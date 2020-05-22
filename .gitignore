@@ -1,3 +1,4 @@
+
 **/
 !**/1_fs/
 !**/1_MODULES
@@ -12,7 +13,9 @@
 !**/8_buffer
 !**/homework
 !**/9_0_EXPRESS
-!**/9_ExpressStart/myapp/
+!**/9_ExpressStart/
+!**/10_Express_generator
 !**/12_MVC
 !**/13_Handlebars
+
 node_modules/
