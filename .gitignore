@@ -1,0 +1,18 @@
+**/
+!**/1_fs/
+!**/1_MODULES
+!**/1 first/
+!**/1.1_Event_Emmiter
+!**/2_add your module
+!**/3_CreateServer
+!**/4_URL parse
+!**/5_path
+!**/6_blockingCode
+!**/7_modules
+!**/8_buffer
+!**/homework
+!**/9_0_EXPRESS
+!**/9_ExpressStart/myapp/
+!**/12_MVC
+!**/13_Handlebars
+node_modules/
