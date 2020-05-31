@@ -1,0 +1,45 @@
+
+<!-- this kam . mijocov stanum enq people zangvaci amen mi elemety nor p-i mej -->
+<h1>Welcom to the Contact page</h1>
+
+{{#each people}}
+<p>{{.}}</p>
+<!-- <p>{{this}}</p> -->
+
+{{/each }}
+
+<hr>
+
+{{#each people as |value key|}} <!-- key = index, value = value -->
+
+<p>{{key}}: {{value}}</p>
+
+{{/each }}
+<hr>
+
+<!-- Read user Object from server.js-->
+{{#each user}}
+
+<p>{{.}}</p>
+<p>@key: {{@key}}</p>
+
+{{/each }}
+<hr>
+
+{{#each user as |key value|}}
+
+<p>{{key}}: {{value}}</p>
+
+{{/each }}
+
+<hr>
+<!-- Read items Object in lists Object from server.js-->
+{{#each lists}}
+	{{#each this.items}}
+
+		<p>{{this}}</p>
+		
+	{{/each }}
+	<hr>
+{{/each }}
+

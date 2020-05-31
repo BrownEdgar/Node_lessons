@@ -1,2 +1,2 @@
 npm init -y
-npm install express express-handlebars -S
+npm install express-handlebars -S

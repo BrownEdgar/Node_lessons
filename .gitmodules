@@ -1,6 +1,12 @@
 [submodule "15_DB"]
-	path = 15_DB
-	url = ./15_DB/
+	
+path = 15_DB
+	
+url = ./15_DB/
+
 [submodule "16_Sequelize"]
-	path = 16_Sequelize
-	url = ./16_Sequelize/
+	
+path = 16_Sequelize
+	
+url = ./16_Sequelize/
+

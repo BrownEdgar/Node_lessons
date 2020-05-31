@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+		<form action="#">
+			<label for="iName">User Name
+				<input type="text" id="iName" name="user">
+			</label>
+			<label for="iPass">Password
+				<input type="password" id="iPass" name="password">
+			</label>
+			<label for="iPass">Password
+				<input type="text" id="iemail" name="password">
+			</label>
+			<button id="addBtn" onclick="start()">Submit</button>
+		</form>
+			
+	<script>
+		function start(){
+	
+	let nameCookie = document.getElementById('iName').value;
+ 	let passCookie = document.getElementById('iPass').value;
+ 	let passCookie2 = document.getElementById('iemail').value;
+ 	let strCookie = `${nameCookie} = ${passCookie} = ${passCookie2}`;
+ 	document.cookie = strCookie;
+ 	
+		}
+
+	</script>
+</body>
+</html>

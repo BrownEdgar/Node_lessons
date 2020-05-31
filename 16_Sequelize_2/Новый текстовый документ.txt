@@ -1,0 +1,130 @@
+﻿1.Вначале установим пакет sequelize.
+npm install --save sequelize
+
+2.Для работы с MySQL также должен быть установлен пакет mysql2:
+npm install --save mysql2
+
+3.Для работы с MS SQL Server в проекте должен быть установлен пакет tedious:
+npm install --save tedious
+
+4.И естественно перед подключением необходимо создать базу данных, с которой будет идти взаимодействие.
+npm install --save pg
+
+
+/*таблице по умолчанию будут создаваться два
+дополнительных поля: createdAt и updatedAt,которые 
+будут иметь тип datetime и будут представлять соответственно
+время создания и последнего обновления строки в таблице.*/
+
+Но, возможно, нам не нужны эти дополнительные столбцы createdAt и updatedAt. В этом случае при определении объекта Sequelize нам надо задать параметр define: {timestamps: false}:
+
+/*Более того, нам не обязательно определять в модели 
+поле id, так как sequelize по умолчанию также будет 
+создавать подобное поле, 
+которое будет выполнять роль первичного ключа.*/
+
+
+Еси в бд есть подобная таблица, но она не соответствует определению модели, то мы можем использоать параметр {force: true}, чтобы удалить таблицы и создать их заново, но уже с нужной нам структурой:
+sequelize.sync({force: true}).then(result=>{
+  console.log(result);
+})
+.catch(err=> console.log(err));
+
+
+
+
+
+
+
+
+
+
+
+/*Sequelize - это ORM-библиотека для приложений на Node.js*/
+const Sequelize = require("sequelize");
+const express = require('express')
+const app = express();
+const port = 8080;
+
+
+/*Для подключения к базе данных прежде всего необходимо
+создать объект Sequelize:*/
+const sequelize = new Sequelize("mydb2", "root", "admin25", {
+  dialect: "mysql",
+  host: "localhost",
+  port: "8080"
+});
+
+/*в работе Sequelize с бд являются модели. 
+Модели описывают стуктуру хранящихся в бд данных
+tarberak 1*/
+const User = sequelize.define("user", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,//значение столбца будет auto
+    primaryKey: true,//говорит о том, что соответствующий столбец в таблице будет выполнять роль первичного ключа
+    allowNull: false
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false//допускает ли поле отсутствие значение?
+  },
+  age: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  }
+});
+
+//kam 2-rd tarberak
+/*class User extends Model {}
+User.init({
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    allowNull: false
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  age: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  }
+}, {
+  sequelize,
+  modelName: "user"
+});*/
+
+//Для добавления данных в бд у модели вызывается метод create(), в который передается добавляемый объект:
+User.create({
+    name: "Tom",
+    age: 35
+  }).then(res=>{
+    console.log(res);
+  }).catch(err=>console.log(err));
+
+/*Մինչև տվյալների բազայի հետ կապ հաստատելը պետք է համոզվել,
+արդյոքայն համապատասղանում է մեր մոդելին։Օգտագործելով sync մեթոդը*/
+sequelize.sync().then(result=>{
+  console.log(result);
+})
+.catch(err=> console.log(err));
+
+//Для извлечения всех данных применяется метод findAll():
+User.findAll({raw:true}).then(users=>{
+  console.log(users);
+}).catch(err=>console.log(err));
+
+//метод destroy() for DELETED
+User.destroy({
+  where: {
+    name: "Bob"
+  }
+}).then((res) => {
+  console.log(res);
+});
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+

@@ -1,0 +1,21 @@
+{
+  "name": "16_Sequelize",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hbs": "^4.0.4",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.7.0",
+    "nodemon": "^1.19.2",
+    "sequelize": "^5.18.1",
+    "tedious": "^6.3.0"
+  }
+}
