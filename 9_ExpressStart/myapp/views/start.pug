@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    title= title
+  body
+    h1 sad
+    p. 
+     adassdsd
+     sdadsa
+    h1#myid Hedding
+    p.myClassName Paragraph
+    .createDivDefault
+    #createDivDefault
+
+    //-  atributes 
+    input(type="text")
+    //- pass in node.js
+    div(class=classname1)
+    //- array js
+    - const myArr = ['main1', 'main2']
+    - const myStyle = {"border":"2px solid red", "width":"200px","height":"200px"}
+    div(class=myArr style=myStyle)
+    //- images	
+    - const myImg = {"src": "myPhots.jpg", "alt":"nkar"}
+    img&attributes(myImg)
+    //- for
+    h1 'for' loop in arr
+    each key, index in ['html', 'css', 'Java Script', 'React.js', 'Node.js', 'Python' ]
+      p=index + " --> " + key
+    h1 'for' loop in object
+    - const Player = {name: 'Michael', surname:'Jordan',age:57,number: 23,points: 32292,team: 'Chicago Bulls'};
+    each key, index in Player
+      p=index + " --> " + key
+    h1 'for' loop in object
+    - const Player2 = {name: 'Michael', surname:'Jordan',age:57,number: 23,points: 32292,team: 'Chicago Bulls'};
+    for key, index in Player2
+      p=index + " --> " + key
+    else
+      strong No data yet!
+
+    //- if()
+    h1 'if()' in pag
+    if bool
+     p Welcome, value is TRUE! #{bool}
+    else
+      strong value is FALSE! sorry #{bool}
+    //- link
+    include includes/nav
+
+//անջատել միայն բացատով, ՛tab՛-ի դեպքում հարուցում է սխալ
+//p. նշանակում է կարող ենք գրել մի քանի տողով հաձորդ տողից սկսած
+//. # ուղղակի ՛.՛-ը նշանակում է ստեղծել դիվ նշված կլասով / # id-ով դիվ
