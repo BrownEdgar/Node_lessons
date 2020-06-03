@@ -1,0 +1,18 @@
+### dependencies
+npm install --save @hapi/joi@15.0.3
+express
+jsonwebtoken
+mongoose
+bcryptjs
+dotenv
+
+### Քայլերի հերթականություն
+1․ http://localhost:3000/api/user/register էջը բացել ռեգիստռացիա լինել [name, email, password] դաշտերով ։ Valid տվյալներ մուտքագրելուց հետո ստուգել գրանցումը "Mongo Compass" User DB—ում․․․
+2.http://localhost:3000/api/user/login էջում մուտք գորշել [email, password] դաշտերով
+3. որպես հաջող մուտքի պատասխան կստանաք "token" "routes/auth.js" տող 50
+4․ Այն  պետք է մեզ որպեսզի կարողանաք տվյալներ ստանալ 
+GET http://localhost:3000/api/posts էջից, եթե տեսնում եք "Invalid Token" արտահայտությունը ուրեմն "token"-ը սխալ է հակառակ դեպքում սերվերը վերադարձնում է պատասխան նման Օրինակով․՝
+{
+    "_id": "5edd0c3ea4b05d0ca4c70d01",
+    "iat": 1591545363
+}

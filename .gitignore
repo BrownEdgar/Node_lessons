@@ -1,6 +1,6 @@
 node_modules/
+/node_modules/
 .env
-.md
 /20_admin-bro/
 /22_Admin_bro
 /Bee_web_team/

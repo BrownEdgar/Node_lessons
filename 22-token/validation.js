@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const BookValidation = data =>{	
 	const schema = {
 		name:Joi.string()
-			.min(4)
+			.min(6)
 			.required(),
 		email:Joi.string()
 			.min(6)
@@ -30,5 +30,5 @@ const loginValidation = data =>{
 }
 
 
-module.exports.registerValidation = registerValidation;
+module.exports.registerValidation = BookValidation;
 module.exports.loginValidation = loginValidation;

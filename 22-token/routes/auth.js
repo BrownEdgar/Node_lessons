@@ -3,7 +3,7 @@ var router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { registerValidation, loginValidation} = require('../validation');
+const { registerValidation, loginValidation } = require('../validation');
 
 
 
@@ -13,7 +13,7 @@ const { registerValidation, loginValidation} = require('../validation');
 router.post('/register',async(req, res)=> {
 	//DATA VALIDATE BEFORE MAKE A USER
 	console.log(req.body);
-const { error } = registerValidation(req.body);
+	const { error } = registerValidation(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 	//check user in db 
 	const emailExist = await User.findOne({email:req.body.email});
