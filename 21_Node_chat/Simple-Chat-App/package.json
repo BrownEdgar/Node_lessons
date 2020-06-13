@@ -6,7 +6,7 @@
   "scripts": {
     "devStart": "nodemon server.js"
   },
-  "author": "",
+  "author": "Sebo",
   "license": "ISC",
   "dependencies": {
     "socket.io": "^2.2.0"

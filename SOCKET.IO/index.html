@@ -47,6 +47,9 @@
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
+		/* Որպեսզի ֆորման նկարը չծաշկի  */
+		position: relative;
+    	bottom: 100px;
 	}
 
 	#messages li {
@@ -75,7 +78,10 @@
 		vertical-align: middle;
 		font-weight: 900;
 	}
-
+	#messages li img{
+	width: 100%;
+	height: 300px;
+}
 </style>
         <link
             rel="stylesheet"
@@ -141,7 +147,8 @@
 
             <!-- message form -->
             <form action="" id="messageform">
-                <input id="m" autocomplete="off"/>
+				<input id="m" autocomplete="off"/>
+				<input type="file" name="imagefile" id="imagefile">
                 <button>Send</button>
             </form>
         </div>
@@ -150,7 +157,23 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
             $(function () {
-                const socket = io();
+				const socket = io();
+
+				$('#imagefile').on('change', function (e) {
+				console.log('object', e)
+					const file = e.originalEvent.target.files[0],
+						reader = new FileReader();
+					//When the file has been read...
+					reader.onload = function (evt) {
+                    //image in base64 format
+                    console.log("evt.target.result",evt.target.result);
+					socket.emit('user image', evt.target.result);
+					};
+					//And now, read the image and base64
+					let r = reader.readAsDataURL(file);
+				});
+
+
                 let $messageform = $('#messageform');
                 let $userForm = $('#userForm');
                 let $username = $('#username');
@@ -158,12 +181,13 @@
                 let $main = $('#main');
                 $('form').on('submit', function (e) {
                     e.preventDefault();
-                    socket.emit('chat message', $('#m').val()); // ստանում ենք 'chat message'-ի հաղորդագրությունը
+					socket.emit('chat message', $('#m').val()); // ստանում ենք 'chat message'-ի հաղորդագրությունը
+					
+					
                     $('#m').val(''); // մաքրում ենք "input"- ը ուղարկելուց հետո
                     return false;
                 });
                 socket.on('chat message', function (msg) {
-					
                     if (msg !== '') {
                         $('#messages').append($('<li>').text(msg));
                     }
@@ -189,8 +213,12 @@
                     }
                     $users.html(html)
 				})
-			
-				 
+				//նկարի ընդունում սերվերից
+				socket.on('user image', image);
+				function image(from, base64Image) {
+					$('#messages').append($('<li>').append($('<b>').text(from),
+						'<img src="' + base64Image + '" />'));
+				}
             });
         </script>
     </body>

@@ -13,6 +13,18 @@ app.get('/', function (req, res) {
 
 
 io.on('connection', (socket) => {
+	//Ընդունում ենք ֆայլը ուղարկելով հետ
+	socket.on('user image', function (msg) {
+		io.emit('user image', socket.username, msg);
+	});
+
+	socket.on('user message', function (msg) {
+		console.log('msg', msg)
+	 });
+	
+
+
+
 	connections.push(socket);
 	//ամեն մի "socket" ուն նաև "disconnect" իրադարձություն
 	socket.on('disconnect', () => {

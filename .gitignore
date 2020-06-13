@@ -1,6 +1,5 @@
 node_modules/
 /node_modules/
 .env
-/20_admin-bro/
-/22_Admin_bro
 /Bee_web_team/
+.zip
