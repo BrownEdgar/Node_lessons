@@ -117,7 +117,4 @@ router.delete('/:orderID', function (req, res, next) {
 		});
 });
 
-
-
-
 module.exports = router;

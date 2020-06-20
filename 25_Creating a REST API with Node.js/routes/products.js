@@ -54,6 +54,8 @@ router.get('/', function (req, res, next) {
 		});
 });
 router.post('/', upload.single('productImage'), function (req, res, next) {
+	console.log('req.file.path', req.file.path)
+	console.log('req.file.path', req.body.name)
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
