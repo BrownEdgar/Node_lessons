@@ -1,5 +1,5 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
 
 app.get('/', function (req, res) {
@@ -24,12 +24,12 @@ app.get('/example/b', function (req, res, next) {
 /*-------------------2----------------------*/
 /* հետադարջ կանչի Ֆունկցիաների զանգվածը կարող է սպասարկել մեկ ուղի. օրինակ:
 այստեղ consol-um կտպի CB0 հետո CB1 նոր body-ում կտպի ՝Hello from C!՝*/
-var cb0 = function (req, res, next) {
+const cb0 = function (req, res, next) {
   console.log('CB0');
   next();
 }
 
-var cb1 = function (req, res, next) {
+const cb1 = function (req, res, next) {
   console.log('CB1');
   if(7>5){
     res.end("stop")
@@ -37,7 +37,7 @@ var cb1 = function (req, res, next) {
   next();
 }
 
-var cb2 = function (req, res) {
+const cb2 = function (req, res) {
   res.end('Hello from C!');
 }
 
@@ -59,7 +59,7 @@ app.route('/book')
 /*Այս app-ն այժմ կկարողանա մշակել հարցումները,
 հասցեագրված ՝/birds՝ և ՝/birds/about՝, ռեսուրսներին  և
 նաև կանչել  միջանկյալ մշակման հատուկ ՝timeLog՝ ֆունկցիան.*/
-var birds = require('./birds');
+const birds = require('./birds');
 app.use('/birds', birds);
 app.use((req, res, next) =>{
   const error = new Error("Not found");

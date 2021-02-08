@@ -10,7 +10,7 @@ const users = []
 app.get('/users', function (req, res) {
 	res.send(users);
 });
-
+//bcrypt աշխատում է "async" ֆունկցիաներում
 app.post('/users', async function (req, res) {
 	try{
 		//const salt = await bcrypt.genSalt();
@@ -25,7 +25,7 @@ app.post('/users', async function (req, res) {
 		users.push(user)
 		res.status(201).send(users);
 	}catch{
-		res.status(500).send();
+		res.status(500).send("some err");
 
 	}
 });

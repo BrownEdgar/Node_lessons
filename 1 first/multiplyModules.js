@@ -6,8 +6,8 @@ module.exports.r = r;
 module.exports.b = b;
 module.exports.f = f;
 
-// module.exports = {
-//     r:r,
-//     b:b,
-//     f:f
-// }
+module.exports = {
+    r,
+    b,
+    f
+}

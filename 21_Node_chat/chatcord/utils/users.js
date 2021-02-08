@@ -1,20 +1,20 @@
 const users = [];
 
-// Join user to chat
+// այստեղ պահում ենք բոլոր "user"-րին
 function userJoin(id, username, room) {
   const user = { id, username, room };
 
   users.push(user);
-
+console.log('users', users)
   return user;
 }
 
-// Get current user
+// Ստանում ենք "user"-ին
 function getCurrentUser(id) {
   return users.find(user => user.id === id);
 }
 
-// User leaves chat
+// Եթե "user"-ը դուր է գալիս սենյակիցէ ջնջում ենք
 function userLeave(id) {
   const index = users.findIndex(user => user.id === id);
 
@@ -23,7 +23,7 @@ function userLeave(id) {
   }
 }
 
-// Get room users
+// Այստեղ Ստանում ենք "room"-ի "user"-ին
 function getRoomUsers(room) {
   return users.filter(user => user.room === room);
 }

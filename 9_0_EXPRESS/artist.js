@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-const artists = [{
+const artists = [
+	{
 		id: 1,
 		name: "Metalica"
 	},
@@ -64,7 +65,13 @@ app.put("/artists/:id", function (req, res) {
 });
 
 app.delete("/artists/:id", function (req, res) {
-	
+	const artist= artists.find(c => c.id === parseInt(req.params.id));
+	if (!artist) return res.status(404).send('The course with the given ID was not found.');
+
+	const index = artists.indexOf(artist);
+	artists.splice(index, 1);
+
+	res.send(artist);
 
 });
 app.listen(3000);

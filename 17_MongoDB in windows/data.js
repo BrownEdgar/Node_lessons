@@ -48,7 +48,7 @@ db.users.find({age:22,email:"example2@mail.ru"},{_id:0});
 db.users.find({$or: [ {age:22}, {email:"example2@mail.ru"} ]},{_id:0});
 
 
-/*$eq:38 == "equal38" ajsinqn = e 38-i nuynn e inch {age:22}*/
+/*$eq:38 == "equal38" ajsinqn = e 38-i nuynn e inch {age:38}*/
 /*$lt:38 = "less then 38" tariqy poqr e qan 38-y, ev sortavorac en*/
 /*$lte:38 == "less or equal then 38" ajsinqn <= en 38-ic*/
 /*$gte:38 == "greeter or equal then 38" ajsinqn >= en 38-ic*/
@@ -76,6 +76,7 @@ db.users.find( { Colors: {$elemMatch: {$lte:'a'}} }, {_id:0} );
 
 //update
 //tarmacnum e "arajin handipac" 12 tarekan useri tariqy, 
+// link => https://docs.mongodb.com/manual/reference/operator/update/
 db.users.updateOne( {age:12}, { $set:{age:41} } );
 
 //gtnum e age:23 usernerin ev poxum e nranc "naem" ev "email" dashtery:
@@ -137,3 +138,7 @@ db.users.bulkWrite([
 }
 
 ])
+
+
+findByIdAnnRemove
+findById

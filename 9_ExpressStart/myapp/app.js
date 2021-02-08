@@ -11,6 +11,7 @@ var pagRouter = require('./routes/pag');
 var app = express();
 
 // view engine setup
+// նախատեսված է "Շաբլոնիզատոր" նշելու համար 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 //dev -:method :url :status :response-time ms - :res[content-length]

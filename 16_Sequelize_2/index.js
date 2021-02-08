@@ -6,10 +6,10 @@ const app = express();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
  
 // определяем объект Sequelize
-const sequelize = new Sequelize("mysql", "root", "xxx", {
+const sequelize = new Sequelize("lilo", "root", "xxx", {
   dialect: "mysql",
   host: "localhost",
-  port: 3307,
+  port: 3306,
   define: {
     timestamps: false
   }
@@ -92,7 +92,7 @@ app.post("/edit", urlencodedParser, function (req, res) {
   }).catch(err=>console.log(err));
 });
  
-// удаление данных
+// Տվյալների Ջնջում
 app.post("/delete/:id", function(req, res){  
   const userid = req.params.id;
   User.destroy({where: {id: userid} }).then(() => {

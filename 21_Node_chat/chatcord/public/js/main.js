@@ -3,7 +3,7 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
 
-// Get username and room from URL
+// URL- ից ստանում ենք օգտվողի անունը և սենյակը
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true
 });
@@ -13,29 +13,29 @@ const socket = io();
 // Join chatroom
 socket.emit('joinRoom', { username, room });
 
-// Get room and users
+// ստանում ենք "room"-ը և "user"-ին
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
 });
 
-// Message from server
+// սերվերից եկած "Message"-ը "մշակում" նեք
 socket.on('message', message => {
-  console.log(message);
+	console.log(message); // "Message"-ը օբյոկտի տեսքով "console"-ում 
   outputMessage(message);
 
   // Scroll down
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// Message submit
+
 chatForm.addEventListener('submit', e => {
   e.preventDefault();
 
-  // Get message text
+  // Ստանւոմ նեք հաղորդագրության տեքստը
   const msg = e.target.elements.msg.value;
 
-  // Emit message to server
+  // Հաղորդագրության փոխանցում սերվերին
   socket.emit('chatMessage', msg);
 
   // Clear input
@@ -43,7 +43,7 @@ chatForm.addEventListener('submit', e => {
   e.target.elements.msg.focus();
 });
 
-// Output message to DOM
+// հաղորդագրություն նկարում ենք DOM- ում <div > p>-ի մեջ դնեկով
 function outputMessage(message) {
   const div = document.createElement('div');
   div.classList.add('message');
@@ -54,12 +54,12 @@ function outputMessage(message) {
   document.querySelector('.chat-messages').appendChild(div);
 }
 
-// Add room name to DOM
+// DOM-ում  ավելացնում ենք նաև  "room"-ի անվանումը
 function outputRoomName(room) {
   roomName.innerText = room;
 }
 
-// Add users to DOM
+// ավելացնում ենք "user"-ին
 function outputUsers(users) {
   userList.innerHTML = `
     ${users.map(user => `<li>${user.username}</li>`).join('')}

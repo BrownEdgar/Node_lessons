@@ -24,7 +24,7 @@ app.route('/book')
     res.send('Update the book');
   });
 
-var requestTime = function (req, res, next) {
+const requestTime = function (req, res, next) {
   req.requestTime = Date.now();
   next();
 };
@@ -32,7 +32,7 @@ var requestTime = function (req, res, next) {
 app.use(requestTime);
 
 app.get('/', function (req, res) {
-  var responseText = 'Hello World!';
+  const responseText = 'Hello World!';
   responseText += 'Requested at: ' + req.requestTime + '';
   res.send(responseText);
 });

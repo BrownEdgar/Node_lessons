@@ -5,13 +5,23 @@ var expbs = require('express-handlebars');
 app.engine("handlebars", expbs());
 app.set("view engine", "handlebars");
 
-
+const obj= [
+	{id:1, name: "a",age:18,regeon:"usa"},
+	{id:2, name: "a",age:32,regeon:"Russia"},
+	{id:3, name: "a",age:22,regeon:"usa"},
+	{id:4, name: "a",age:18,regeon:"Armenia"},
+	{id:5, name: "a",age:64,regeon:"Russia"},
+	{ id: 6, name: "a", age: 23, regeon:"Armenia"},
+	{ id: 7, name: "a", age: 16, regeon:"Russia"},
+	{id:8, name: "a",age:10,regeon:"Denmark"},
+	{ id: 9, name: "a", age: 25, regeon:"Armenia"},
+]
 
 app.get('/', (req, res) => {
 	res.render('home', {
 		title:'Home Page',
 		name:"home",
-		bool:true
+		bool:false
 
 		});
 });
@@ -58,8 +68,24 @@ app.get('/contact', (req, res) => {
 		});
 });
 
+app.get('/task', (req, res) => {
 
+	let r = obj.filter((elem) => elem.age >= 18)
+		.filter((elem) => {
+			if (elem.regeon === "usa"){
+				if ( elem.age >= 21) {
+					return true;
+				}
+				return false;
+			}
+			return true;
+		})
+		console.log(r);
+	res.render('task', {
+		data: r
 
+	});
+});
 app.listen(8080, function () {
   console.log('Example app listening on port 8080');
 });

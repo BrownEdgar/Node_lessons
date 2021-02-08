@@ -1,0 +1,31 @@
+<div class="main__form" autocomplete="off">
+	<h1>Sign In</h1>
+	<span>
+			<% if (error.length > 0) { %>
+			<p class="feedback">
+				<%= error %>
+			</p>
+			<% } else {%>
+			<p>все ОК пока</p>
+			<% } %>
+	</span>
+	<form action="/create" method="POST" enctype="multipart/form-data" id="mainForm">
+		<input type="text" name="name" placeholder="Enter name" value="Aram">
+		<span id="name"></span>
+		<input type="text" name="surname" placeholder="Enter surname" value="Hambaryan">
+		<span id="surname"></span>
+		<input type="password" name="password">
+		<input type="text" name="age" placeholder="Enter age" value="25">
+		<span id="age"></span>
+		<input type="email" name="email" placeholder="Enter email" value="">
+		<input type="file" name="cv">
+		<span id="email"></span>
+		
+		<input type="submit" value="add User" >
+	</form>
+	<span id="special">Or with Social Profile</span>
+		<div class="aBloc">
+			<h4><a href="/users">View all users</a></h4>
+			<h4><a href="/login">login</a></h4>
+		</div>
+</div>

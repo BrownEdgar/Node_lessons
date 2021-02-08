@@ -50,6 +50,11 @@
 var express = require('express');
 var app = express();
 
+var users = require('./routes/users');
+var about = require('./routes/about');
+
+app.use('/users', users);
+app.use('/about', about);
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });

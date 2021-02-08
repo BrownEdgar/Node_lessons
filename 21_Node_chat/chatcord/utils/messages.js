@@ -1,3 +1,6 @@
+///////////////////////////
+//1․Այստեղ օգտագործում ենք "moment" մոդուլը հաղղորդագրության ժամանակագրության և տեսքը ապահովելու համար
+
 const moment = require('moment');
 
 function formatMessage(username, text) {

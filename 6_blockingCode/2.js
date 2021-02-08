@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const data = fs.readFileSync('test.txt'); // blocks here until file is read
 console.log(data.toString());
 

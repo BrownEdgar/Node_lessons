@@ -1,225 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link
-            rel="stylesheet"
-            href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-            integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
-            crossorigin="anonymous">
-        <title>Document</title>
-<style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
 
-	body {
-		font: 13px Helvetica, Arial;
-	}
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<title>Document</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
 
-	#messageform {
-		background: #000;
-		padding: 3px;
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-	}
+		body {
+			font: 13px Helvetica, Arial;
+		}
 
-	#messageform input {
-		border: 0;
-		padding: 10px;
-		width: 90%;
-		margin-right: 0.5%;
-	}
+		#messageform {
+			background: #000;
+			padding: 3px;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+		}
 
-	#messageform button {
-		width: 9%;
-		background: rgb(130, 224, 255);
-		border: none;
-		padding: 10px;
-	}
+		#messageform input {
+			border: 0;
+			padding: 10px;
+			width: 90%;
+			margin-right: 0.5%;
+		}
 
-	#messages {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		/* Որպեսզի ֆորման նկարը չծաշկի  */
-		position: relative;
-    	bottom: 100px;
-	}
+		#messageform button {
+			width: 9%;
+			background: rgb(130, 224, 255);
+			border: none;
+			padding: 10px;
+		}
 
-	#messages li {
+		#messages {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			/* Որպեսզի ֆորման նկարը չծաշկի  */
+			position: relative;
+			bottom: 100px;
+		}
 
-		padding: 5px 10px;
-	}
-	#messages li:nth-child(odd) {
-		background: #eee;
-	}
-	.position-fixed {
-		top: 0;
-		right: 0;
-	}
-	#main {
-		display: none;
-	}
-	ul {
-		list-style-type: none;
-	}
+		#messages li {
 
-	#users li::before {
-		font-family: "Font Awesome 5 Free";
-		content: '\f007';
-		display: inline-block;
-		padding-right: 10px;
-		vertical-align: middle;
-		font-weight: 900;
-	}
-	#messages li img{
-	width: 100%;
-	height: 300px;
-}
-</style>
-        <link
-            rel="stylesheet"
-            href="https://bootswatch.com/4/journal/bootstrap.min.css">
-    </head>
-    <body>
-        <!-- UserName form -->
-        <form action="#" id="userForm">
+			padding: 5px 10px;
+		}
 
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="form-group has-success">
-                        <label class="form-control-label" for="username">Enter UserName</label>
-                        <input
-                            type="text"
-                            placeholder="name here"
-                            class="form-control is-valid"
-                            id="username">
-                        <input type="submit" class="btn btn-primary" value="Login"/>
-                    </div>
-                </div>
-            </div>
-        </form>
+		#messages li:nth-child(odd) {
+			background: #eee;
+		}
 
-        <div class="container-fluid mt-3 p-0 " id="main">
-            <div class="row w-100">
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                        <div class="card-header">Online Users</div>
-                        <div class="card-body">
-                            <ul class="card-title" id="users"></ul>
-                        </div>
+		.position-fixed {
+			top: 0;
+			right: 0;
+		}
 
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <ul id="messages" class="table-success"></ul>
+		#main {
+			display: none;
+		}
 
-                </div>
-            </div>
+		ul {
+			list-style-type: none;
+		}
 
-            <!-- Push notifikation  -->
-            <div
-                class="toast show position-fixed w25"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="mr-auto">Socket.io chat</strong>
-                    <small id="time"></small>
-                    <button
-                        type="button"
-                        class="ml-2 mb-1 close"
-                        data-dismiss="toast"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    Hello, world! This is a toast message.
-                </div>
-            </div>
+		#users li::before {
+			font-family: "Font Awesome 5 Free";
+			content: '\f007';
+			display: inline-block;
+			padding-right: 10px;
+			vertical-align: middle;
+			font-weight: 900;
+		}
 
-            <!-- message form -->
-            <form action="" id="messageform">
-				<input id="m" autocomplete="off"/>
-				<input type="file" name="imagefile" id="imagefile">
-                <button>Send</button>
-            </form>
-        </div>
+		#messages li img {
+			width: 100%;
+			height: 300px;
+		}
+	</style>
+	<link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
+</head>
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script>
-            $(function () {
-				const socket = io();
+<body>
+	<!-- UserName form -->
+	<form action="#" id="userForm">
 
-				$('#imagefile').on('change', function (e) {
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="form-group has-success">
+					<label class="form-control-label" for="username">Enter UserName</label>
+					<input type="text" placeholder="name here" class="form-control is-valid" id="username">
+					<input type="submit" class="btn btn-primary" value="Login" />
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="container-fluid mt-3 p-0 " id="main">
+		<div class="row w-100">
+			<div class="col-md-4">
+				<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+					<div class="card-header">Online Users</div>
+					<div class="card-body">
+						<ul class="card-title" id="users"></ul>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-md-5">
+				<ul id="messages" class="table-success"></ul>
+
+			</div>
+		</div>
+
+		<!-- Push notifikation  -->
+		<div class="toast show position-fixed w25" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header">
+				<strong class="mr-auto">Socket.io chat</strong>
+				<small id="time"></small>
+				<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="toast-body">
+				Hello, world! This is a toast message.
+			</div>
+		</div>
+
+		<!-- message form -->
+		<form action="" id="messageform">
+			<input id="m" autocomplete="off" />
+			<input type="file" name="imagefile" id="imagefile">
+			<button>Send</button>
+		</form>
+	</div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(function () {
+			const socket = io();
+
+			$('#imagefile').on('change', function (e) {
 				console.log('object', e)
-					const file = e.originalEvent.target.files[0],
-						reader = new FileReader();
-					//When the file has been read...
-					reader.onload = function (evt) {
-                    //image in base64 format
-                    console.log("evt.target.result",evt.target.result);
+				const file = e.originalEvent.target.files[0],
+					reader = new FileReader();
+				//When the file has been read...
+				reader.onload = function (evt) {
+					//image in base64 format
+					console.log("evt.target.result", evt.target.result);
 					socket.emit('user image', evt.target.result);
-					};
-					//And now, read the image and base64
-					let r = reader.readAsDataURL(file);
-				});
+				};
+				//And now, read the image and base64
+				let r = reader.readAsDataURL(file);
+			});
+
+			let $messageform = $('#messageform');
+			let $userForm = $('#userForm');
+			let $username = $('#username');
+			let $users = $('#users');
+			let $main = $('#main');
+			$('form').on('submit', function (e) {
+				e.preventDefault();
+				socket.emit('chat message', $('#m').val()); // ստանում ենք 'chat message'-ի հաղորդագրությունը
 
 
-                let $messageform = $('#messageform');
-                let $userForm = $('#userForm');
-                let $username = $('#username');
-                let $users = $('#users');
-                let $main = $('#main');
-                $('form').on('submit', function (e) {
-                    e.preventDefault();
-					socket.emit('chat message', $('#m').val()); // ստանում ենք 'chat message'-ի հաղորդագրությունը
-					
-					
-                    $('#m').val(''); // մաքրում ենք "input"- ը ուղարկելուց հետո
-                    return false;
-                });
-                socket.on('chat message', function (msg) {
-                    if (msg !== '') {
-                        $('#messages').append($('<li>').text(msg));
-                    }
-                });
-
-                $userForm.on('submit', function (e) {
-                    e.preventDefault();
-                    socket.emit('new user', $username.val(), function (data) {
-						console.log('data', data)
-                        if (data) {
-                            $userForm.fadeOut(100);
-                            $main.fadeIn(100)
-                        }
-                    });
-                    $username.val('');
-                    return false;
-                });
-                socket.on('get users', function (data) {
-                    console.log("data", data);
-                    let html = '';
-                    for (let i = 0; i < data.length; i++) {
-                        html += `<li>${data[i]}</li>`
-                    }
-                    $users.html(html)
-				})
-				//նկարի ընդունում սերվերից
-				socket.on('user image', image);
-				function image(from, base64Image) {
-					$('#messages').append($('<li>').append($('<b>').text(from),
-						'<img src="' + base64Image + '" />'));
+				$('#m').val(''); // մաքրում ենք "input"- ը ուղարկելուց հետո
+				return false;
+			});
+			socket.on('chat message', function (msg) {
+				if (msg !== '') {
+					$('#messages').append($('<li>').text(msg));
 				}
-            });
-        </script>
-    </body>
+			});
+
+			$userForm.on('submit', function (e) {
+				e.preventDefault();
+				socket.emit('new user', $username.val(), function (data) {
+					console.log('data', data)
+					if (data) {
+						$userForm.fadeOut(100);
+						$main.fadeIn(100)
+					}
+				});
+				$username.val('');
+				return false;
+			});
+			socket.on('get users', function (data) {
+				console.log("data", data);
+				let html = '';
+				for (let i = 0; i < data.length; i++) {
+					html += `<li>${data[i]}</li>`
+				}
+				$users.html(html)
+			})
+			//նկարի ընդունում սերվերից
+			socket.on('user image', image);
+
+			function image(from, base64Image) {
+				$('#messages').append($('<li>').append($('<b>').text(from),
+					'<img src="' + base64Image + '" />'));
+			}
+		});
+	</script>
+</body>
+
 </html>

@@ -24,9 +24,9 @@ server.listen(3000,  () => {
 });
 
 /*Karox enq naev kardal 
-"text/plain" - txt fayleri hamar
-"text/html"  - html fayleri hamar	
-"application/json" - json fayleri hamar
+"text/plain" - "txt" ֆայլերի համար
+"text/html"  - "html" ֆայլերի համար	
+"application/json" - "json" ֆայլերի համար
 13-rd toxum poxel patasxani tipy 
 15-um fayly
  */

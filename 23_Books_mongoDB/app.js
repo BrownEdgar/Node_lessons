@@ -13,8 +13,10 @@ dotenv.config();
 
 //connect DB
 mongoose.connect(process.env.DB_CONNECTION,
-	{ useUnifiedTopology: true,
-	useNewUrlParser: true },
+	{
+  useUnifiedTopology: true,
+	useNewUrlParser: true 
+},
 	()=> console.log("Connected to db!"));
 
 app.use(express.json());

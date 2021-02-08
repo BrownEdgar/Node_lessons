@@ -28,7 +28,7 @@ module.exports = function (passport) {
                 });
             });
     }));
-    // serializeUser որոժում է թե, User-օբյեկտի որ տվյալները պետք է պահպանվեն
+    // serializeUser որոշում է թե, User-օբյեկտի որ տվյալները պետք է պահպանվեն
     // Session-ի մեջ
     passport.serializeUser(function (user, done) {
         done(null, user.id);

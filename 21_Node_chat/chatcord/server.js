@@ -14,19 +14,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Set static folder
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const botName = 'ChatCord Bot';
 
-// Run when client connects
+// Աշխատում է, երբ "user"-ը  միանում է
 io.on('connection', socket => {
   socket.on('joinRoom', ({ username, room }) => {
     const user = userJoin(socket.id, username, room);
-
+		console.log('user', user)
     socket.join(user.room);
 
-    // Welcome current user
+    // Welcome "message"-ի ուղարկում սենյակ մտնելոց հետո
     socket.emit('message', formatMessage(botName, 'Welcome to ChatCord!'));
 
     // broadcast նշ․է Հաղորդագրության ուղարկում բոլորին բացի այն "socket"-ից, որն իրեն աշխատացնում է
@@ -37,21 +37,22 @@ io.on('connection', socket => {
         formatMessage(botName, `${user.username} has joined the chat`)
       );
 
-    // Send users and room info
+	// Ուղարկում ենք օգտվողներին և սենյակի տվյալները
+	//getRoomUsers ֆունկցիան գտնում է այդ սենյակի բոլոր օգտվողներին 
     io.to(user.room).emit('roomUsers', {
       room: user.room,
       users: getRoomUsers(user.room)
     });
   });
 
-  // Listen for chatMessage
+  // Այստեղ հետևում ենք չատի "message"-րին
   socket.on('chatMessage', msg => {
     const user = getCurrentUser(socket.id);
 
     io.to(user.room).emit('message', formatMessage(user.username, msg));
   });
 
-  // Runs when client disconnects
+  //Աշխատում է "client"-ի դուս գալու ժամանակ
   socket.on('disconnect', () => {
     const user = userLeave(socket.id);
 
@@ -61,7 +62,7 @@ io.on('connection', socket => {
         formatMessage(botName, `${user.username} has left the chat`)
       );
 
-      // Send users and room info
+      //Ուղարկում ենք օգտվողներին և սենյակի տվյալները
       io.to(user.room).emit('roomUsers', {
         room: user.room,
         users: getRoomUsers(user.room)

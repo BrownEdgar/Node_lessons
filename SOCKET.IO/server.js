@@ -56,3 +56,5 @@ io.on('connection', (socket) => {
 // ԿԱՐևՈՐ: app.listen(3000) այստեղ չի աշխատի!
 server.listen(process.env.PORT || 3000)
 console.log("server is runnning");
+
+ 

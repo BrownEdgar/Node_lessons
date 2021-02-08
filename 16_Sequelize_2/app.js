@@ -6,10 +6,11 @@ const port = 8889;
 
 
 /* объект Sequelize:*/
-const sequelize = new Sequelize("test", "root", "admin25", {
+const sequelize = new Sequelize("test", "root", "xxx", {
   dialect: "mysql",
   host: "localhost",
-  port: 3306
+	port: 3306
+	
 });
 
 /*
@@ -17,8 +18,8 @@ tarberak 1*/
 const User = sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER,
-    autoIncrement: true,//значение столбца будет auto
-    primaryKey: true,//говорит о том, что соответствующий столбец в таблице будет выполнять роль первичного ключа
+    autoIncrement: true,//Կգեներացվի աֆտոմատ
+    primaryKey: true,// Այս սյունը Աղյուսակում կկատարի "Առաջնային բալանու" դերը
     allowNull: false
   },
   name: {

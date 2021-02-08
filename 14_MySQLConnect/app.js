@@ -8,8 +8,8 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
 	host: '127.0.0.1',
 	user: 'root',
-	password: 'xxx',
 	port: 3306,
+	password:"xxx",
 	database:'nodemysql' //ete sax normal ancni http://localhost/phpmyadmin ksarqi baza ajs anunov
 });
 
@@ -77,7 +77,7 @@ app.get('/getposts',  (req, res) => {
 	let query = db.query(sql, (err, result)=>{
 			if (err) throw err;
 			console.log(result);
-			res.send("Postery tpvac en...");
+		res.send(result);
 	});
 });
 

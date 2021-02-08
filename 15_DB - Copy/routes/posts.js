@@ -18,7 +18,8 @@ router.post('/', (req, res) =>{
 		discription: req.body.discription
 	});
 
-	post.save()
+	post.save();//Եթե այսպես թողնենք հարցումը երբեք չի ավարտվի "pannding"
+	res.redirect('/posts');
 });
 
 

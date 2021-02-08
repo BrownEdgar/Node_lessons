@@ -1,6 +1,6 @@
 /* __________________vew___________________________ */
 
-var view ={
+const view ={
 	showNumber: function(n){
 		let elem = document.getElementById("root");
 		elem.innerHTML = n;
@@ -8,7 +8,7 @@ var view ={
 };
 /* __________________model_________________________ */
 
-var model ={
+const model ={
 	number:0,
 caunt: function(a, b) {
 		this.number = a * b;
@@ -20,7 +20,7 @@ caunt: function(a, b) {
 
 /* __________________controler_____________________ */
 
-var controller = {
+const controller = {
 	handle: function() {
 		model.caunt(3, 4);
 	}
@@ -28,7 +28,7 @@ var controller = {
 
 /* __________________anunymous function___________________________ */
 (function appt(){
-	var app = {
+	const app = {
 		init: function () {
 			this.main();
 			this.event();
@@ -48,5 +48,3 @@ var controller = {
 app.get("/hotels", controller.handle(hotels), function(req,res){
 	res.send(controller)
 })
-
-Math.max(1,2,3)

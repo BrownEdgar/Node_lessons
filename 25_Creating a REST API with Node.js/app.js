@@ -56,3 +56,5 @@ app.use((error, req, res, next) => {
 })
 
 module.exports = app;
+const fileupload = require("express-fileupload");
+app.use(fileupload());
