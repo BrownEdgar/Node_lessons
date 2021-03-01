@@ -1,6 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20");
-const keys = require('./keys')
+const keys = require('./keys');
+const User = require('../models/User');
 
 passport.use(
 	new GoogleStrategy({
@@ -11,6 +12,16 @@ passport.use(
 	}, (accessToken,refreshTokjen,profile, done) => {
 		// passports cb function
 			console.log('passports cb function', profile)
+		// new User
+		let r = new User({
+			username: profile.displayName,
+			googleId: profile.id
+		})
+		r.save().then((newUser) => {
+			console.log('newUser', newUser)
+			.catch(err=>console.log(err));
+			done("")
+		})  // այս մեթոդը պահում է տվյալները բազայում
 	})
 )
 

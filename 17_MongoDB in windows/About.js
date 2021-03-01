@@ -123,7 +123,7 @@ db.collection("Persons").updateMany(
 
 
 // ================================
-//link => https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#deleteMany
+
 db.collection("Persons").countDocuments({ age: 23 }, { limit: 1 }, (err, user) => {
 	if (err) {
 		console.log(err)
@@ -151,6 +151,7 @@ db.collection("Persons").findOneAndDelete({ age: 23 }, (err, user) => {
 })
 
 // ================================
+//link => https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#deleteMany
 db.collection("Persons").deleteMany(
 	{ avto: false }
 )

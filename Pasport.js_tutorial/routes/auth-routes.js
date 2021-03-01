@@ -18,10 +18,13 @@ router.get('/logout', (req, res) => {
 // 	 res.send('logging in with Google');
 // });
 router.get('/google', passport.authenticate('google', {
-	scope: ['profile']
+	scope: ['profile'],
+	failureRedirect:"/login",
+	successRedirect:"/"
 }));
 
 router.get('/google/redirect', passport.authenticate('google'),(req, res) => {
+	console.log('objects=============================')
 	res.send('callbackURL');
 });
 

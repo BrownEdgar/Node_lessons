@@ -32,8 +32,8 @@ router.post('/', async(req, res)=> {
 	if (!validPass)  {
 		console.log("invalid password");
 		return res.status(400).send("invalid password")};
-console.log("Log in!");
-res.redirect('api/addbooks');
+	console.log("Log in!");
+	res.redirect('api/addbooks');
 	//CREATE A TOKEN
 	const token = jwt.sign({_id:user._id}, process.env.TOKEN_SECRET);
 	res.header('auth-token',token).send(token);

@@ -15,7 +15,7 @@ const user = {
   passwordHash,
   id: 1
 }
-for
+
 
 function findUser (username, callback) {
   if (username == user.username) {

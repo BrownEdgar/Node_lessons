@@ -14,13 +14,19 @@ app.use('/public/css', express.static(__dirname + '/public/css'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }))
-
+app.use(express.json())
 const homeRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const testRouter = require('./routes/test');
+const futbolistRouter = require('./routes/futbolist');
+const girqRouter = require('./routes/Griq');
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/login", loginRouter);
+app.use("/test", testRouter);
+app.use("/fotbolist", futbolistRouter);
+app.use("/girq", girqRouter);
 
 // Use connect method to connect to the server
 async function start() {
@@ -29,7 +35,6 @@ async function start() {
 			'mongodb+srv://Edgar:sebastian25@sebocl.bhoqm.mongodb.net/klaus?retryWrites=true&w=majority',
 			{
 				useNewUrlParser: true,
-				useFindAndModify: false,
 				useUnifiedTopology: true 
 			}
 		)

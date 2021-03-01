@@ -53,7 +53,7 @@ router.post("/create", [upload.single('cv'),cb1], async (req, res) => {
 			console.log('newUser', newUser)
 			let r = await newUser.save(function (error) {
 				if (error) {
-					console.log("mtav", error.errors.password);
+					console.log("mtav", error.errors);
 					let message = error.message.slice(error.message.indexOf(":") + 1)
 					res.render("index", { error: JSON.stringify(message,null, 2) })
 				}else{

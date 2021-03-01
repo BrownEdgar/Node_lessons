@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt');
+var validator = require('validator');
 const Userschema = new Schema({
 	name: {
 		type: String,
@@ -11,7 +12,12 @@ const Userschema = new Schema({
 	},
 	age: {
 		type: Number,
-		required: true
+		required: true,
+		validate(value) {
+			if (!validator.isNumeric(value)) {
+				throw new Error("validate run: ", value + "is invalid value")	
+		}
+		}
 	},
 	email: {
 		type: String,
