@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const expresslayouts = require('express-ejs-layouts')
 
+const models = require("./models");
 
 
 var app = express();
@@ -15,18 +16,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-const homeRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const loginRouter = require('./routes/login');
-const testRouter = require('./routes/test');
-const futbolistRouter = require('./routes/futbolist');
-const girqRouter = require('./routes/Griq');
-app.use("/", homeRouter);
-app.use("/users", usersRouter);
-app.use("/login", loginRouter);
-app.use("/test", testRouter);
-app.use("/fotbolist", futbolistRouter);
-app.use("/girq", girqRouter);
+const sevices = require("./services");
+
+const wineRouter = require('./routes/Wine');
+app.use("/wine", wineRouter);
+
+
+app.models = {
+	wines: models.wine
+}
+
+app.services = {
+	wines: new (sevices.wine)(app.models),
+};
 
 // Use connect method to connect to the server
 async function start() {

@@ -1,3 +1,3 @@
-module.exports= {
-	FutbolistModel: require('./FutbolistModel')
+module.exports = {
+	wine: require('./Wine'),
 }

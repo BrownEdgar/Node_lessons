@@ -10,7 +10,12 @@ router.post('/', controller.addSingleWine);
 
 router.get('/multiple', controller.getWinesByMultipleFields); 
 
-router.get('/:winename', controller.getWineByName); 
+router.get('/winename/:winename', controller.getWineByName); 
+router.get('/company/:companyname', controller.getWineByCompanyName); 
+router.get('/expensive', controller.getMostExpensiveWine); 
+router.get('/increase/:sum', controller.priceIncrease); 
+router.get('/random', controller.randomWine); 
+
 
 
 module.exports = router
