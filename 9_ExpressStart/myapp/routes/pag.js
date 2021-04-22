@@ -5,10 +5,12 @@ var router = express.Router();
 router.get('/', function (req, res) {
 	console.log('pag start');
 
-	res.render('test', {
+	res.render('test', 
+	{
 		title: 'Express',
 		classname1:"box",
-		bool:true });
+		bool:true }
+	);
 });
 
 module.exports = router;

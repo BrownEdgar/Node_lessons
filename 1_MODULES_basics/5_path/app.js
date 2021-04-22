@@ -1,5 +1,5 @@
 const path = require('path');
-var fs = require('fs');
+const fs = require('fs');
 
 /*  path մոդուլը տրամադրում է գործիքներ Ֆայլերի ուղիների և դիրեկտորյաների հետ աշխատանքի համար */
 

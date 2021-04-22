@@ -11,6 +11,8 @@ md "\data\db"
 
 comands
 show dbs 
+db.books.insert({"name": "mongoDB data"})
+show collections
 use SebastianDB
 db.createCollection("users")
 db.newCollection.drop() -jnjum e db-i 'newCollection' anunov colekcian, ete verjinna db-n el hetna jnjvum
@@ -18,3 +20,7 @@ db.newCollection.drop() -jnjum e db-i 'newCollection' anunov colekcian, ete verj
 
 
 6.db.users.insertOne({'name':"Jhon","email":"example.ru"}); avelacnum e colekciayum tvyalner
+
+
+
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/

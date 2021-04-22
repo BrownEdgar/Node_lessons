@@ -58,6 +58,6 @@ router.post('/update', function (req, res, next) {
 });
 router.post('/delete', function (req, res, next) {
 	const id = req.body.id;
-	UserData.findByIdAnnRemove(id).exec();
+	UserData.findByIdAndRemove(id).exec();
 });
 module.exports = router;

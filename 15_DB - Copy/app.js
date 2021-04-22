@@ -18,27 +18,28 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 //IMport Routes
 var postsRouter = require('./routes/posts');
-
+var usersRouter = require('./routes/users');
 app.use('/posts', postsRouter);
+app.use('/users', usersRouter);
 
 
 
 // 'mongodb://localhost:27017/FirstDB'
 
-mongoose.connect('mongodb://localhost:27017/klaus',{useNewUrlParser:true},(err) => {
-if (err) {
-	console.log(err);
-}
-	console.log("Coneccted to DB")	
+mongoose.connect(
+	'mongodb://localhost:27017/klaus',
+	{ useNewUrlParser: true,  useUnifiedTopology: true},
+	(err) => {
+		if (err) {
+		console.log(err);
+		}
+		console.log("Coneccted to DB")	
 });
+
 
 app.get('/', function (req, res) {
 	res.send("Home Page...");
 });
-
-
-
-
 
 
 app.listen(3000, function () {

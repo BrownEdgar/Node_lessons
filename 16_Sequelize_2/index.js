@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
  
-// определяем объект Sequelize
+//  Sequelize Օբյեկտի Ստեղծում
 const sequelize = new Sequelize("lilo", "root", "xxx", {
   dialect: "mysql",
   host: "localhost",
@@ -15,7 +15,7 @@ const sequelize = new Sequelize("lilo", "root", "xxx", {
   }
 });
  
-// определяем модель User
+//  User Մոդելի ստեղծում
 const User = sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER,
@@ -35,7 +35,7 @@ const User = sequelize.define("user", {
  
 app.set("view engine", "hbs");
  
-// синхронизация с бд, после успшной синхронизации запускаем сервер
+// 
 sequelize.sync().then(()=>{
   app.listen(3000, function(){
     console.log("Сервер ожидает подключения...");

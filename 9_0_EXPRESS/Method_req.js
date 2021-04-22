@@ -3,7 +3,7 @@ const app = express();// darnum e mer servery
 const port = 3000;
 
 app.get('/', (req, res) => {
-	res.send("sebo");
+	// res.send("sebo");
 	console.log("method: " + req.method);
 //query պահպանում է իր մեջ URL հարցումները օբյեկտի նման
 console.log("query: " + req.query);

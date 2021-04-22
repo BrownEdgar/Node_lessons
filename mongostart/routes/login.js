@@ -14,8 +14,6 @@ router.post('/', async (req, res) => {
 	console.log('login run!!!')
 	console.log('req.body', req.body);
 
-
-
 	const { login, password } = req.body;
 	
 	Userschema.findOne({ name: login }, { _id:0}, async  (err, user) => {
@@ -56,11 +54,7 @@ router.post('/', async (req, res) => {
 					}});
 			}
 		}
-	
 	}).select('name  password');
-
-
-
 })
 
 module.exports = router

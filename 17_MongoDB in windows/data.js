@@ -1,4 +1,5 @@
-db.createCollection("users")
+db.createCollection("users");
+
 db.users.insertOne({
 	'name':"Jhon",
 	"email":"example.ru",
@@ -45,7 +46,15 @@ db.users.find({age:22},{_id:0});
 db.users.find({age:22,email:"example2@mail.ru"},{_id:0});
 
 // kveradardzni kam age=22 kam email = example2@mail.ru usernery 
-db.users.find({$or: [ {age:22}, {email:"example2@mail.ru"} ]},{_id:0});
+db.users.find(
+	{$or: 
+		[ 
+			{age:22},
+			{email:"example2@mail.ru"} 
+		]
+	},
+	{_id:0}
+	);
 
 
 /*$eq:38 == "equal38" ajsinqn = e 38-i nuynn e inch {age:38}*/
@@ -156,3 +165,13 @@ Model.updateMany()
 Model.updateOne()
 
 
+db.users.insertMany([
+	{name: "Karen", age:24, city:"erevan"},
+	{name: "Karine", age:18, city:"erevan"},
+	{name: "Mher", age:24, city:"vanadzor"},
+	{name: "Garegin", age:41, city:"erevan"},
+	{name: "Tigran", age:54, city:"gyumri"},
+	{name: "Vahe", age:30, city:"vanadzor"},
+	{name: "Lilit", age:44, city:"gyumri"},
+	{name: "Ani", age:29, city:"erevan"},
+])

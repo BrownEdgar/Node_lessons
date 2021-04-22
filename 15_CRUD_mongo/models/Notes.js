@@ -24,7 +24,7 @@ module.exports = mongoose.model("Notes", NotesSchema);
 // 	email: {
 // type: String,
 // 	max: 255,
-// 		min: 6
+// 	min: 6
 // 	},
 // gender: {
 // 	type: String,

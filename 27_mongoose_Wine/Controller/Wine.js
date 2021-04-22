@@ -25,11 +25,11 @@ class WineController {
 	};
 	// ------------------------------------------
 	async getWineByName(req, res) {
-		
-		let { fieldname } = req.params;
-		console.log('winename', fieldname)
+		console.log("koosakdok");
+		let { winename } = req.params;
+		console.log('winename', winename)
 		try {
-			let wname = await req.app.services.wines.getWineByName(res, fieldname );
+			let wname = await req.app.services.wines.getWineByName(res, winename );
 			res.status(200).json({ message: wname });
 		} catch (err) {
 			res.status(500).send(err.message);
@@ -86,6 +86,37 @@ class WineController {
 			res.status(500).send(err.message);
 		}
 	};
+	// ------------------------------------------
+	isLogin(req, res, next) {
+	const authHeader = req.get('Authorization');
+	if (!authHeader) {
+		return res.status(401).json({
+			message: 'Token not Provided !'
+		})
+	}
+	const token = authHeader.replace('Bearer ', '');
+	try {
+		const payload = jwt.verify(token, process.env.SESSION_SECRET);
+		if (payload.type !== 'access') {
+			return res.status(401).json({
+				message: 'Token expired'
+			})	
+		}
+	} catch (e) {
+		if (e instanceof jwt.TokenExpiredError) {
+			return res.status(401).json({
+				message: 'Token expired'
+			})
+		}
+		if (e instanceof jwt.JsonWebTokenError) {
+			return res.status(401).json({
+				message: `invalid Token`
+			})
+		}
+	}
+	next();
+}
+
 }
 
 module.exports = WineController;

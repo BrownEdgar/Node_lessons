@@ -7,6 +7,26 @@ let buffer2 = fs.createWriteStream(__dirname + "/writeME.txt");
 buffer.pipe(buffer2);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const server = http.createServer((req, res) => {
   console.log('Начало обработки запроса');
 

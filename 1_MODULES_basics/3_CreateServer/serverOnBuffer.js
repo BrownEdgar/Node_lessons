@@ -1,12 +1,28 @@
 const fs = require('fs'); 
 const http = require('http'); 
+// let port = 8083;
+
+// const server = http.createServer(function(req,res){
+// 	res.writeHead(200, { "Content-Type": "text/html" });
+// 	let buffer = fs.createReadStream(__dirname, "./index.html", "utf8");
+// 	res.write("<h1>HEllo node</h1>")
+// })
+// server.listen(port, ()=> console.log("server is running"))
+
+
+
+
+
+
+
+
 let port = 8083;
 
 const server = http.createServer((req, res) => { 
 	console.log("noric mtav");
 	res.writeHead(200, {"Content-Type": "text/html"});
 	let buffer = fs.createReadStream(__dirname + "/index.html","utf8");	
-	res.write("avelacum");	
+		
 	buffer.pipe(res);
 
 });

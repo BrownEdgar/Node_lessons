@@ -3,14 +3,14 @@ const app = express();// darnum e mer servery
 const route = express.Router();
 const port = 3000;
 
-/*
-'/ab?cd' - acd и abcd.
-'/ab+cd' - abcd, abbcd, abbbcd и т.д.
-'/ab*cd' - abcd, abxcd, abRABDOMcd, ab123cd и т.д.
-'/ab(cd)?e' -  /abe и /abcde.
-/a/ -  любой элемент с “a” в имени маршрута.
-/.*fly$/ - fly verjavorutyun
-*/
+
+// '/ab?cd' - abc и abcd.
+// '/ab+cd' - abcd, abbcd, abbbcd и т.д.
+// '/ab*cd' - abcd, abxcd, abRABDOMcd, ab123cd и т.д.
+// '/ab(cd)?e' -  /abe и /abcde.
+// /a/ -  любой элемент с “a” в имени маршрута.
+// /.*fly$/ - fly verjavorutyun
+
 
 
 app.route('/book')
