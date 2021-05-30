@@ -160,3 +160,21 @@ db.collection("Persons").deleteMany(
 db.users.deleteMany(
 	{ age: { $gt: 20 }, age: { $lt: 30 } },
 )
+
+
+//Կոնկրետ "title" որևիցե մասի հետ համընկման դեպքում 
+// Օր․՝ "Lorem" => կգտնի բոլոր պոստերը, որոնց մեջ կա "Lorem" բառը
+// Օրինակը  => H:\NODE LESSON\17_MongoDB in windows\mongooseStart\myapp\routes/post.js
+const posts = await Post.find(
+	{ 
+	title: {$regex: `${searchValue}`, $options: "i"}
+	}, 
+	function (err, docs) {
+		if (err) console.log(err);
+		console.log(docs);	
+	});
+
+//kam 
+const s = 'cool'
+const regex = new RegExp(s, 'i') // i for case insensitive
+Post.find({ title: { $regex: regex } })

@@ -3,12 +3,11 @@ const messageContainer = document.getElementById('message-container')
 const messageForm = document.getElementById('send-container')
 const messageInput = document.getElementById('message-input')
 
-const name = prompt('What is your name?')
+const name = prompt('What is your name?', "Edgar")
 appendMessage('You joined')
 socket.emit('new-user', name)
 
 socket.on('chat-message', data => {
-  console.log('data', data)
   appendMessage(`${data.name}: ${data.message}`)
 })
 // երբ "user"-ը մուտք է անում իր անունը մտնելով չատ աշխատում է այս ֆունկցիան
@@ -32,6 +31,9 @@ messageForm.addEventListener('submit', e => {
   socket.emit('send-chat-message', message);
   messageInput.value = '';
 })
+
+
+
 // Ամեն մի "message"-ի համար սարքում ենք նոր "div" մեջը տեղադրելով մեր "message"-ը
 function appendMessage(message) {
   const messageElement = document.createElement('div');

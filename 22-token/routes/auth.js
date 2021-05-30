@@ -7,7 +7,9 @@ const { registerValidation, loginValidation } = require('../validation');
 
 
 
-
+router.get('/register', async (req, res) => {
+	res.send("register page")
+})
 
 
 router.post('/register', async (req, res) => {
@@ -29,6 +31,7 @@ router.post('/register', async (req, res) => {
 		password: hashPassword,
 	});
 	try {
+		
 		const savedUSer = await user.save();
 		res.send({ user: user._id });
 	} catch (error) {
@@ -48,10 +51,9 @@ router.post('/login', async (req, res) => {
 	if (!validPass) res.status(400).send("invalid password");
 
 	//CREATE A TOKEN
-	const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-	res.header('auth-token', token).send(token);
+	const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {expiresIn: "30s"});
+	res.header('authorization', token).send(token);
 
-	res.end("Loggen in");
 
 });
 module.exports = router;

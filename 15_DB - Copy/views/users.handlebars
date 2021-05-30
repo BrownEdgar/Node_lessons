@@ -1,0 +1,20 @@
+
+{{#if error}}
+<h1>Somethinf is wrong!</h1>
+
+{{else}}
+<h1>Welcom to the Users page</h1>
+
+<ul class="people_list">
+	{{#each users}}
+	{{#each this}}
+	
+	<p>@key: {{@key}}</p>
+	<p>{{.}}</p>
+	
+	{{/each }}
+	<hr>
+	{{/each }}
+</ul>
+
+{{/if }}

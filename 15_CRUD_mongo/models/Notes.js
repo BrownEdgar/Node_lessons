@@ -30,3 +30,15 @@ module.exports = mongoose.model("Notes", NotesSchema);
 // 	type: String,
 // 		enum: ["male", "female"]
 // },
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+		
+	
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+</html>

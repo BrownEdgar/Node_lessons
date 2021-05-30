@@ -41,5 +41,5 @@ $(function () {
 	socket.on('news', function (data) {
 		console.log('news', data);
 	})
-
 });
+

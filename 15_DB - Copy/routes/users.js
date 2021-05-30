@@ -5,7 +5,6 @@ const Client = require('../models/Users');
 
 router.get("/", async (req,res) => {
 	try {
-		
 		let allUsers = await Client.find();
 		res.json(allUsers)
 	} catch (error) {

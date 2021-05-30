@@ -21,7 +21,7 @@ app.post('/contact', (req, res) => {
 	const { email, password } = req.body;
 	if (!email || !password) {
 		isValid = false;
-		message = `Please fill alll fields`
+		message = `Please fill all fields`
 		res.render('home', {isValid,message });
 		return;
 	}

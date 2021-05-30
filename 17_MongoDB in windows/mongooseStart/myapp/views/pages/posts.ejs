@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../partals/head.ejs'); %>
+</head>
+<body>
+<%- include('../partals/sectionTitle.ejs', {title: "All posts"}); %>
+	<div class="searchPosts">
+		<div class="add">
+			<h4><a href="/posts/create">Add posts</a></h4>
+		</div>
+	<form action="/posts/search" method="post">
+		<input type="text" value="" name="searchValue" >
+		<input type="submit" value="search" id="search">
+	</form>
+	</div>
+<div class="flex__container">
+	<% if (posts.length === 0) { %>
+	 <pre> 0 posts found :)</pre>
+	<% } %>
+	<% posts.forEach(element=> { %>
+		<a href="/posts/<%= element.id %>">
+			<div class="flex__container__item">
+
+				<h4><%= element.date.toDateString() %></h4>
+				<div class="flex__container__item_img">
+					
+					<img src='../<%= element.img %>' alt='girl'>
+				</div>
+				<div class="post__title">
+					<h1>
+						<%= element.title %>
+					</h1>
+				</div>
+			</div>
+		</a>
+	<% }); %>
+</div>
+</body>
+
+</html>
+

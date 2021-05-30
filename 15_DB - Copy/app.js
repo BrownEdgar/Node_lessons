@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 //IMport Routes
-var postsRouter = require('./routes/posts');
-var usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
+const usersRouter = require('./routes/users');
 app.use('/posts', postsRouter);
 app.use('/users', usersRouter);
 

@@ -9,7 +9,7 @@ dotenv
 ### Քայլերի հերթականություն
 1․ http://localhost:3000/api/user/register էջը բացել ռեգիստռացիա լինել [name, email, password] դաշտերով ։ Valid տվյալներ մուտքագրելուց հետո ստուգել գրանցումը "Mongo Compass" User DB—ում․․․
 2.http://localhost:3000/api/user/login էջում մուտք գորշել [email, password] դաշտերով
-3. որպես հաջող մուտքի պատասխան կստանաք "token" "routes/auth.js" տող 50
+3. որպես հաջող մուտքի պատասխան կստանաք "token" "routes/auth.js" տող 53
 4․ Այն  պետք է մեզ որպեսզի կարողանաք տվյալներ ստանալ 
 GET http://localhost:3000/api/posts էջից, եթե տեսնում եք "Invalid Token" արտահայտությունը ուրեմն "token"-ը սխալ է հակառակ դեպքում սերվերը վերադարձնում է պատասխան նման Օրինակով․՝
 {
