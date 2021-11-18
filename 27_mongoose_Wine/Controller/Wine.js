@@ -25,7 +25,7 @@ class WineController {
 	};
 	// ------------------------------------------
 	async getWineByName(req, res) {
-		console.log("koosakdok");
+		
 		let { winename } = req.params;
 		console.log('winename', winename)
 		try {

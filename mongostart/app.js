@@ -6,7 +6,7 @@ const expresslayouts = require('express-ejs-layouts')
 const models = require("./models");
 
 
-var app = express();
+const app = express();
 app.use(expresslayouts);
 app.set("layout", './layouts/main');
 

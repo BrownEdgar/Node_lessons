@@ -14,7 +14,8 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const user = await new User(req.body.user).save()
+  const user = await new User(req.body.user).save();
+	console.log(`user`, req.body.user)
   res.send(serializer(user))
 })
 

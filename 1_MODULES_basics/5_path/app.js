@@ -29,5 +29,11 @@ const fs = require('fs');
 //".." - մեկ հարթակ վերև։ Վերջի մասնիկը չի արտածի․ այս դեպքում "/mas2"-ը
 //"../․․" - երկու հարթակ վերև։
 
+console.log(path.basename(__filename)); // app.js
+console.log(path.dirname(__filename)); // F:\NODE LESSON\1_MODULES_basics\5_path
+console.log(path.extname(__filename)); // .js
+console.log(path.join(__dirname, "test", "index.html")); // ...\5_path\test\index.html
+
+
 console.log(path.parse(__filename)); // վերծանում է ֆայլի ուղին վերադարձնելով մեզ օբյեկտ
 

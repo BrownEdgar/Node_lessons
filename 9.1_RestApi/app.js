@@ -28,13 +28,13 @@
 // 	products.push(req.body);
 // 	res.json(req.body);
 // })
-// app.put('/products/:id', function(req, res){
-// 	const product = products.find(p => p.id === +req.params.id);
-// 	const productIndex = products.indexOf(product);
-// 	const newProduct = { ...product, ...req.body };
-// 	products[productIndex] = newProduct;
-// 	res.json(newProduct);
-// });
+app.put('/products/:id', function(req, res){
+	const product = products.find(p => p.id === +req.params.id);
+	const productIndex = products.indexOf(product);
+	const newProduct = { ...product, ...req.body };
+	products[productIndex] = newProduct;
+	res.json(newProduct);
+});
 
 // app.delete('/products/:id', function(req, res){
 // 	const product = products.find(p => p.id === +req.params.id);

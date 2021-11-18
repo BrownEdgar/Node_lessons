@@ -1,0 +1,45 @@
+<div class="container ">
+	<h1>Add Products</h1>
+
+	<span></span>
+
+	<form action="/addproduct" method="POST" enctype="multipart/form-data" id="mainForm">
+		<select name="type" id="selecttype">
+			<option value="" selected hidden></option>
+			<option value="meat">meat</option>
+			<option value="vegetable">vegetable</option>
+			<option value="householdgoods">householdgoods</option>
+			<option value="dairy">dairy</option>
+		</select>
+
+
+		<label for="name">
+			<p>Name</p>
+			<input type="text" id="name" name="name">
+		</label>
+		<label for="price">
+			<p>price</p>
+			<input type="number" id="price" name="price">
+		</label>
+		<label for="dom">
+			<p>DOM</p>
+			<input type="date" id="dom" name="dom">
+		</label>
+		<label for="expiryDate">
+			<p>expiryDate</p>
+			<input type="date" id="expiryDate" name="expiryDate">
+		</label>
+
+		<label for="quantity">
+			<p>quantity</p>
+			<input type="number" id="quantity" name="quantity">
+		</label>
+		<label for="productImage">
+			<p>quantity</p>
+			<input type="file" id="productImage" name="productImage">
+		</label>
+
+		<input type="submit" value="add product" >
+	</form>
+
+</div>

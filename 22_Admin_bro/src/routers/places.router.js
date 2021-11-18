@@ -1,7 +1,7 @@
-const { Router, } = require('express')
-const paginate = require('../services/paginate.service')
-const Place = require('../models/place.model')
-const City = require('../models/city.model')
+const { Router, } = require('express');
+const paginate = require('../services/paginate.service');
+const Place = require('../models/place.model');
+const City = require('../models/city.model');
 
 const router = new Router()
 
@@ -25,10 +25,12 @@ router.get('/:placeId', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+	console.log(`req.body.place`, req.body)
   const place = await new Place({
     userId: req.params.userId,
-    ...req.body.place
+    ...req.body
   }).save()
+  console.log(`place`, place)
   res.send(serializer(place))
 })
 

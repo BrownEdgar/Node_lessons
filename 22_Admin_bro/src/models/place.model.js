@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose')
 const Place = model('Place', {
   name: {
     type: String,
-    required: true,
+	required: true,
   },
   location: {
     lat: Number,
