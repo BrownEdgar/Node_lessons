@@ -8,7 +8,8 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-app.use(bodyParser.json());// ete chlini post methodov ches kara json formati data poxances
+app.use(bodyParser.json());
+//կարևոր տող
 app.use("/uploads",express.static('uploads'));
 
 //CORS
@@ -56,5 +57,5 @@ app.use((error, req, res, next) => {
 })
 
 module.exports = app;
-const fileupload = require("express-fileupload");
-app.use(fileupload());
+// const fileupload = require("express-fileupload");
+// app.use(fileupload());

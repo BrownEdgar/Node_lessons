@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<%- include('../partals/head.ejs'); %>
+</head>
+
+<body>
+	<%- include('../partals/sectionTitle.ejs', {title: `Post N-${post._id.toString().slice(0, 5).concat("...")}`}); %>
+
+	<div class="flex__container">
+		<div class="add">
+			<h4><a href="/posts">all posts</a></h4>
+		</div>
+			<div class="flex__container__item">
+
+				<h4><%= post.date.toDateString() %></h4>
+				<div class="flex__container__item_img">
+
+						<img src='../<%= post.img %>' alt='girl'>
+				</div>
+				<div class="post__title">
+					<h1>
+						<%= post.title %>
+					</h1>
+					<p>
+						<%= post.discription %>
+					</p>
+				</div>
+			</div>
+	</div>
+</body>
+
+</html>

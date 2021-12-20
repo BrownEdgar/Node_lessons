@@ -8,39 +8,49 @@ app.engine("handlebars", expbs());
 app.set("view engine", "handlebars");
 
 const obj= [
-	{id:1, name: "a",age:18,regeon:"usa"},
-	{id:2, name: "a",age:32,regeon:"Russia"},
-	{id:3, name: "a",age:22,regeon:"usa"},
-	{id:4, name: "a",age:18,regeon:"Armenia"},
-	{id:5, name: "a",age:64,regeon:"Russia"},
-	{id: 6, name: "a", age: 23, regeon:"Armenia"},
-	{id: 7, name: "a", age: 16, regeon:"Russia"},
-	{id:8, name: "a",age:10,regeon:"Denmark"},
-	{id: 9, name: "a", age: 25, regeon:"Armenia"},
+	{id:1, name: "Armen",age:18,},
+	{id:2, name: "Avet",age:32,regeon:"Russia"},
+	{id:3, name: "Karen",age:22,regeon:"usa"},
+	{id:4, name: "hamlet",age:18,regeon:"Armenia"},
+	{id:5, name: "Liana",age:64,regeon:"Russia"},
+	{id: 6, name: "Lilith", age: 23, regeon:"Armenia"},
+	{id: 7, name: "Anahit", age: 16, regeon:"Russia"},
+	{id:8, name: "Gayane",age:10,regeon:"Denmark"},
+	{id: 9, name: "Axtamar", age: 25, regeon:"Armenia"},
 ]
 
 app.get('/', (req, res) => {
 	res.render('home', {
 		title:'Home Page',
 		name:"home",
-		bool:false
+		bool:true,
+		users: obj
 
 		});
 });
+app.get('/users/:id', (req, res) => {
+	const {id} = req.params;
+	const user = obj.find(user => user.id === +id);
+	console.log(user);
 
+	res.render("users", {
+		user: user.name,
+		id: user.id
+	})
+})
 
 app.get('/about', (req, res) => {
 	res.render('about',{
 		title:'About Page',
 		 name:"About",
-		 age: 30,
+		 age: user.age || 30,
 		 description:" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad sint vero natus soluta fugit, vitae veniam incidunt."
 		});
 });
 
 app.get('/dashboard', (req, res) => {
 	res.render('dashboard',{
-		isnameValid:false
+		isnameValid:true
 
 		});
 });

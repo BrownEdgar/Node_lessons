@@ -25,9 +25,10 @@ app.use('/login',routerLogValidation);
 
 
 mongoose.connect("mongodb://localhost:27017/Notesdb",
-	{ useUnifiedTopology: true,
+	{ 
+		useUnifiedTopology: true,
 		useNewUrlParser: true 
-},
+	},
 	(err)=> console.log(err));
 
 

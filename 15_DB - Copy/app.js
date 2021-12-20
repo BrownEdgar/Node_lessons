@@ -12,20 +12,46 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("dotenv/config");
 
+
+const models = require('./models')
+const sericies = require('./Servicies')
+
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(bodyParser.json());
+
 //IMport Routes
-const postsRouter = require('./routes/posts');
-const usersRouter = require('./routes/users');
-app.use('/posts', postsRouter);
-app.use('/users', usersRouter);
+// const postsRouter = require('./routes/posts');
+// const usersRouter = require('./routes/users');
+// const clients = require('./routes/testRoute');
+// const bookRouter = require("./routes/bookRouter")
+const ROUTERS = require("./routes")
+
+app.use('/posts', ROUTERS.Post);
+app.use('/users', ROUTERS.UserRouter);
+app.use('/clients', ROUTERS.Client);
+app.use('/book', ROUTERS.BookRouter);
+
+
+app.models = {
+	books: models.Book
+}
+
+app.sericies = {
+	books: new(sericies.books)(app.models)
+}
+
+
+
+
+
+
+
 
 
 
 // 'mongodb://localhost:27017/FirstDB'
-
 mongoose.connect(
 	'mongodb://localhost:27017/klaus',
 	{ useNewUrlParser: true,  useUnifiedTopology: true},

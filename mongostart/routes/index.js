@@ -19,10 +19,15 @@ var storage = multer.diskStorage({
 	}
 })
 
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage });
+
+
+
 router.get('/', async (req, res) => {
 	res.render("index", {error:""});
 })
+
+
 function cb1(req,res,next) {
 	let u = Userschema.findOne({ email: req.body.email})
 	.then(result=> {

@@ -24,3 +24,4 @@ db.newCollection.drop() -jnjum e db-i 'newCollection' anunov colekcian, ete verj
 
 
 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+https://docs.atlas.mongodb.com/getting-started/

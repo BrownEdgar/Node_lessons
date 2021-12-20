@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partals/head.ejs'); %>
+
+</head>
+<body>
+	<h1> <%= title %>   </h1>
+
+		<% skills.forEach(element => {   %>
+			<p><%= element %> </p>
+		<%  }); %>
+
+		<% if (bool) { %>
+		 <h1>WE have <%= skills.length %> data</h1>
+		<% }else{%>
+			<h1>We dont have any data yet!</h1>
+		<% } %>
+</body>
+</html>

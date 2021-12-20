@@ -1,0 +1,162 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+}
+
+body {
+	color: aliceblue;
+	background: rgb(3, 47, 33);
+	background: linear-gradient(90deg, rgba(3, 47, 33, 1) 54%, rgba(122, 62, 9, 1) 54%);
+}
+
+.main {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: stretch;
+	height: 100vh;
+	width: 100%;
+	background-color: #fff;
+
+}
+
+.bgImage {
+	background-image: url("https://images.unsplash.com/photo-1556745753-b2904692b3cd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1266&q=80");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center right;
+	position: relative;
+	flex-basis: 60%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding-left: 50px;
+}
+
+.bgImage::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	background-color: #007bff9d;
+}
+
+.bgImage__Box {
+	width: 70%;
+	position: relative;
+	z-index: 10;
+}
+
+.bgImage__Box h1 {
+	font-size: 3rem;
+}
+
+.bgImage__Box p {
+	font-size: 2rem;
+	margin-bottom: 40px;
+}
+
+.bgImage__Box button {
+	width: 200px;
+	border-radius: 20px;
+	background-color: #343A40;
+	color: #fff;
+	font-weight: 500;
+	font-size: 20px;
+	border: none;
+	padding: 15px;
+}
+
+/* main__form */
+
+.main__form {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	flex-basis: 40%;
+	background-color: #000;
+}
+
+.main__form h1 {
+	font-weight: 400;
+	letter-spacing: 3px;
+}
+
+#mainForm {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-around;
+	align-items: center;
+	padding: 25px;
+	background-color: rgba(0 0 0 /90%);
+	width: 100%;
+}
+
+#mainForm input {
+	width: 90%;
+	border-radius: 10px;
+	display: block;
+	margin-top: 25px;
+	padding: 15px 20px;
+	background-color: #232A31;
+	border: none;
+	transition: 0.2s;
+	color: #547074;
+}
+
+#mainForm input:focus {
+	border: none;
+	outline: none;
+	outline-width: 1px;
+	outline-style: solid;
+	outline-color: #007BFF;
+	outline-offset: none;
+	transition: 0.5s;
+}
+
+input[type="submit"] {
+	background-color: #007BFF !important;
+	color: #fff !important;
+	font-weight: 300;
+	font-size: 1.5rem;
+	letter-spacing: 2px;
+}
+
+span#special {
+	position: relative;
+	color: grey;
+	padding: 20px;
+}
+
+span#special::before {
+	content: "";
+	position: absolute;
+	width: 90px;
+	height: 1px;
+	background-color: grey;
+	left: 94%;
+	top: 50%;
+}
+
+span#special::after {
+	content: "";
+	position: absolute;
+	width: 90px;
+	height: 1px;
+	background-color: grey;
+	right: 94%;
+	top: 50%;
+}
+
+.aBloc a {
+	text-decoration: none;
+	color: #007BFF;
+	font-size: 20px;
+	font-weight: 500;
+}

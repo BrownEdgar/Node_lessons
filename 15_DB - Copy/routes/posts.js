@@ -13,14 +13,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', (req, res) =>{
+router.post('/', async (req, res) =>{
 	const post = new Post({
 		title:req.body.title,
 		discription: req.body.discription
 	});
 
-	post.save();//Եթե այսպես թողնենք հարցումը երբեք չի ավարտվի "pannding"
-	res.redirect('/posts');
+	 post.save();//Եթե այսպես թողնենք հարցումը երբեք չի ավարտվի "pannding"
+	res.end("ok")
 });
 
 
@@ -63,4 +63,17 @@ router.delete('/:id', async function (req, res) {
 	}).catch(err => res.json({err}))
 
 });
+
+router.delete('/all/:title', async function (req, res) {
+	const title = req.params.title;
+	Post.deleteMany({ title })
+		.then(data => {
+			res.json({
+				message: data,
+				result: "Posty jnjvac e"
+			})
+		}).catch(err => res.json({ err }))
+
+});
+
 module.exports = router;

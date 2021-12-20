@@ -55,7 +55,8 @@ db.users.find(
 	},
 	{_id:0}
 	);
-
+	//forEach !
+db.collection("users").find().forEach(function (myDoc) { console.log("name: " + myDoc.name); });
 
 /*$eq:38 == "equal38" ajsinqn = e 38-i nuynn e inch {age:38}*/
 /*$lt:38 = "less then 38" tariqy poqr e qan 38-y, ev sortavorac en*/
@@ -175,3 +176,60 @@ db.users.insertMany([
 	{name: "Lilit", age:44, city:"gyumri"},
 	{name: "Ani", age:29, city:"erevan"},
 ])
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+let x = db.collection("users").find(
+	{ "age": 66 }
+).skip(3);
+x.forEach(elem => console.log(elem))
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+db.collection("users").find(
+	{ "age": { $lte: 50 } }
+).sort({ _id: 1 })
+	.limit(3)
+	.forEach(student => {
+		console.log(student.name);
+	});
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+let x = db.collection("users").find().sort({ age: -1 });
+x.forEach(elem => console.log(elem))
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+db.collection("users").findOneAndReplace(
+	{ "age": { $lt: 40 } },
+	{ "newProperty": "Observant Badgers", "age": 20 },
+	{ sort: { "score": 1 } }
+)
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+db.collection("users").findOneAndUpdate(
+	{ "age": 41 },
+	{ $set: { "name": "new name" }, $inc: { "age": 5 } },
+	{ sort: { "age": 1 } }
+)
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+db.collection("users").findOneAndUpdate(
+	{ "age": 61 },
+	{ $set: { "name": "new name" }, $inc: { "age": 5 } },
+).then((data) => {
+	console.log({ data: data.value })
+}).catch(err => console.error("err:", err))
+
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+//Եթե "age" դաշտը փոքր լինի 50-ից ապա կփոխի, հակառակ դեպքում ոչինչ չի անի
+
+db.collection("users").updateOne(
+	{
+		email: "Gexam@mail.ru"
+	},
+	{ $max: { age: 50 } }
+)

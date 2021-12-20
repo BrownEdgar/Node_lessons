@@ -6,3 +6,13 @@
 <p>My home page is not!!! worcking!!!</p>
 
 {{/if }}
+
+{{#each users}}
+	{{#if this.regeon }}
+	<div>
+		<p>info: {{this.name}}</p>
+	</div>
+	{{/if}}
+
+
+{{/each}}

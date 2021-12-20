@@ -3,14 +3,16 @@ const router = express.Router();
 const Product = require('../models/Products');
 const mongoose = require("mongoose");
 const path = require('path');
-const multer = require("multer"); // https://www.youtube.com/watch?v=srPXMt1Q0nY video
+const multer = require("multer"); 
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, './uploads/');
+		//Այստեղ նշում ենք պապկի անունը(հասցեն)
+		cb(null, './uploads');
 	},
 	filename: function (req, file, cb) {
-		cb(null,  file.originalname);
+			//Այստեղ նշում ենք Ֆայլլի անունը  անունը
+		cb(null, file.originalname );
 	}
 });
 
@@ -46,8 +48,12 @@ router.get('/', function (req, res, next) {
 			})
 		});
 });
+
+
+// name = "productImage" input պետքա լինի էջում կամ postman => body => form
 router.post('/', upload.single('productImage'), function (req, res, next) {
-	console.log('req.file.path', req.file.path)
+	console.log('req.file', req.file);
+	console.log('req.file.path', req.file.path);//uploads\test1.jpg
 	console.log('req.file.path', req.body.name)
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
@@ -156,3 +162,8 @@ router.delete('/:productId', function (req, res, next) {
 });
 
 module.exports = router;
+
+
+
+
+// https://www.youtube.com/watch?v=srPXMt1Q0nY video
