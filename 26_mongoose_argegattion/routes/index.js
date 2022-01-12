@@ -16,7 +16,6 @@ router.post("/create", async (req, res) => {
 		age, 
 		email
 	})
-	console.log('newUser', newUser)
 	newUser.save();
 	res.redirect("/")
 })
