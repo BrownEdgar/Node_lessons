@@ -14,7 +14,7 @@ app.set("view engine", 'pug');
 
 app.get('/home', (req, res) => {
 	console.log("home");
-	});
+});
 
 app.get('/:name', (req, res) => {
 	let data = {

@@ -54,12 +54,12 @@ ProductSchema.aggregate(
 
 #  ԿՈՒՂԱՐԿԻ ՄԻԱՅՆ "$project" ՕԲՅԵԿՏՈՒՄ ՆՇՎԱԾ ԴԱՇՏԵՐԸ!
 # _id-ն default գալիսա, դրա համար դնում ենք "0", որ չցուցադրվի
-WineSchema.aggregate([
+	WineSchema.aggregate([
 			{ $match: { $and: [{ winename: winename }, { price: { $gt: +price } }] } },
 			{ $project: { winename: 1, price: 1, _id: 0} }
 		])
 # Կվերադարձնի ամենամեծ "price"-ը , ԱՌԱՆՑ "_id" ԴԱՇՏԻ
-WineSchema.aggregate([
+	WineSchema.aggregate([
 	{
 		$group:{ _id:null, maxPrice: { $max: "$price",} }
 	},
@@ -68,12 +68,12 @@ WineSchema.aggregate([
 	}
 ])
 # Կվերադարձնի DB-ում առկա բոլոր տվյալների ընդհանուր քանակը
-WineSchema.aggregate([
-	{ $count: "allDocumentsCount" },
-])
+	WineSchema.aggregate([
+		{ $count: "allDocumentsCount" },
+	])
 
 # Կվերադարձնի DB-ում WineSchema մոդելից պատահական 1 Գինի, առանց "__v" դաշտի
-WineSchema.aggregate([
+	WineSchema.aggregate([
 		{ $sample: { size: 1 }  },
 		{ $unset: ["__v"] }
-])
+	])

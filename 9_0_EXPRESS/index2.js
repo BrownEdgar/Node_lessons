@@ -15,5 +15,14 @@ app.get('/', function (req, res) {
 });
 
 
+app.use((error, req, res, next) => {
+	res.status(error.status || 500);
+	res.json({
+		error: {
+			message: error.message
+		}
+	});
+});
+
 app.listen(3000, ()=>console.log("server is starting"));
 /*Если запрос адресован корневому каталогу приложения, приложение выводит на экран системное время запроса в браузере.*/

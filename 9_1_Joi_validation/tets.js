@@ -9,13 +9,12 @@ const users = [];
 // 	"name":
 // 	"surname":
 // 	"age":
-// 	"gender":
 // 	"email":
 // 	"password":
 // 	"salary":
 // 	"hobbies":
 // 	"address":
-// 	"dob":
+// "dob":
 
 // }
 
@@ -27,7 +26,7 @@ app.post('/users', async (req, res) => {
 		name: Joi.string().empty('').default('default name here'),
 		surname: Joi.string().required(),
 		gender: Joi.string().valid('male', 'fimale').required(),
-		age: Joi.number().min(18).max(98).message("sda"),
+		age: Joi.number().min(18).max(98),
 		email: Joi.string().email(),
 		// Մինիմում 1 Մեծատառ + 1 Փոքրատառ + 1 թիվ 
 		password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/).required(),
@@ -38,7 +37,7 @@ app.post('/users', async (req, res) => {
 
 	});
 	try {
-		let result = await schema.validate(req.body);
+		let result =  schema.validate(req.body);
 
 		if (result.error) {
 			throw result.error.details[0].message
@@ -54,7 +53,6 @@ app.post('/users', async (req, res) => {
 		users.push(newUser);
 		res.send(users);
 	} catch (error) {
-		
 		res.status(500).json({error});
 	}
 
