@@ -15,18 +15,17 @@
 	
 	<ul class="list">
 		<h1>
-			<%= users.length %>
-				Users
+			<%= users.length %> Users
 		</h1>
 		<% for (let prop in users ) { %>
 			<li>
-				<%= users[prop].name %>
+				<%= users[prop].name %>| <br/>
+				<%= users[prop].age %>| <br/>
+				<%= users[prop].email %>| <br/>
+				<%= users[prop].surname %>| <br/>
 			</li>
-			<% } %>
+		<% } %>
 	</ul>
 
-
-
 </body>
-
 </html>

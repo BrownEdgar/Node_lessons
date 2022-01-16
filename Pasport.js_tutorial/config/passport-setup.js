@@ -3,11 +3,12 @@ const GoogleStrategy = require("passport-google-oauth20");
 const keys = require('./keys');
 const User = require('../models/User');
 
+
 passport.use(
 	new GoogleStrategy({
 		//google start options
-		callbackURL:'http://localhost:3000/auth/google/redirect',
-		clientID: keys.google.clientID,
+		callbackURL:'http://localhost:3000/auth/google/callback',
+		clientID: keys.google.clentID,
 		clientSecret: keys.google.clientSecret
 	}, (accessToken,refreshTokjen,profile, done) => {
 		// passports cb function
@@ -17,14 +18,16 @@ passport.use(
 			username: profile.displayName,
 			googleId: profile.id
 		})
-		r.save().then((newUser) => {
-			console.log('newUser', newUser)
-			.catch(err=>console.log(err));
-			done("")
-		})  // այս մեթոդը պահում է տվյալները բազայում
+		r
+		.save()
+		.then((newUser) => console.log('newUser', newUser))
+		.catch(err => console.log(err));
+		
+		done("")	 // այս մեթոդը պահում է տվյալները բազայում
+
 	})
 )
-
+	
 
 
 // link > https://youtu.be/o9e3ex-axzA

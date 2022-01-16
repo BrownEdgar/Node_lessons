@@ -63,10 +63,16 @@
 		</ul>
 	</nav>
 	<header>
-		<h1>Login using...</h1>
+	<% if (user) { %>
+	<h2>Hello <%= user.username %></h2>
+		<%} else { %>
+			<p> Not Allowed </p>
+			<% } %>
+						
+
 	</header>
 	<main>
-		<a class="google-btn" href="/auth/google">Google+</a>
+		<a class="google-btn" href="/auth/google/callback">Google+</a>
 	</main>
 </body>
 

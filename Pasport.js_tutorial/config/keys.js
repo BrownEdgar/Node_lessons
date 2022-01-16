@@ -2,8 +2,8 @@
 
 module.exports = {
 	google:{
-		clientID: "975129130799-h9hgh2j4vgbli5l80jibindiqv0irbep.apps.googleusercontent.com",
-		clientSecret: 'KQXmpcZzgWuOgjtJe0dQC-z8'
+		clientID: "975129130799-6s80um1vgtge6j5o9v8t53mkdtsr04h9.apps.googleusercontent.com",
+		clientSecret: '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'
 	},
 	mongodb:{
 		dbURI:"mongodb+srv://Edgar:sebastian25@sebocl.bhoqm.mongodb.net/klaus?retryWrites=true&w=majority"

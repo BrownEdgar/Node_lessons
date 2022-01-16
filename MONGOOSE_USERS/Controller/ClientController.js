@@ -19,6 +19,16 @@ class ClientController {
 			res.status(500).send(err.message);
 		}
 	};
+	async getBySpecialField(req, res) {
+		const { fieldName } = req.params
+		try {
+
+			let addClient = await req.app.services.clients.getBySpecialField(fieldName);
+			res.status(200).send(addClient);
+		} catch (err) {
+			res.status(500).send(err.message);
+		}
+	};
 
 }
 

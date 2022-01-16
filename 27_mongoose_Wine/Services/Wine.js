@@ -20,7 +20,7 @@ class WineController {
 		// const wine = await this.models.wines.aggregate([
 		// 	{ $count: "allDocumentsCount" },
 		// ])
-		return 	wine
+		// return 	wine
 	}
 
 	// ------------------------------------------
@@ -67,8 +67,7 @@ class WineController {
 	// ------------------------------------------
 	async getMostExpensiveWine(res) {
 
-		const expensiveWine = await this.models.wines.aggregate([
-			
+		const expensiveWine = await this.models.wines.aggregate([	
 			{
 				$group:
 				{

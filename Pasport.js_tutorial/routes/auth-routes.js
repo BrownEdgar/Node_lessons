@@ -3,29 +3,30 @@ const passport = require("passport");
 
 // auth login
 router.get('/login', (req, res) => {
+	console.log(`req.user`, req.user)
 	res.render('login', { user: req.user });
 });
 
 // auth logout
-router.get('/logout', (req, res) => {
+router.get('/faild', (req, res) => {
 	// handle with passport
 	res.send('logging out');
+	req.logOut()
+
 });
 
-// auth with google+
-// router.get('/google', (req, res) => {
-// 	// handle with passport start part
-// 	 res.send('logging in with Google');
-// });
-router.get('/google', passport.authenticate('google', {
-	scope: ['profile'],
-	failureRedirect:"/login",
-	successRedirect:"/"
-}));
-
-router.get('/google/redirect', passport.authenticate('google'),(req, res) => {
-	console.log('objects=============================')
-	res.send('callbackURL');
+router.get('/google/callback', passport.authenticate('google', {scope:["profile"]}))
+router.get('/google/callback', passport.authenticate('google', {
+	failureRedirect:"/auth/faild",
+	successRedirect: "/"
+}), function (req,res) 	{
+	res.redirect("/auth/login")
+	
 });
+
+
 
 module.exports = router;
+
+dbURl
+

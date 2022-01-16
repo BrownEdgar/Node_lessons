@@ -26,6 +26,12 @@ class ClientController {
 		console.log("allClients:", allClients)
 		return allClients;
 	}
+	async getBySpecialField(fieldName) {
+		const userfield = this.models.clients.aggregate([
+			{ $match: {} },
+			{ $project: { [fieldName]: 1, _id: 0}}
+		])
+	}
 
 }
 

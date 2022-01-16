@@ -103,7 +103,7 @@
 #
 
 	WineSchema.aggregate([
-		{ $sample: { size: 1 }  },
+		{ $sample: { size: 10}  },
 		{ $unset: ["__v"] }
 	])
 
@@ -139,7 +139,7 @@
 		{ $group: { _id: "$age" } }
 		----------------
 		{ $limit: 3}
-		{ $match: { eteColor: {$ne: "black" }} => աչքերի գույնը՝ ոչ սև
+		{ $match: { eyeColor: {$ne: "black" }} => աչքերի գույնը՝ ոչ սև
 	]) 
 
 ## $avg
@@ -175,3 +175,11 @@
 			}}
 			{$out: "newCollection"}
 		]) 
+
+		-------------------------------------------------
+
+		X.aggregate([
+			{$match : {name: "Karen"}},
+			{$group: _id: "$age"}
+			{$sort: 1}
+		])

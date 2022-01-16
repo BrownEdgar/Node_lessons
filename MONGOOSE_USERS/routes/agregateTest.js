@@ -13,6 +13,7 @@ const controller = new ClientController();
 router.get('/', controller.getAllClients)
 
 router.post('/add', controller.addClients);
+router.post('/:fieldName', controller.getBySpecialField);
 
 
 

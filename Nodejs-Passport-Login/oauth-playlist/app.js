@@ -24,7 +24,7 @@ app.use(passport.session());
 
 
 // connect to mongodb
-mongoose.connect(keys.mongodb.dbURI, () => {
+mongoose.connect(keys.mongodb.dbURL, () => {
     console.log('connected to mongodb');
 });
 

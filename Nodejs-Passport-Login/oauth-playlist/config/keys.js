@@ -5,7 +5,7 @@ module.exports = {
 		clientSecret: 'AIzaSyBz-t-HE3fokg5Sqyx_6OdCU_nX5TdNSa4'
 	},
         mongodb: {
-			dbURI: 'mongodb+srv://Edgar:sebastian25@sebocl.bhoqm.mongodb.net/klaus?retryWrites=true&w=majority'
+			dbURL: 'mongodb+srv://Edgar:sebastian25@sebocl.bhoqm.mongodb.net/klaus?retryWrites=true&w=majority'
         },
         session: {
             cookieKey: 'thenetninjaisawesomeiguess'
