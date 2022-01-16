@@ -1,4 +1,5 @@
 let app = require('./module');
+let app2 = require('./module2');
 
 console.log(app.counter(["a", "b", "c"]));
 console.info(typeof app.pi);
