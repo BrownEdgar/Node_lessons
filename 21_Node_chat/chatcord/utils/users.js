@@ -14,7 +14,7 @@ function getCurrentUser(id) {
   return users.find(user => user.id === id);
 }
 
-// Եթե "user"-ը դուր է գալիս սենյակիցէ ջնջում ենք
+// Եթե "user"-ը դուր է գալիս սենյակից ջնջում ենք
 function userLeave(id) {
   const index = users.findIndex(user => user.id === id);
 

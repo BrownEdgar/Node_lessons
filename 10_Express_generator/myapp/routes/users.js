@@ -1,10 +1,12 @@
 var express = require('express');
+const { Errors, ErrorMessages } = require('../errors/ErrorMessages');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resousrce');
-  res.end();
+
+router.post('/', function(req, res, next) {
+  if (!req.user) {
+		Errors.notfound(res, ErrorMessages.NOT_FOUND.replace(":id", 651321))
+	}
 });
 
 module.exports = router;

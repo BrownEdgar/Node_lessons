@@ -9,14 +9,14 @@ router.get('/login', (req, res) => {
 
 // auth logout
 router.get('/faild', (req, res) => {
-	// handle with passport
+
 	res.send('logging out');
 	req.logOut()
 
 });
 
-router.get('/google/callback', passport.authenticate('google', {scope:["profile"]}))
-router.get('/google/callback', passport.authenticate('google', {
+router.get('/google/redirect', passport.authenticate('google', {scope:["profile"]}))
+router.get('/google/redirect', passport.authenticate('google', {
 	failureRedirect:"/auth/faild",
 	successRedirect: "/"
 }), function (req,res) 	{
@@ -28,5 +28,4 @@ router.get('/google/callback', passport.authenticate('google', {
 
 module.exports = router;
 
-dbURl
 

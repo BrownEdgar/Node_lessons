@@ -6,7 +6,7 @@ const con = mysql.createConnection({
 	host: '127.0.0.1',
 	user: 'root',
 	password: '',
-  	port:3307,
+  port:3307,
 	database:'mydb2'//ete sax normal ancni http://localhost/phpmyadmin ksarqi baza ajs anunov
 
 });

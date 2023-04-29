@@ -2,7 +2,7 @@ let fs = require('fs');
 let path = require('path');
 
 /* Read txt file!! */
-//.toString() մեթոդի փոխարեն կարող ենք 2-րդ արգումենտով փոխանցենք "utf-8" արգումենտը
+//.toString() մեթոդի փոխարեն կարող ենք 2-րդ արգումենտով փոխանցել "utf-8" արգումենտը
 fs.readFile("test.txt", function(err, data){
 	if (err) {
 		throw err;

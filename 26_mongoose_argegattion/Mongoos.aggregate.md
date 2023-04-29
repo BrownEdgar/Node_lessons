@@ -9,16 +9,27 @@
 	
 	{ $match: {age: {$gt:18} }},
 	{ $match: { status: "urgent" } },
+  { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
+  {$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
 	{ $match: { "address.city": "McKenziehaven" } },
 	{ $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }],
+  {$match: {paid: { $ne: null }}},
+  {$match: {productType: {$in: ['shoe', 'shirt']}}},
 	])
 
 
 ## $group examples 
+### `Вы можете использовать $group для объединения документов на основе значения поля, которое является общим для всех документов. Его также можно использовать для полезных вещей, таких как суммирование всех значений определенного поля.`
+
 #
  	{ $group: { _id: '$age'} }  
  	{ $group: {_id: { age:'$age', name:"$name"}} } 
  	{ $group: _id: {name: "$name", "email": "$email"} }
+  ### `այս օրինակը կգտնի բոլոր հնարավոր տարիքի մարդկան, + ցույց կտա նրանց քանակը`
+ 	{ $group: _id: {
+  _id: {age: "$age"}, total: {$sum:1}
+} }
+  
 
 ### `այս օրինակը կվերադարձնի միայն այն "User"-ին որոնց մոտ "hobby․length"-ը  3 կլինի``Նույն արդյունքը կլինի եթե․՝ User.find({hobby: {#size:3}}) կանչենք`
 `Օրինակ hobby:[ 1,2,3 ]`
@@ -59,6 +70,8 @@
 ## $project
 ### `ԿՈՒՂԱՐԿԻ ՄԻԱՅՆ "$project" ՕԲՅԵԿՏՈՒՄ ՆՇՎԱԾ ԴԱՇՏԵՐԸ`
 ### `_id-ն default գալիսա, դրա համար դնում ենք "0", որ չցուցադրվի`
+- `$multiply` բազմապատկում է նծշված դաշտերը
+{ $project: { date: 1, item: 1, total: { $multiply: [ "$price", "$quantity" ] } } }
 #
 
 	WineSchema.aggregate([
@@ -112,7 +125,7 @@
 #
 
 	WineSchema.aggregate([
-		{ $group: { _id: {age: "$age", name: "$name }} }
+		{ $group: { _id: {age: "$age", name: "$name" }} }
 		{ $match: {salary: {$gt: 150_000 }} },
 	]) => 0 documents
 	--------------
@@ -183,3 +196,103 @@
 			{$group: _id: "$age"}
 			{$sort: 1}
 		])
+		-------------------------------------------------
+- Բոլորի համար ավելացնել "age" հատկություն պատահական թվով 0-98 միջակայքից
+  aggregate(
+      [
+        {
+          $set: {
+            age: {
+              $floor: {
+                $multiply: [{ $rand: {} }, 98]
+              }
+            }
+          },
+        }
+      ]
+    )
+
+
+		-------------------------------------------------
+
+    const x = await this.models.clients.remove()
+
+
+
+        //https://youtu.be/9vH3zsARqw4?list=PLWkguCWKqN9OwcbdYm4nUIXnA2IoXX0LI
+    // const allClients = this.models.clients.aggregate([
+    // { $match: {} },// բոլորը
+    // ============================
+    // { $match: { "address.street": "Victor Plains" } },// բոլորը նրանց ում address{street: ?} հավասար է "Victor Plains"-ի
+    // =========== | կոնկրետ քանակ | =================
+    // { $match: {} },
+    // { $limit: 3 },
+    // ============ | կարող ենք ընտրել կոնկրետ որ դաշտերն ենք ուզում ցուցադրել |================
+
+    // { $match: {} },
+    // {
+    //   $project: {
+    //     "email": 1,
+    //     "website": 1,
+    //     "_id": 0
+    //   }
+    // },
+
+    // ============ |  կոնկրետ  դաշտի բոլոր հնարավոր տարբետակները   |================
+    //ցուցադրման համար կարող ենք ընտրել օրինակ ինչքան հնարավոր "category", "website" կա,
+    // վերադարձվում է [ {"_id": "ola.org"} ... {}, {} տարբերակ]
+    // => տվյալների կրկնություն հնարավոր չէ
+    // const allClients = this.models.clients.find({}).select("edgar") // տվյալների կրկնություն կլինի
+
+    // { $group: { "_id": "$edgar" } }
+
+
+    // ============ |    |================
+    // { $group: { "_id": "$edgar" } }
+    // ============ |   Գտնել և սորտավորոել ըստ "email" դաշտի |================
+    // { $match: {} },
+    // { $sort: { email: 1 } },
+    // {
+    //   $project: {
+    //     "email": 1,
+    //     "_id": 0
+    //   }
+    // }
+
+    // ============ |    |================
+    // {
+    //   $project: {
+    //     age: {
+    //       $floor: {
+    //         $multiply: [{ $rand: {} }, 98]
+    //       }
+    //     }
+    //   }
+    // }
+    // ])
+
+    
+({ "_id" : 1, "item" : "ABC1", sizes: [ "S", "M", "L"] }).aggregate( [ { $unwind : "$sizes" } ] ) =>
+
+{ "_id" : 1, "item" : "ABC1", "sizes" : "S" }
+{ "_id" : 1, "item" : "ABC1", "sizes" : "M" }
+{ "_id" : 1, "item" : "ABC1", "sizes" : "L" }
+
+    db.orders.insertMany( [
+   { _id: 0, name: "Pepperoni", size: "small", price: 19,
+     quantity: 10, date: ISODate( "2021-03-13T08:14:30Z" ) },
+   { _id: 1, name: "Pepperoni", size: "medium", price: 20,
+     quantity: 20, date : ISODate( "2021-03-13T09:13:24Z" ) },
+   { _id: 2, name: "Pepperoni", size: "large", price: 21,
+     quantity: 30, date : ISODate( "2021-03-17T09:22:12Z" ) },
+   { _id: 3, name: "Cheese", size: "small", price: 12,
+     quantity: 15, date : ISODate( "2021-03-13T11:21:39.736Z" ) },
+   { _id: 4, name: "Cheese", size: "medium", price: 13,
+     quantity:50, date : ISODate( "2022-01-12T21:23:13.331Z" ) },
+   { _id: 5, name: "Cheese", size: "large", price: 14,
+     quantity: 10, date : ISODate( "2022-01-12T05:08:13Z" ) },
+   { _id: 6, name: "Vegan", size: "small", price: 17,
+     quantity: 10, date : ISODate( "2021-01-13T05:08:13Z" ) },
+   { _id: 7, name: "Vegan", size: "medium", price: 18,
+     quantity: 10, date : ISODate( "2021-01-13T05:10:13Z" ) }
+] )

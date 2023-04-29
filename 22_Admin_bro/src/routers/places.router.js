@@ -1,7 +1,7 @@
 const { Router, } = require('express');
 const paginate = require('../services/paginate.service');
 const Place = require('../models/place.model');
-const City = require('../models/city.model');
+
 
 const router = new Router()
 

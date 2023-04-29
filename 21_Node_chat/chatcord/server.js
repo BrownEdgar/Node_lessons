@@ -22,8 +22,9 @@ const botName = 'ChatCord Bot';
 // Աշխատում է, երբ "user"-ը  միանում է
 io.on('connection', socket => {
   socket.on('joinRoom', ({ username, room }) => {
+		//պահում ենք user-ին զանգվածի մեջ 
     const user = userJoin(socket.id, username, room);
-		console.log('user', user)
+
     socket.join(user.room);
 
     // Welcome "message"-ի ուղարկում սենյակ մտնելոց հետո

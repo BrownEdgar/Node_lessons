@@ -5,9 +5,6 @@ console.log(__dirname);
 console.log(__filename);
 // // ---------------------------------------
 
-let a = require('./m.js');
-let moreModules = require('./multiplyModules.js');
- a(25);
 
 
 

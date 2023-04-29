@@ -1,11 +1,12 @@
 var express = require('express');
+var {Errors, ErrorMessages} = require('../errors/ErrorMessages');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-	console.log('process', process)
-	console.log('process', process.env.PORT)
-  res.render('index', { title: 'Express' });
+router.get('/', async function(req, res, next) {
+	Errors.notfound(res, ErrorMessages.NOT_FOUND.replace(":id", 65321))
+
+		
 });
 
 module.exports = router;

@@ -21,9 +21,9 @@ app.get('/', (req, res) => res.send('Hello World!'))
 const run = async () => {
   await mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
-	useUnifiedTopology: true
+    useUnifiedTopology: true
   })
-  await app.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`)
   })
 }

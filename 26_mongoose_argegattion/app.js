@@ -32,6 +32,7 @@ app.use("/agregate", agregateRouter);
 app.models = {
 	clients: models.clientInfo
 }
+
 app.services = {
 	clients: new (sevices.ClientServices)(app.models),
 };

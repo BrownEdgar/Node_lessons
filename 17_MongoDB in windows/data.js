@@ -98,7 +98,7 @@ db.users.updateMany( {age:23}, { $set:{name:"new Name",email:"poxacEmail.ru"} } 
 //amboxj object-i popoxumy nshvacnerov
 db.users.replaceOne(
 {age:41},
-{name: "new User", avto: 23, password: 123456,age:23}
+{name: "new User", avto: false, password: 123456, age:23}
 )
 
 
@@ -233,3 +233,6 @@ db.collection("users").updateOne(
 	},
 	{ $max: { age: 50 } }
 )
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+//ջնջում է ՛passed՛ հատկությունը
+const result = await collection.updateOne({ _id: new ObjectId("6440eac0f13898dad6e68118") }, { $unset: { passed: true } })

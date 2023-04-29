@@ -41,7 +41,7 @@ class AuthController {
 			  res.status(404).send("user not Found");
 				
 			}else{
-				const hashPassword = await bcrypt.compareSync(password, user.password);
+				const hashPassword = bcrypt.compareSync(password, user.password);
 				if (!hashPassword) {
 					res.status(401).send("invalid password");
 					res.end()

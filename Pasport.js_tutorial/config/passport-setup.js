@@ -7,8 +7,8 @@ const User = require('../models/User');
 passport.use(
 	new GoogleStrategy({
 		//google start options
-		callbackURL:'http://localhost:3000/auth/google/callback',
-		clientID: keys.google.clentID,
+		callbackURL:'http://localhost:3000/auth/google/redirect',
+		clientID: keys.google.clientId,
 		clientSecret: keys.google.clientSecret
 	}, (accessToken,refreshTokjen,profile, done) => {
 		// passports cb function
@@ -23,7 +23,7 @@ passport.use(
 		.then((newUser) => console.log('newUser', newUser))
 		.catch(err => console.log(err));
 		
-		done("")	 // այս մեթոդը պահում է տվյալները բազայում
+		done(r)	 // այս մեթոդը պահում է տվյալները բազայում
 
 	})
 )

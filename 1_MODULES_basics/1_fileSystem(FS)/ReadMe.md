@@ -12,4 +12,4 @@ fs.unlink()
 fs.open() 
 fs.rename() 
 ...
-Ավելին 'FS'-ի մասին => https://js-node.ru/
+Ավելին 'FS'-ի մասին => https://www.tutorialspoint.com/nodejs/nodejs_file_system.htm
