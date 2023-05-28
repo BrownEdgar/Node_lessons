@@ -31,7 +31,7 @@ app.use('/posts', postRouter);
 
 // Mongoose connect
 mongoose.connect(
-	'mongodb://localhost:27017/klaus',
+	'mongodb://0.0.0.0:27017/klaus',
 	{ useNewUrlParser: true, useUnifiedTopology: true },
 	(err) => {
 		if (err) {
@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('pages/error');
 });
 
 module.exports = app;

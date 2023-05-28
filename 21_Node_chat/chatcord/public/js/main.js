@@ -51,7 +51,7 @@ function outputMessage(message) {
   <p class="text">
     ${message.text}
   </p>`;
-  document.querySelector('.chat-messages').appendChild(div);
+  document.querySelector('.chat-messages').append(div);
 }
 
 // DOM-ում  ավելացնում ենք նաև  "room"-ի անվանումը

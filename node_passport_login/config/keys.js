@@ -1,5 +1,5 @@
-dbPassword = 'mongodb://localhost:27017/klaus';
+const dbUrl = 'mongodb://localhost:27017/klaus';
 
 module.exports = {
-	mongoURI: dbPassword
+	mongoURI: dbUrl
 };

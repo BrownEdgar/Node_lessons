@@ -1,22 +1,4 @@
-     # Node.js & Passport Login
 
-This is a user login and registration app using Node.js, Express, Passport, Mongoose, EJS and some other packages.
-
-### Version: 2.0.0
-
-### Usage
-
-```sh
-$ npm install
-```
-
-```sh
-$ npm start
-# Or run with Nodemon
-$ npm run dev
-
-# Visit http://localhost:5000
-```
 
 ### MongoDB
 
@@ -80,7 +62,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
  ### req.isAuthenticated()
- Проверку авторизации можно делать с помощью req.isAuthenticated(). Я вынесу проверку в middleware
+ Проверку авторизации можно делать с помощью req.isAuthenticated(). 
 
 
 ### link 

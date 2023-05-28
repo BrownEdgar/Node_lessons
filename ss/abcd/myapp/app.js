@@ -17,6 +17,7 @@ const sevices = require("./services");
 const productRouter = require('./routes/product');
 const usersRouter = require('./routes/users');
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,6 +31,7 @@ app.use('/public/css', express.static(__dirname + '/public/css'));
 
 app.use('/', productRouter);
 app.use('/users', usersRouter);
+
 
 
 app.models = {

@@ -3,18 +3,32 @@
 
 <head>
 	<%- include('../partals/head.ejs'); %>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+		
 </head>
 
 <body>
 	<%- include('../partals/sectionTitle.ejs', {title: `Post N-${post._id.toString().slice(0, 5).concat("...")}`}); %>
 
 	<div class="flex__container">
+	
 		<div class="add">
 			<h4><a href="/posts">all posts</a></h4>
 		</div>
 			<div class="flex__container__item">
 
-				<h4><%= post.date.toDateString() %></h4>
+				<div class="title_delete_cont">
+					<div class="title_cont">
+<h4><%= post.date.toDateString() %></h4>
+					</div>
+					
+						<div class="delete_icon_cont">
+							<i data-id="<%=post._id  %>" class="fa-solid fa-trash"></i>
+						</div>
+				</div>
+
 				<div class="flex__container__item_img">
 
 						<img src='../<%= post.img %>' alt='girl'>

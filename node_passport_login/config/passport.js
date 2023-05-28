@@ -1,3 +1,11 @@
+/////////////////////////////////////////////
+// 1.LocalStrategy принимает 2 параметра: объект с опциями и middleware для верификации пользователя.
+// Второй аргумент — middleware — принимает параметры`username`, `passport` и`done`.В done, вторым аргументом, передаем объект пользователя, если такой есть.
+ //❗️ Если все в порядке, и пользователь существует, то информация о нем сохраняется в сессию, а идентификатор сессии, в свою очередь, сохраняется в cookies браузера.
+ //❗️ Каждый последующй запрос будет содержать cookies, с помощью которого passport сможет опознать пользователя, и достать его данные из сессии. Для того, чтобы сохранять или доставать пользовательские данные из сессии, паспорт использует функции `passport.serializeUser()` и `passport.deserializeUser()`.
+/////////////////////////////////////////////
+
+
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 
@@ -5,6 +13,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 module.exports = function (passport) {
+	console.log('passport:', passport)
 	passport.use(new LocalStrategy({
 		usernameField: 'email'
 	}, (email, password, done) => {

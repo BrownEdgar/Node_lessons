@@ -17,9 +17,7 @@ require('./config/passport')(passport);
 const db = require('./config/keys').mongoURI;
 
 // Connect to MongoDB
-mongoose.connect(db,
-
-  )
+mongoose.connect(db)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
@@ -36,6 +34,7 @@ app.use(
     secret: 'secret',
     resave: true,
     saveUninitialized: true
+		// для параметра установлено значение false, файл cookie не будет установлен для ответа с неинициализированным сеансом. Этот параметр изменяет поведение только в том случае, если существующий сеанс был загружен для запроса
   })
 );
 

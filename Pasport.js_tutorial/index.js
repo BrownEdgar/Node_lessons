@@ -1,8 +1,8 @@
-const express 		= require('express');
-const app 			= express();
-const port 			= 3000;
-const mongoose 		= require("mongoose");
-const keys 			= require("./config/keys");
+const express = require('express');
+const app = express();
+const port = 3000;
+const mongoose = require("mongoose");
+const keys = require("./config/keys");
 
 require("./config/passport-setup");
 
@@ -13,8 +13,8 @@ mongoose.connect(keys.mongodb.dbURI, {
 	useNewUrlParser: true,
 	useFindAndModify: false,
 	useUnifiedTopology: true
-}, () =>{
-console.log('MondoDB connect')
+}, () => {
+	console.log('MondoDB connect')
 })
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))

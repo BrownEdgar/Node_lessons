@@ -3,3 +3,5 @@ node_modules/
 .env
 /Bee_web_team/
 .zip
+*/*.zip
+**/*.rar

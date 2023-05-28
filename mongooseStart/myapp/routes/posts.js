@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 const Post = require('../models/Post');
@@ -12,8 +11,6 @@ const storage = multer.diskStorage({
 		cb(null, './uploads/')
 	},
 	filename: (req, file, cb) => {
-		
-		console.log(`file`, file)
 		if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" ){
 			cb(null, `photo-${Math.random().toString().slice(12)}` + path.extname(file.originalname))
 		}else{
@@ -28,30 +25,26 @@ const upload = multer({ storage: storage, });
 router.get('/', async (req, res) => {
 	try {
 		const posts = await Post.find();
-
+		console.log(posts)
 		res.render('pages/posts', {
 			posts,
 			error: null
 		})
 	} catch (error) {
 		res.render('pages/posts', {
-			posts,
 			error: error
-
 		})
 	}
 });
 
 router.post('/',  [upload.single('image')], async (req, res) => {
-
-	console.log(`req.file`, req.file)
 	const post = new Post({
 		title: req.body.title,
 		discription: req.body.discription,
 		img: req.file.filename
 	});
 	try {
-		await post.save((err, data) => {
+	 post.save((err, data) => {
 			if (err) {
 				res.json({ err })
 			} else {
@@ -92,22 +85,6 @@ router.post('/search', async (req, res) => {
 		return res.redirect('/posts')
 	}
 	try {
-		const posts = await Post.find(
-			{
-				title: { $regex: `${searchValue}`, $options: "i" }
-			},
-			function (err, docs) {
-				if (err) {
-					return res.render('pages/posts', {
-						posts: [],
-						searchValue: err,
-					})
-				}
-				res.render('pages/posts', {
-					posts: docs,
-					searchValue,
-				})
-			});
 
 	} catch (error) {
 		res.render('pages/posts', {
@@ -125,13 +102,12 @@ router.get('/:postId', async (req, res) => {
 			post
 		});
 	} catch (error) {
-	
 		res.render("pages/error", {
 			error,
 			message: error.message
 		})
 	}
-});
+})
 
 router.put('/:postId', async (req, res) => {
 	console.log('node body', req.body)
@@ -154,14 +130,17 @@ router.put('/:postId', async (req, res) => {
 		}))
 })
 
-router.delete('/:id', async function (req, res) {
+router.delete('/delete/:id', async function (req, res) {
+
 	const id = req.params.id;
+	console.log(req.params);
 	Post.deleteOne({ _id: id })
 		.then(data => {
 			res.json({
 				message: data,
 				result: "Posty jnjvac e"
 			})
+	
 		}).catch(err => res.json({ err }))
 
 });

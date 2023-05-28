@@ -28,8 +28,12 @@ io.on('connection', socket => {
 
   });
 
+
+
   //Աշխատում է "client"-ի դուս գալու ժամանակ
-  socket.on('disconnect', () => {})
+  socket.on('disconnect', () => {
+
+	})
 
   
 });

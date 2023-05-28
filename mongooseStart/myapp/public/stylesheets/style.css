@@ -31,7 +31,29 @@ body {
 	overflow: hidden;
 }
 
-.flex__container__item h4 {
+
+.title_delete_cont {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 .5em;
+}
+
+.delete_icon_cont {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.delete_icon_cont > i {
+	color: #c3c3c3;
+	transition: 0.35s;
+	cursor: pointer;
+}
+.delete_icon_cont > i:hover {
+	color: #e82f2f;
+}
+
+.title_cont h4 {
 	background-color: #ff005b;
 	display: inline-block;
 	padding: 5px 13px;
