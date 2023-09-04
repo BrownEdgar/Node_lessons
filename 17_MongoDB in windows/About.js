@@ -213,3 +213,21 @@ db.collection("users").findOneAndUpdate(
 }).catch(err => console.error("err:", err))
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+
+
+ const user = {
+	city: "Los-Angeles",
+	population: 4_000_000,
+	area: 1299,
+	language: "english",
+	declaration: 1781,
+
+ }
+
+//  1. ամենաշատ բնակ․ քաղաքը / ամենաքիչ
+// Գտնել բոլոր Անգլjախոս քաղաքները, տպել նրանց անունները
+// ցուցադրել top 3 մակերես ունեցող քաղաքները
+// գտնել ամենահին քաղաքը
+// gtnel ruskaxos qaxaqne8i qanaky
+// bolor anglyaxws qaxaqne8i bnakchutyuny avelacnel 15000-ov

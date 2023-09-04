@@ -7,7 +7,7 @@ app.get('/', (req, res) => {
 console.log("method: " + req.method);
 //query պահպանում է իր մեջ URL հարցումները օբյեկտի նման
 console.log("query: " + req.query);
-//http կամ https մեր դեպքում http, որովհետև պաշտպանցած չե
+//http կամ https մեր դեպքում http, որովհետև պաշտպանված չե
 console.log("protocol: "+ req.protocol);
 //պաշտպանված պռատակոլովա գնում հարցումը թե ոչ
 console.log("secure: "+ req.secure);

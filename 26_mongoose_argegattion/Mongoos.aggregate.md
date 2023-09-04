@@ -1,6 +1,8 @@
 ## Նախնական կառուցվածքը
 
- User.aggregate([ {} {} {} ])
+ User.aggregate([ {}  ])
+
+ $match |  $group | $project | $sort | $count | $limit | $skip | $out | 
 
 ## $match examples
 #
@@ -11,8 +13,8 @@
 	{ $match: { status: "urgent" } },
   { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
   {$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
-	{ $match: { "address.city": "McKenziehaven" } },
-	{ $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }],
+	{ $match: { "address.city": "McKenziehaven" } }
+	{ $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }]}},
   {$match: {paid: { $ne: null }}},
   {$match: {productType: {$in: ['shoe', 'shirt']}}},
 	])
@@ -25,7 +27,7 @@
  	{ $group: { _id: '$age'} }  
  	{ $group: {_id: { age:'$age', name:"$name"}} } 
  	{ $group: _id: {name: "$name", "email": "$email"} }
-  ### `այս օրինակը կգտնի բոլոր հնարավոր տարիքի մարդկան, + ցույց կտա նրանց քանակը`
+  ### `այս օրինակը կգտնի բոլոր հնարավոր տարիքի մարդկանց, + ցույց կտա նրանց քանակը`
  	{ $group: _id: {
   _id: {age: "$age"}, total: {$sum:1}
 } }
@@ -177,7 +179,7 @@
 			}}
 		])
 #
-- $out: այս ակումուլյատորը կստեղծի "newCollection" անունով ՆՈՐ ԿՈԼԵԿՑԻԱ մեր DB-ում, որի մեջ կլինեն "aggregate" մեթեշոդի վերադարձված արժեքները 
+- $out: այս ակումուլյատորը կստեղծի "newCollection" անունով ՆՈՐ ԿՈԼԵԿՑԻԱ մեր DB-ում, որի մեջ կլինեն "aggregate" մեթոդի վերադարձված արժեքները 
 
 		WineSchema.aggregate([
 			{$project:{

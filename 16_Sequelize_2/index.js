@@ -6,14 +6,14 @@ const app = express();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
  
 //  Sequelize Օբյեկտի Ստեղծում
-const sequelize = new Sequelize("lilo", "root", "xxx", {
+const sequelize = new Sequelize("mysql", "root", "", {
   dialect: "mysql",
-  host: "localhost",
+  host: "127.0.0.1",
   port: 3306,
   define: {
     timestamps: false
   }
-});
+})
  
 //  User Մոդելի ստեղծում
 const User = sequelize.define("user", {
@@ -98,4 +98,6 @@ app.post("/delete/:id", function(req, res){
   User.destroy({where: {id: userid} }).then(() => {
     res.redirect("/");
   }).catch(err=>console.log(err));
-});
+})
+
+

@@ -18,9 +18,14 @@ const users = [];
 
 // }
 
+username: 
+
 app.get('/users', (req,res)=> {
 	res.send(users)
 })
+
+
+
 app.post('/users', async (req, res) => {
 	const schema = Joi.object({
 		name: Joi.string().empty('').default('default name here'),
@@ -29,8 +34,8 @@ app.post('/users', async (req, res) => {
 		age: Joi.number().min(18).max(98),
 		email: Joi.string().email(),
 		// Մինիմում 1 Մեծատառ + 1 Փոքրատառ + 1 թիվ 
-		password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/).required(),
-		repeat_password: Joi.ref('password'),
+		password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/).required(),
+		repeat_password: Joi.ref('password').required(),
 		salary: Joi.number().greater(50000).required(),
 		hobbies: Joi.array().items(Joi.string()).length(3).required(),
 		dob: Joi.date().greater('1-1-1974').default("19-09-1986")

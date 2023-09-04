@@ -1,9 +1,6 @@
 ## բազային մեթոդները
 fs.writeFile()
 fs.readFile()
-
-
-
 fs.mkdir()
 fs.rmdir
 fs.readdir() 

@@ -21,7 +21,7 @@ socket.on('roomUsers', ({ room, users }) => {
 
 // սերվերից եկած "Message"-ը "մշակում" նեք
 socket.on('message', message => {
-	console.log(message); // "Message"-ը օբյոկտի տեսքով "console"-ում 
+
   outputMessage(message);
 
   // Scroll down

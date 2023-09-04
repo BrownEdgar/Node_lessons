@@ -6,7 +6,7 @@ class ClientController {
 		this.models = models;
 	}
 
-	async addClients(res, body) {
+	async addClients( body) {
 			//clients-ը այստեղ "app"-իցա գալիս 
 		const norClient = new this.models.clients({
 			_id: new mongoose.Types.ObjectId(),
