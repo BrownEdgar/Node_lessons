@@ -14,6 +14,9 @@ const storeItems = new Map([
   [3, { priceInCents: 85000, name: "IPhone 14" }],
 ])
 
+
+
+
 app.post("/create-checkout-session", async (req, res) => {
 
   try {
@@ -42,4 +45,5 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 })
 
-app.listen(3000)
+app.listen(3333, () => console.log("server is runnig"))
+

@@ -1,13 +1,14 @@
 const button = document.querySelector("button")
 button.addEventListener("click", () => {
-  fetch("http://localhost:3000/create-checkout-session", {
+  fetch("http://localhost:3333/create-checkout-session", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       items: [
-        { id: 3, quantity: 1 }
+        { id: 3, quantity: 1 },
+        { id: 1, quantity: 2 }
       ],
     }),
   })

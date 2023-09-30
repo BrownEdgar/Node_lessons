@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+
+
+:root {
+  --cade-bg-color: #0c0a20;
+  --table-bg-color: #323232;
+  --description-keyword-color: #f1c40f;
+  --comands-variable-color: #7bed9f;
+  --table-border-color: grey;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  color: #eee;
+  font-size: 1.125rem;
+  font-family: system-ui;
+  line-height: 1.5;
+}
+
+.wrapper {
+  width: max(900px, 100% - 3rem);
+  margin-inline: auto;
+}
+
+table {
+  width: 100%;
+  background-color: var(--table-bg-color);
+  border-collapse: collapse;
+  text-align: left;
+
+}
+
+th, td, caption {
+  padding: 1rem;
+  border: 1px solid var(--table-border-color);
+
+}
+
+span {
+  color: var(--comands-variable-color);
+}
+
+
+
+caption, th {
+  text-align: left;
+}
+
+caption {
+  background: hsl(0 0% 0%);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+th {
+  background: hsl(0 0% 0% / 0.5);
+}
+
+tr:nth-of-type(2n) {
+  background: hsl(0 0% 0% / 0.1);
+}
+
+td.commads {
+  white-space: pre-line;
+  min-width: 200px
+}
+
+td.example {
+  min-width: 300px;
+
+}
+
+td.desc {
+  min-width: 250px;
+}
+
+td.desc span {
+  color: var(--description-keyword-color);
+}
+
+code {
+  background-color: var(--cade-bg-color);
+  padding: 6px 3px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  white-space: pre-line;
+  display: block;
+  border-radius: 6px;
+  position: relative;
+}
