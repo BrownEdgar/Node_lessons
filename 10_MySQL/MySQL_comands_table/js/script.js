@@ -1,7 +1,13 @@
 const table = document.getElementsByTagName('table')[0];
 const tbody = document.getElementsByTagName('tbody')[0];
 
+// MYSQL TYPES AND EXAMPLES
+// DATETIME  || ex. transaction_date DATETIME DEFAULT NOW() || 2023-10-22 14:36:46
+// DESIMAL  || ex. transaction_date DESIMAL(4, 2) || 3.99
 
+
+//LINKS
+// https://dev.mysql.com/doc/refman/8.0/en/mathematical-functions.html
 
 const data = [
   {
@@ -93,7 +99,7 @@ const data = [
   {
     id: 15,
     mysql_command: `INSERT INTO <span>&lt;table_name&gt;</span> (column1, column2, column3,etc)\nVALUES (...), (...), (...)`,
-    description: `Այս հրամանը միանգամից ավելացնում է մի քանի տվյալներ աղյուղակի մեջ։ Տվյալների արժեքների հերթականությունը պետք է համընկնի սյուների հերթականության հետ։Եթե որևիցե տվյալ նշված սյունակների համար չփոխանցվի ապա կհարուցվի սխալ, իսկ հակառակ դեպքում այն կլինի <span>&quot;NULL&quot;</span>`,
+    description: `Այս հրամանը միանգամից ավելացնում է մի քանի տվյալներ աղյուղակի մեջ։ Տվյալների արժեքների հերթականությունը պետք է համընկնի սյուների հերթականության հետ։Եթե որևիցե տվյալ նշված սյունակների համար չփոխանցվի ապա կհարուցվի սխալ, իսկ հակառակ դեպքում այն կլինի <span>&quot;NULL&quot;</span>, կամ եթե կա DEFAULT արժեք սյունակի համար կվերցրվի այդ արժեքը։(տես 26-րդ հրամանը)`,
     example: `INSERT INTO dogs (id, name, gender)\nVALUES (1, 'AXEL', NULL),\n(1, 'AXEL', 'male');`
   },
   {
@@ -122,15 +128,129 @@ const data = [
   },
   {
     id: 20,
-    mysql_command: 'DELETE FROM <span>&lt;table_name&gt;</span>\nWHERE <span>&lt;column_name&gt;</span> = 1;',
-    description: `Ջնջում է table-ի մեջ ՄԻԱՅՆ <span>&quot;WHERE&quot;</span> հրամանի միջոցով ընտրված դոկումենտը։`,
+    mysql_command: `DELETE FROM <span>&lt;table_name&gt;</span>
+    WHERE <span>&lt;column_name&gt;</span> = 1; or
+    WHERE <span>&lt;column_name&gt;</span> >= 14; 
+    `,
+    description: `Ջնջում է table-ի մեջ ՄԻԱՅՆ <span>&quot;WHERE&quot;</span> հրամանի միջոցով ընտրված դոկումենտը։ Վերջին տողը կջնջի 14 id-ից բարձր id ունեցող 'user'-րին: Միայն առաջին տողը եթե գրենք այն կջնջի բոլոր տվյալները աղյուսակի մեջից, բայց ոչ աղյուսակը։`,
     example: 'DELETE FROM persons\nWHERE person_id=3;'
   },
   {
     id: 21,
-    mysql_command: 'CREATE TABLE <span>&lt;table_name&gt;</span>\nWHERE <span>&lt;column_name&gt;</span> = 1;',
-    description: `Ջնջում է table-ի մեջ ՄԻԱՅՆ <span>&quot;WHERE&quot;</span> հրամանի միջոցով ընտրված դոկումենտը։`,
-    example: 'CREATE TABLE persons (\nperson_id INT UNIQUE, \nname VARCHAR(50) \n);'
+    mysql_command: `CREATE TABLE <span>&lt;table_name&gt;</span> (
+    key type <span>UNIQUE</span>,
+    key type <span>NOT NULL</span>
+    key type <span>DEFAULT 0</span>
+    );`,
+    description: `<span>&quot;UNIQUE&quot;</span> հրամանի միջոցով նշված սյունակը հետագայումչի կարող կրկնվել, իսկ <span>&quot;NOT NULL&quot;</span> հրամանի միջոցով նշված սյունակը հետագայում չի կարող նշանակվել դատարկ կամ NULL։<span>&quot;DEFAULT&quot;</span> հրամանը նշանակում է համապատասխան դեֆոլտ արժեք եթե ավելացման պահին այն բաց թողնվի։`,
+    example: 'CREATE TABLE persons (\nperson_id INT UNIQUE, \nname VARCHAR(50) NOT NULL\n);'
+  },
+  {
+    id: 22,
+    mysql_command: 'ALTER TABLE <span>&lt;table_name&gt;</span>\nMODIFY <span>&lt;column_name&gt;</span> &lt;type&gt; NOT NULL;',
+    description: `Այս գրվածքը թույլ է տալիս արդեն ստեղծված աղյուսակի մեջ ինչ որ դաշտ նշանակենք <span>&quot;NOT NULL&quot;</span>։`,
+    example: 'CREATE TABLE persons (\nperson_id INT UNIQUE, \nname VARCHAR(50) NOT NULL\n);'
+  },
+  {
+    id: 23,
+    mysql_command: `CREATE TABLE <span>&lt;table_name&gt;</span> (
+       key type UNIQUE,
+       key type NOT NULL, 
+       <span>CONSTRAINT</span> &lt;check_prefix&gt; <span>CHECK</span>(age >=18)
+       );`,
+    description: `Այս գրվածքը թույլ է տալիս անմիջապես աղյուսակի ստեղծման պահին տալ վալիդացիա կոնկրետ դաշտի համար։<span>&quot;CHECK&quot;</span> բանալի բառի միջոցով Օրինակում նշանակվում է տարիքի ներքին սահման։`,
+    example: `CREATE TABLE users (
+       id INT UNIQUE,
+       name VARCHAR(50) NOT NULL,
+       CONSTRAINT check_age CHECK (age >=18)
+       );`
+  },
+  {
+    id: 24,
+    mysql_command: `ALTER TABLE <span>&lt;table_name&gt;</span> (
+       ....
+       <span>ADD CONSTRAINT</span> &lt;check_prefix&gt; <span>CHECK</span>(age >=18)
+       );`,
+    description: `Այս գրվածքը թույլ է տալիս արդեն առկա  աղյուսակի մեջ նշանակել  վալիդացիա կոնկրետ դաշտի համար։`,
+    example: `ALTER TABLE users 
+       id INT UNIQUE,
+       name VARCHAR(50) NOT NULL,
+       ADD CONSTRAINT check_age CHECK (age >=18);`
+  },
+  {
+    id: 25,
+    mysql_command: `ALTER TABLE <span>&lt;table_name&gt;</span> 
+      <span>DROP CHECK </span> &lt;check_prefix&gt;`,
+    description: `Այս գրվածքը թույլ է ջնջել արդեն նշանակված վալիդացիան կոնկրետ դաշտի վրայից։`,
+    example: 'ALTER TABLE users\nDROP CHECK  check_age;'
+  },
+  {
+    id: 26,
+    mysql_command: 'ALTER TABLE <span>&lt;table_name&gt;</span>\nALTER <span>&lt;column_name&gt;</span> SET DEFAULT &lt;def_value&gt;;',
+    description: `Այս գրվածքը թույլ է տալիս արդեն ստեղծված աղյուսակի մեջ ինչ որ դաշտին  նշանակել <span>&quot;DEFAULT&quot;</span> արժեք։`,
+    example: 'ALTER TABLE persons\n ALTER price SET DEFAULT 0;'
+  },
+  {
+    id: 27,
+    mysql_command: 'CREATE TABLE <span>&lt;table_name&gt;</span> (\n key type <span>PRIMARY KEY</span> AUTO INCREMENT\n);',
+    description: `<span>&quot;PRIMARY KEY&quot;</span> (UNIQUE + NOT NULL)։ Ամեն մի աղյուսակի մեջ կարող է լինել միայն ՄԵԿ 'PRIMARY KEY' դաշտ։Երկրորդ նման փորձը կհարուցի սխալ(1068 Multiply primary key defined):Իսկ <span>&quot;AUTO INCREMENT&quot;</span> թույլ է տալիս մեզ ստեղծելու պահին այլևս չնշել այդ դաշտի արժեքտ, այն ավտոմատ կերպով ավելանում է։`,
+    example: 'CREATE TABLE users ( \n user_id INT <span>PRIMARY KEY</span>,\nfirst_name VARCHAR(50)\n);'
+  },
+  {
+    id: 28,
+    mysql_command: 'ALTER TABLE <span>&lt;t_name&gt;</span>\nADD CONSTRAINT\nPRIMARY KEY(<span>&lt;old_column_name&gt;</span>);',
+    description: `<span>&quot;PRIMARY KEY&quot;</span> (UNIQUE + NOT NULL) դաշտ է նշանակում է արդեն ստեղծված աղյուսակի մեջ։`,
+    example: `ALTER TABLE users 
+    ADD CONSTRAINT
+    PRIMARY KEY(user_id);`
+  },
+  {
+    id: 29,
+    mysql_command: 'ALTER TABLE <span>&lt;t_name&gt;</span>\nAUTO_INCREMENT = n;',
+    description: `Փոխում է աղյուսակում ավտոմատի ինկրեմենտացիայի նախնական շեմը։ Առաջին ավելացված դոկումենտը կլինի "777" id-ով։ `,
+    example: `ALTER TABLE users 
+    AUTO_INCREMENT = 777;`
+  },
+  {
+    id: 30,
+    mysql_command: 'CREATE TABLE <span>&lt;t_name&gt;</span>\nFOREIGN KEY("column_name")\n<span>REFERENCES</span> <span>&lt;t_name&gt;</span>("column_name");',
+    description: `Ստեղծելով <span>&quot;books&quot;</span> table-ը միանգամից <span>&quot;FOREIGN KEY&quot;</span> միջոցով մեկ դաշտի արժեքը հղվում է այդ նույն DB-ում առկա մեկ այլ(users) table-ին։Դրանով իսկ կապ է ստեղծվում այդ 2 աղյուսակների մեջև, որը կարելի է օգտագործել որոնումների ժամանակ։`,
+    example: `CREATE TABLE books (
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(60),
+    price DECIMAL(4, 2),
+    user_id INT,
+    <span>FOREIGN KEY</span> (user_id) <span>REFERENCES</span> users (id)
+    );`
+  },
+  {
+    id: 31,
+    mysql_command: 'SELECT <span>SUM("column_name")</span> AS total_sum\nFROM <span>&lt;t_name&gt;</span>;',
+    description: `Փոխում է աղյուսակում ավտոմատի ինկրեմենտացիայի նախնական շեմը։ Առաջին ավելացված դոկումենտը կլինի "777" id-ով։ `,
+    example: `SELECT SUM(profit) AS total_profit
+    FROM sales;`
+  },
+  {
+    id: 32,
+    mysql_command: 'SELECT <span>SUM("column_name")</span> AS total_sum FROM <span>&lt;t_name&gt;</span>;',
+    description: `Վերադարձնում է նշված սյունակի ընդհանում գումարը բոլոր դոկումենտների համար։`,
+    example: `SELECT SUM(profit) AS total_profit
+    FROM sales;`
+  },
+  {
+    id: 33,
+    mysql_command: 'SELECT <span>MAX("column_name")</span> AS total_sum FROM <span>&lt;t_name&gt;</span>;',
+    description: `Միանգամից գտնում է նշված սյունակի max արժեքը։ <span>MIN</span>-ը համապատասխան ձևով կվերադարձնի մինիմում արժեքը։<span>AVG</span>-ն(average-միջին) կվերադարձնի գնի միջին թվաբանականը։ `,
+    example: `SELECT MAX/MIN/AVG(price) AS maximum
+    FROM sales;`
+  },
+  {
+    id: 34,
+    mysql_command: `SELECT <span>CONCAT("column_name" ...)</span> AS n 
+    FROM <span>&lt;t_name&gt;</span>;`,
+    description: `<span>CONCAT</span> ֆունկցիան պետք է սյունակների միավորման համար։Վերադարջված արժեքը կլինի ֆունկցիայի մեջ նշված սյունակների արժեքները մեկ "n" սյունակ անվան տակ։ Օրինակում միավորվում է անուն ազգանունը `,
+    example: `SELECT CONCAT (name, surname) AS full_name
+    FROM users;`
   },
 
 ];

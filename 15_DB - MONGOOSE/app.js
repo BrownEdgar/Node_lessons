@@ -17,7 +17,7 @@ const models = require('./models')
 const sericies = require('./Servicies')
 
 app.use(bodyParser.urlencoded({
-	extended: false
+  extended: false
 }));
 app.use(bodyParser.json());
 
@@ -35,36 +35,27 @@ app.use('/book', ROUTERS.BookRouter);
 
 
 app.models = {
-	books: models.Book
+  books: models.Book
 }
 
 app.sericies = {
-	books: new(sericies.books)(app.models)
+  books: new (sericies.books)(app.models)
 }
-
-
-
-
-
-
-
-
-
 
 // 'mongodb://localhost:27017/FirstDB'
 mongoose.connect(
-	'mongodb://localhost:27017/klaus',
-	{ useNewUrlParser: true,  useUnifiedTopology: true},
-	(err) => {
-		if (err) {
-		console.log(err);
-		}
-		console.log("Coneccted to DB")	
-});
+  'mongodb://localhost:27017/klaus',
+
+  (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log("Coneccted to DB")
+  });
 
 
 app.get('/', function (req, res) {
-	res.send("Home Page...");
+  res.send("Home Page...");
 });
 
 

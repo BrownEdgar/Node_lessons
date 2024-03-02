@@ -8,9 +8,8 @@ md "\data\db"
 3.Connect to MongoDB
 "C:\Program Files\MongoDB\Server\4.2\bin\mongo.exe"// arandzin cmd-um havaqel
 
-
 comands
-show dbs 
+show dbs
 db.books.insert({"name": "mongoDB data"})
 show collections
 use SebastianDB
@@ -19,11 +18,7 @@ db.newCollection.drop() -jnjum e db-i 'newCollection' anunov colekcian, ete verj
 
 db.dropDatabase()
 
-
-
 6.db.users.insertOne({'name':"Jhon","email":"example.ru"}); avelacnum e colekciayum tvyalner
 
-
-
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
-https://docs.atlas.mongodb.com/getting-started/
+<https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/>
+<https://docs.atlas.mongodb.com/getting-started/>

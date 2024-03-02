@@ -18,7 +18,6 @@ const storeItems = new Map([
 
 
 app.post("/create-checkout-session", async (req, res) => {
-
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -27,7 +26,7 @@ app.post("/create-checkout-session", async (req, res) => {
         const storeItem = storeItems.get(item.id)
         return {
           price_data: {
-            currency: "usd",
+            currency: "eur",
             product_data: {
               name: storeItem.name,
             },
@@ -45,5 +44,4 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 })
 
-app.listen(3333, () => console.log("server is runnig"))
-
+app.listen(3333, () => console.log("server is runnig")) 

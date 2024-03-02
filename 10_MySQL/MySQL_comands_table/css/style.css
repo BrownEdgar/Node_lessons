@@ -86,10 +86,12 @@ td.desc span {
 code {
   background-color: var(--cade-bg-color);
   padding: 6px 3px;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 500;
+  font-family: 'Consolas', sans-serif;
+  font-weight: 300;
   white-space: pre-line;
   display: block;
   border-radius: 6px;
   position: relative;
+  line-height: 1.6;
+  padding-left: 10px;
 }
