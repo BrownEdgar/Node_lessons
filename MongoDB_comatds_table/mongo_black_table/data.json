@@ -1,0 +1,136 @@
+[
+  {
+    "id": 1,
+    "keyword": "$group",
+    "command": "Model.aggregate([ {} ])",
+    "description": "<span>aggregate</span> մեթոդի հիմնական կառուցվածքն է:կոնստրուկտոր, որն օգտագործվում է ագրեգացիոն <span>pipeline</span>-երի(array of objects) կառուցման համար:Հիմնական մեթոդներն են։<br/> $match | $group | $project | $sort | $count | $limit | $skip | $out",
+    "example": "Model.aggregate([\n { $match: { status: 'urgent' } }\n]}"
+  },
+  {
+    "id": 2,
+    "keyword": "$match",
+    "command": "{ $match: { name: <name> } },\n { $sort: { age: 1 } }",
+    "description": "Օրինակը գտնում է բոլոր 'Ivan' անունով մարդկանց և հաջորթիվ սրոտավորում է ըստ տարիքի:('1'-ըստ աՃման,'-1'-ըստ նվազման)",
+    "example": "Model.aggregate([\n { $match:{ name: 'Ivan' },\n { $sort: { age: 1 }}\n]}"
+  },
+  {
+    "id": 43,
+    "keyword": "$count",
+    "command": "{ $match: {  score: {$gt: 80} } },\n { $count: <string> }",
+    "description": "Օրինակը գտնում է բոլոր $80-ից բարձր '$score' ունեցող դոկումենտները՝ վերադարձնելով նրանց քանակը:",
+    "example": "Model.aggregate([\n { $match: {  score: {$gt: 80} } }\n { $count: 'count' }\n]}",
+    "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/?utm_source=compass&utm_medium=product#-count--aggregation-"
+  },
+  {
+    "id": 3,
+    "keyword": "$limit | $sort",
+    "command": "{$match: {name: 'Ivan'}}, {$sort: {age: -1}}, {$limit: 1}",
+    "description": "Օրինակը գտնում է բոլոր 'Ivan' անունով մարդկանց և հաջորթիվ սրոտավորում է ըստ տարիքի:Հետո վերադարձնում 1 մարդու։ Արդյունքում կստանանք ամենատարեց մարդուն:",
+    "example": "Model.aggregate([\n {$match: {name: 'Ivan'}}, \n {$sort: {age: -1}}, \n {$limit: 1}\n]}"
+  },
+  {
+    "id": 4,
+    "keyword": "$match",
+    "command": " { $match: { 'address.city': <city_name> } }",
+    "description": "Օրինակը պետք է գալիս եթե ունենք ներդրված օբյեկտներ։ $address.city գրառումը(չակերտները պարտադիր են) գտնում է address օբյեկտում '$city' դաշտի համապատասխան արժեքը",
+    "example": "Model.aggregate([\n { $match: { 'address.city': 'Yerevan' } }\n]}"
+  },
+  {
+    "id": 5,
+    "keyword": "$gt | $and",
+    "command": "{ $match: { $and: [ {'gender': <string> }, {'age': {$gt:<number> } }]}}",
+    "description": "Գտնում է բոլոր 26-ից բարձր տարիք ունեցող տղաներին:Զանգվածի մեջ գրված 2 պաըմեններն էլ միաժամանակ պետք է ճշմարիտ լինեն։",
+    "example": "Model.aggregate([\n { $match: { $and: [\n {'gender': 'male' }, {'age': { $gt: 26 } }\n]}}\n]}"
+  },
+  {
+    "id": 6,
+    "keyword": "$ne",
+    "command": "{$match: {paid: { $ne: <string> }}}",
+    "description": "lorem",
+    "example": "Model.aggregate([\n {$match: {paid: { $ne: null }}}\n]}"
+  },
+  {
+    "id": 7,
+    "keyword": "$group",
+    "command": "{ $match: {hobby: {#size:<number>} }}}",
+    "description": "այս օրինակը կվերադարձնի միայն այն 'User'-ին որոնց մոտ 'hobby․length'-ը  3 կլինի``Նույն արդյունքը կլինի եթե․՝ User.find({hobby: {#size:3}}) կանչենք",
+    "example": "Model.aggregate([\n { $match: {hobby: {#size:3} }}\n]}"
+  },
+  {
+    "id": 8,
+    "keyword": "$group",
+    "command": "Model.aggregate([ { $group: { _id:<objectId>} }   ])",
+    "description": "lorem",
+    "example": "Model.aggregate([\n { $group: { _id: '$age'} }}\n]}"
+  },
+  {
+    "id": 9,
+    "keyword": "$group",
+    "command": "Model.aggregate([ { $group: {_id: { age:$<age>, name:$<name>}} } ])",
+    "description": "lorem",
+    "example": "Model.aggregate([\n { $group: {_id: { age:'$age', name:'$name'}} }\n]}"
+  },
+  {
+    "id": 10,
+    "keyword": "$group",
+    "command": "([{$match: {type: 'a'}},{$group: {_id: '$type', total: {$sum: '$price'}}}])",
+    "description": "այս օրինակը կվերադարձնի 'a' Տիպ ունեցող 'Girq'-ի ընդհանուր գինը,(գները գրված են price հատկւոտյան մեջ),եթե հանենք '$match' ֆիլտրը ապա կվերադարձնի բոլոր տիպերի գները առանձին օբյեկտներով",
+    "example": "Model.aggregate([\n {$match: {type: 'a'}},\n {$group: {_id: '$type', total: {$sum: '$price'}}}\n]}"
+  },
+  {
+    "id": 11,
+    "keyword": "$project",
+    "command": "([ { $project: { <specification> } } ])",
+    "description": "Թույլ է տալսիս 'document'-ից ընտրել այն հատկությունները, որոնք մենք նախընտրում ենք(<field>: <$1 or true> | _id: <$0 or false>)",
+    "example": "Model.aggregate([\n { $project: { name:1, _id: 0 }}\n]}"
+  },
+  {
+    "id": 12,
+    "keyword": "$multiply",
+    "command": "([ { $project: { ..., total: \n{ $multiply: [ '$price', '$quantity' ] } } }\n])",
+    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի արտադրյալն է լինում ",
+    "example": "Model.aggregate([\n { $project: { date: 1 item: 1, total: { $multiply: [ '$price', '$quantity' ] } } }]"
+  },
+  {
+    "id": 13,
+    "keyword": "$fill",
+    "command": "Model.aggregate([\n { $fill: output: {name: { value: <value> }}}\n]}",
+    "description": "Բոլոր աւն դոկումենտները, որոնք չունենան '$name' դաշտ, նրանց համար կնշանակվի default 'unknown' արժեքը։",
+    "example": "Model.aggregate([\n { $fill: output: {\n\t name: { value: 'unknown' }\n\t}}\n ]}"
+  },
+  {
+    "id": 14,
+    "keyword": "mongoDB | $push",
+    "command": "db.students.insertOne( { _id: 1, scores: [ 44, 78, 38, 80 ] } )",
+    "description": "Այս օրինակը թույլ կտա '$scores' զանգվածի մեջ ավելացնել նոր էլեմենտ",
+    "example": "db.students.updateOne({ _id: 1},\n{ $push: { scores: 89}}\n)"
+  },
+  {
+    "id": 15,
+    "keyword": "mongoDB | $push",
+    "command": "db.students.insertOne( { _id: 1, scores: [ 44, 78, 38, 80 ] } )",
+    "description": "Այս օրինակը թույլ կտա '$scores' զանգվածի մեջ ավելացնել նոր էլեմենտ",
+    "example": "db.students.updateOne({ _id: 1},\n{ $push: { scores: 89}}\n)"
+  },
+  {
+    "id": 16,
+    "keyword": "$sum",
+    "command": "([ { $project: { ..., total: \n{  total: {$sum: [<value1>, <value2>]} } }\n])",
+    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի $գումարով։",
+    "example": "Model.aggregate([ { $project: { ..., total: \n{ total: {$sum: ['$assignment', '$points']} } }\n]"
+  },
+  {
+    "id": 17,
+    "keyword": "$unset",
+    "command": "db.dogs.updateMany({},\n{ $unset: { type: ''}})",
+    "description": "Ջնջում է նշված դաշտը տրված $type բառի փոխարեն: $aggregate մոթոդում օգտագործելիս այն չի ջնջում դաշտը, ուղղակի վերադարձնում է առանց այդ դաշտի",
+    "example": "db.dogs.updateMany(\n{},\n{ $unset: { age: ''}\n})"
+  },
+  {
+    "id": 18,
+    "keyword": "$unset",
+    "command": "db.dogs.updateMany({},\n{ $unset: { type: ''}})",
+    "description": "Օրինակը գտնում է բոլորին, հետո ցիկլի միջոցով տպում է միայն նրան $email դաշտերը։",
+    "example": "Model.aggregate([\n { $match: {} } \n]).forEach(elem => console.log(elem.email))"
+  }
+]

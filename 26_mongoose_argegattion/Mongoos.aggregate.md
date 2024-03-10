@@ -1,6 +1,6 @@
 ## Նախնական կառուցվածքը
 
- User.aggregate([ {}  ])
+ User.aggregate([ {} ])
 
  $match |  $group | $project | $sort | $count | $limit | $skip | $out |
 
@@ -182,12 +182,12 @@ WineSchema.aggregate([
 
  WineSchema.aggregate([
 
-{ $sort: { name: 1 }
-  { $sort: { name: 1, age: 1 } // => կսորտավորի ըստ անունների հետո նոր ըստ տարիքի
+{ $sort: { name: 1 }}
+  { $sort: { name: 1, age: 1 }} // => կսորտավորի ըստ անունների հետո նոր ըստ տարիքի
   ---------------------
 
   { $group: { _id: "$age" } }
-  { $sort: { _id: 1 }
+  { $sort: { _id: 1 }}
  ])
 
 ## $limit $ne
@@ -290,6 +290,15 @@ X.aggregate([
 
     // { $match: {} },
     // { $limit: 3 },
+
+## =========== | append | =================
+<!--  Թույլ է տալիս միավորել մի քանի aggregate օբյեկտներ մեկի ~~մեջ~~ -->
+aggregate.append({ $project: { field: 1 }}, { $limit: 2 });
+
+// or pass an array
+const pipeline = [{ $match: { daw: 'Logic Audio X' }} ];
+aggregate.append(pipeline);
+
 
 ## ============ | կարող ենք ընտրել կոնկրետ որ դաշտերն ենք ուզում ցուցադրել |================
 

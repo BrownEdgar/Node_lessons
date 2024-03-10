@@ -1,13 +1,12 @@
 const { Router } = require('express')
-const Userschema = require('../models/user')
-
 const router = Router()
 
-router.get('/', async (req, res) => {
-	let result = await Userschema.find();
-	console.log('result', result)
-	res.render("users", { layout: "./users", users: result}); //  Եթե չգրելք ելի "main.ejs" կնկարի
-})
+// Controller register
+const UsersController = require('../Controller/User.controller');
+const controller = new UsersController();
+
+router.get('/', controller.testMethods)
+router.post('/', controller.addUsers)
 
 
 module.exports = router

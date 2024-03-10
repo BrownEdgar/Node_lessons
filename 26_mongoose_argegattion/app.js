@@ -30,34 +30,25 @@ app.use("/agregate", agregateRouter);
 
 
 app.models = {
-	clients: models.clientInfo
+  clients: models.clientInfo,
+  users: models.users
 }
 
 app.services = {
-	clients: new (sevices.ClientServices)(app.models),
+  clients: new (sevices.ClientServices)(app.models),
+  users: new (sevices.users)(app.models),
 };
-
-
-
-
 
 // Use connect method to connect to the server
 async function start() {
-	try {
-		await mongoose.connect(
-			'mongodb+srv://Edgar:sebastian25@sebocl.bhoqm.mongodb.net/klaus?retryWrites=true&w=majority',
-			{
-				useNewUrlParser: true,
-				useFindAndModify: false,
-				useUnifiedTopology: true 
-			}
-		)
-		app.listen(3333, () => {
-			console.log('Server has been started...')
-		})
-	} catch (e) {
-		console.log(e)
-	}
+  try {
+    await mongoose.connect('mongodb://localhost:27017')
+    app.listen(3333, () => {
+      console.log('Server has been started...')
+    })
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 start()

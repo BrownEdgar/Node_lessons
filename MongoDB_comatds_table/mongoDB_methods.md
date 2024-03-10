@@ -101,6 +101,5 @@ db.grades.findOneAndUpdate(
    { sort: { "points" : 1 }, upsert:true, returnNewDocument : true } եթե չի գտնվել
 )
 
-# links
-
-Deprecated Methods => <https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/#std-label-compatibility>
+# Deprecated Methods
+ <https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/#std-label-compatibility>

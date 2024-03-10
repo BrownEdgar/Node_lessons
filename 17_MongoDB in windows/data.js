@@ -15,13 +15,15 @@ db.users.insertMany([
     "email": "example.ru",
     'avto': true,
     'age': 23,
+    'score': [12, 41, 75, 10, 3, 8],
     'birthday': new Date("1986-11-2-19")
   },
   {
-    'name': "Sebo",
+    'name': "Seastian",
     "email": "example2@mail.ru",
     'avto': true,
     'age': 26,
+    'score': [21, 36, 20, 7, 6, 51],
     'birthday': new Date("1986-11-2-19")
   }
 ]);

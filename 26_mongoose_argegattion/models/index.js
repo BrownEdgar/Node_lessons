@@ -1,4 +1,4 @@
 module.exports = {
-	clientInfo: require('./Product'),
-
+  clientInfo: require('./Product'),
+  users: require('./Users'),
 }

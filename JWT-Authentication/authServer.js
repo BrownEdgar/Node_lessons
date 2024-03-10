@@ -9,38 +9,39 @@ app.use(express.json())
 let refreshTokens = []
 
 app.post('/token', (req, res) => {
-	const refreshToken = req.body.token
-	if (refreshToken == null) return res.sendStatus(401);
+  const refreshToken = req.body.token
+  if (refreshToken == null) return res.sendStatus(401);
 
-	if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
 
-	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-		if (err) return res.sendStatus(403)
-		const accessToken = generateAccessToken({ name: user.name })
-		res.json({ accessToken: accessToken })
-	})
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+    const accessToken = generateAccessToken({ name: user.name })
+    res.json({ accessToken: accessToken })
+  })
 })
+
 //ջնջում ենք `token`-ը որպեսզի ամեն անգամ նույն `token`-ով չգեներացվի նոր `accessToken`
 app.delete('/logout', (req, res) => {
-	refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-	res.sendStatus(204)
+  refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+  res.sendStatus(204)
 })
 
 app.post('/login', (req, res) => {
-	const username = req.body.username
-	const user = { name: username }
-	console.log({ username, tiken: process.env.REFRESH_TOKEN_SECRET })
-	const accessToken = generateAccessToken(user)
-	// այս մեկին պետք չե փոխանցել { expiresIn: '30min' }
-	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-	// պահպանում ենք այնհետագայում ստուգելու թոստ անցկացնելու համար
-	refreshTokens.push(refreshToken);
+  const username = req.body.username
+  const user = { name: username }
+  console.log({ username, tiken: process.env.REFRESH_TOKEN_SECRET })
+  const accessToken = generateAccessToken(user)
+  // այս մեկին պետք չե փոխանցել { expiresIn: '30min' }
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+  // պահպանում ենք այնհետագայում ստուգելու թոստ անցկացնելու համար
+  refreshTokens.push(refreshToken);
 
-	res.json({ accessToken: accessToken, refreshToken: refreshToken })
+  res.json({ accessToken: accessToken, refreshToken: refreshToken })
 })
 
 function generateAccessToken(user) {
-	return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30min' })
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30min' })
 }
 
 app.listen(4000)
