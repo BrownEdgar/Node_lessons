@@ -14,8 +14,8 @@ passport.deserializeUser(function (user, done) {
 });
 
 passport.use(new GoogleStrategy({
-  clientID: "144505819167-ej0d7kbvrvj5hnnqv993k33qt22m4qga.apps.googleusercontent.com",
-  clientSecret: "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",
+  clientID: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/google/redirect" //petq 1 hamynkni https://console.developers.google.com/?hl=ru sayti "Authorized redirect URIs"-i het
 },
   function (accessToken, refreshToken, profile, done) {
