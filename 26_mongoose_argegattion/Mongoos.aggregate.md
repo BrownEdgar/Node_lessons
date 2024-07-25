@@ -13,8 +13,9 @@
 
  { $match: {age: {$gt:18} }},
  { $match: { status: "urgent" } },
-  { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
-  {$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
+{ $match: { name: "Ivan" } },
+{ $sort: { age: 1 } }
+{$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
  { $match: { "address.city": "McKenziehaven" } }
  { $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }]}},
   {$match: {paid: { $ne: null }}},
@@ -298,7 +299,6 @@ aggregate.append({ $project: { field: 1 }}, { $limit: 2 });
 // or pass an array
 const pipeline = [{ $match: { daw: 'Logic Audio X' }} ];
 aggregate.append(pipeline);
-
 
 ## ============ | կարող ենք ընտրել կոնկրետ որ դաշտերն ենք ուզում ցուցադրել |================
 

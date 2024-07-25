@@ -11,14 +11,14 @@
  User.aggregate([
  { $match: {hasWife: true }},
 
- { $match: {age: {$gt:18} }},
+ { $match: { age: {$gt:18} }},
  { $match: { status: "urgent" } },
-  { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
-  {$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
+ { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
+ { $match: { name: "Ivan" } }, { $sort: {age: -1} }, { $limit: 1 }
  { $match: { "address.city": "McKenziehaven" } }
  { $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }]}},
-  {$match: {paid: { $ne: null }}},
-  {$match: {productType: {$in: ['shoe', 'shirt']}}},
+ { $match: { paid: { $ne: null }}},
+ { $match: { productType: {$in: ['shoe', 'shirt']}}},
  ])
 
 ## $group examples
@@ -299,7 +299,6 @@ aggregate.append({ $project: { field: 1 }}, { $limit: 2 });
 const pipeline = [{ $match: { daw: 'Logic Audio X' }} ];
 aggregate.append(pipeline);
 
-
 ## ============ | կարող ենք ընտրել կոնկրետ որ դաշտերն ենք ուզում ցուցադրել |================
 
     // { $match: {} },
@@ -322,7 +321,6 @@ aggregate.append(pipeline);
 
 ## ============ |    |================
 
-    // { $group: { "_id": "$edgar" } }
     // ============ |   Գտնել և սորտավորոել ըստ "email" դաշտի |================
     // { $match: {} },
     // { $sort: { email: 1 } },
@@ -346,7 +344,8 @@ aggregate.append(pipeline);
     // }
     // ])
 
-({ "_id" : 1, "item" : "ABC1", sizes: [ "S", "M", "L"] }).aggregate( [ { $unwind : "$sizes" } ] ) =>
+({ "_id" : 1, "item" : "ABC1", sizes: [ "S", "M", "L"] })
+.aggregate( [ { $unwind : "$sizes" } ] ) =>
 
 { "_id" : 1, "item" : "ABC1", "sizes" : "S" }
 { "_id" : 1, "item" : "ABC1", "sizes" : "M" }

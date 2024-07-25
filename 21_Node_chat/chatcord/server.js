@@ -23,7 +23,7 @@ const botName = 'ChatCord Bot';
 io.on('connection', socket => {
 
   socket.on('joinRoom', ({ username, room }) => {
-		//պահում ենք user-ին զանգվածի մեջ 
+    //պահում ենք user-ին զանգվածի մեջ 
     const user = userJoin(socket.id, username, room);
 
     socket.join(user.room);
@@ -39,8 +39,8 @@ io.on('connection', socket => {
         formatMessage(botName, `${user.username} has joined the chat`)
       );
 
-	// Ուղարկում ենք օգտվողներին և սենյակի տվյալները
-	//getRoomUsers ֆունկցիան գտնում է այդ սենյակի բոլոր օգտվողներին 
+    // Ուղարկում ենք օգտվողներին և սենյակի տվյալները
+    //getRoomUsers ֆունկցիան գտնում է այդ սենյակի բոլոր օգտվողներին 
     io.to(user.room).emit('roomUsers', {
       room: user.room,
       users: getRoomUsers(user.room)
@@ -76,3 +76,6 @@ io.on('connection', socket => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+// start foo bar zoo baz

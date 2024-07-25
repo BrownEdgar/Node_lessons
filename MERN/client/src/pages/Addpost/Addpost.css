@@ -1,0 +1,46 @@
+.home__colored {
+  background: #00CED1;
+  min-height: calc(100vh - 50px);
+  align-items: start;
+}
+
+.Addpost {
+  width: 32rem;
+
+  margin: 50px auto;
+  padding: 2em;
+  box-shadow: rgba(0, 0, 0, 0.2) 10px 10px 1px;
+  background: #ffffff;
+  border-radius: 6px;
+}
+
+.Addpost input, textarea {
+  width: 100%;
+  margin: 10px auto;
+  padding: 10px;
+}
+
+.Addpost input:focus {
+  outline: 1px solid rgba(102, 16, 83, 0.698);
+
+}
+
+.Addpost input[type='submit'] {
+  background-color: #16a085;
+  color: #fff;
+  border: 0;
+  font-size: 18px;
+  padding: 0.6em 1em;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.Addpost label {
+  font-variant: small-caps;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+textarea {
+  resize: none;
+}

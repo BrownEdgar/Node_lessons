@@ -1,4 +1,25 @@
 const button = document.querySelector("button")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 button.addEventListener("click", () => {
   fetch("http://localhost:3333/create-checkout-session", {
     method: "POST",
@@ -7,8 +28,8 @@ button.addEventListener("click", () => {
     },
     body: JSON.stringify({
       items: [
-        { id: 3, quantity: 1 },
-        { id: 1, quantity: 2 }
+        { id: 2, quantity: 1 },
+        { id: 1, quantity: 1 }
       ],
     }),
   })

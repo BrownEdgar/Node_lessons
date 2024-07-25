@@ -29,6 +29,12 @@ const data = [
     example: 'DROP DATABASE myDb'
   },
   {
+    id: 3.1,
+    mysql_command: 'SELECT * FROM <span>&lt;db_name&gt;</span>  LIMIT <span>&lt;number&gt;</span>',
+    description: 'Ընտրում է նշված DB-ից  <span>&quot;number&quot;</span>, թվով դոկումենտ',
+    example: 'SELECT * FROM myDb LIMIT 2;'
+  },
+  {
     id: 4,
     mysql_command: 'ALTER DATABASE <span>&lt;db_name&gt;</span>\nREAD ONLY = 1 / 0',
     description: `1-ը readonly է դարձնում,դրանից հետո կձախողվեն DB-ն ջնջելու կամ նոր տվյալներ ավելացնելու փորձերը։
@@ -39,7 +45,7 @@ const data = [
     id: 5,
     mysql_command: 'CREATE TABLE <span>&lt;table_name&gt;</span> (\n key type\n...\n);',
     description: `Ստեղծում է նշված անունով աղյուսակ(table):Ամեն հատկություն ցանկալի է գրել նոր տողից, որից հետո նշվում է նրա տիպը:  <a href="https://blog.devart.com/mysql-data-types.html">all types</a>`,
-    example: 'CREATE TABLE <span>users</span> ( \n user_id INT\nfirst_name VARCHAR(50)\n);'
+    example: 'CREATE TABLE <span>users</span> ( \n user_id INT,\nfirst_name VARCHAR(50),\nmaried BOOL,\ndate DATE\n);'
   },
   {
     id: 6,
@@ -61,9 +67,15 @@ const data = [
   },
   {
     id: 9,
-    mysql_command: 'ALTER TABLE <span>&lt;table_name&gt;</span>\nADD <span>&lt;new_key_name&gt;</span> <span>&lt;type&gt;</span>;',
+    mysql_command: 'ALTER TABLE <span>&lt;table_name&gt;</span>\nADD COLUMN<span>&lt;new_key_name&gt;</span> <span>&lt;type&gt;</span>;',
     description: `ALTER(փոփոխել, փոխել) հրամանը թույլ է տալիս անվանափոխել աղյուսակի ցանկացած սյունակի անուն, կամ ավելացնել նորը`,
-    example: 'ALTER TABLE persons\nADD city VARCHAR(50);'
+    example: 'ALTER TABLE persons\nADD COLUMN city VARCHAR(50);'
+  },
+  {
+    id: 9.1,
+    mysql_command: 'ALTER TABLE <span>&lt;table_name&gt;</span>\nDROP COLUMN <span>&lt;name&gt;</span>;',
+    description: `ALTER(փոփոխել, փոխել) հրամանը թույլ է տալիս անվանափոխել աղյուսակի ցանկացած սյունակի անուն, կամ ավելացնել նորը`,
+    example: 'ALTER TABLE persons\nDROP COLUMN city;'
   },
   {
     id: 10,
@@ -111,8 +123,8 @@ const data = [
   {
     id: 17,
     mysql_command: 'SELECT * FROM <span>&lt;table&gt;</span>\nWHERE<span>&lt;column_name&gt;</span> = 1',
-    description: `Ընտրում  է <span>&lt;persons&gt;</span> table-ից միայն 1 id-ով դոկումենտը։ Եթե նման id-ով դոկումենտ չլինի կվերադարձնի <span>&quot;NULL&quot;</span>: Իսկ սխալ սյաունակի ասնւնը կհարուցի <span>&quot;Error Code 1064&quot;</span> սխալը։`,
-    example: 'SELECT * FROM persons\nWHERE person_id = 1; or \nWHERE salary >= 1000; or \nWHERE salary != 1000; or \nWHERE salary IS NULL; or \nWHERE salary IS NOT NULL;'
+    description: `Ընտրում  է <span>&lt;persons&gt;</span> table-ից միայն 1 id-ով դոկումենտը։ Եթե նման id-ով դոկումենտ չլինի կվերադարձնի <span>&quot;NULL&quot;</span>: Իսկ սխալ սյաունակի ասնւնը կհարուցի <span>&quot;Error Code 1064&quot;</span> սխալը։ <span> ՛&lt;&gt;՛ </span> նշանը նշանակում է Not equal,<span>&lt; s% &gt;</span> նշանը նշանակում է սկսվում է 's' տառով`,
+    example: 'SELECT * FROM persons\nWHERE person_id = 1; or \nWHERE salary >= 1000; or \nWHERE salary != 1000; or \nWHERE salary IS NULL; or \nWHERE salary IS NOT NULL; or \nWHERE City IN ("Yerevan","Gyumri"); or \nWHERE City LIKE `s%` | `%s` | `%any%` |  `_s%`;\n WHERE Price <> 18;or \nWHERE population BETWEEN 5000 AND 6000;'
   },
   {
     id: 18,
@@ -141,9 +153,11 @@ const data = [
     key type <span>UNIQUE</span>,
     key type <span>NOT NULL</span>
     key type <span>DEFAULT 0</span>
+    key type <span>UNSIGNED</span>
+    key <span>ENUM</span>(a,b,c)
     );`,
-    description: `<span>&quot;UNIQUE&quot;</span> հրամանի միջոցով նշված սյունակը հետագայումչի կարող կրկնվել, իսկ <span>&quot;NOT NULL&quot;</span> հրամանի միջոցով նշված սյունակը հետագայում չի կարող նշանակվել դատարկ կամ NULL։<span>&quot;DEFAULT&quot;</span> հրամանը նշանակում է համապատասխան դեֆոլտ արժեք եթե ավելացման պահին այն բաց թողնվի։`,
-    example: 'CREATE TABLE persons (\nperson_id INT UNIQUE, \nname VARCHAR(50) NOT NULL\n);'
+    description: `<span>&quot;UNIQUE&quot;</span> հրամանի միջոցով նշված սյունակը հետագայում չի կարող կրկնվել, իսկ <span>&quot;NOT NULL&quot;</span> հրամանի միջոցով նշված սյունակը հետագայում չի կարող նշանակվել դատարկ կամ NULL։<span>&quot;DEFAULT&quot;</span> բանալի բառը նշանակում է համապատասխան դեֆոլտ արժեք եթե ավելացման պահին այն բաց թողնվի։<span>&quot;UNSIGNED&quot;</span> բանալի բառը նշանակում է, որ այդ դաշտը չի ընդունում բացասական արժեքներ:<span>&quot;ZEROFILL&quot;</span> բանալի բառը  0-րի լրացման գաղափարն է այսինքն int(2) տիպի ժամանակ կցուցադրվի 01 ոչ թե 1:`,
+    example: 'CREATE TABLE persons (\nperson_id INT <span>UNIQUE</span>, \nname VARCHAR(50) <span>NOT NULL</span>,\n age tinyInt <span>DEFAULT</span> 18 <span>UNSIGNED</span> <span>ZEROFILL</span>,\n status  <span>ENUM</span>("active", "inactive")\n);'
   },
   {
     id: 22,
@@ -225,10 +239,9 @@ const data = [
   },
   {
     id: 31,
-    mysql_command: 'SELECT <span>SUM("column_name")</span> AS total_sum\nFROM <span>&lt;t_name&gt;</span>;',
-    description: `Փոխում է աղյուսակում ավտոմատի ինկրեմենտացիայի նախնական շեմը։ Առաջին ավելացված դոկումենտը կլինի "777" id-ով։ `,
-    example: `SELECT SUM(profit) AS total_profit
-    FROM sales;`
+    mysql_command: 'SELECT * FROM <span>ORDER BY</span> cities <span>&lt;col_name&gt;</span> ASC/DESC;',
+    description: `ՎԵրադարձնում է սորտավորված աղյուսակը ըստ տրված դաշտի`,
+    example: `SELECT * FROM cities ORDER BY population ASC/DESC;`
   },
   {
     id: 32,
@@ -252,6 +265,12 @@ const data = [
     example: `SELECT CONCAT (name, surname) AS full_name
     FROM users;`
   },
+  {
+    id: 35,
+    mysql_command: `<span>CREATE TYPE</span> <span>&lt;type_name&gt;</span> AS EMUM('a', 'b', 'c');`,
+    description: `<span>CREATE TYPE</span> հրամանը թույլ է տալիս typeScript-ի նաման ստեղծել հետագայում օգտագործվող տիպեր, ինչը հեշտացնում է նրանց օգտագործումը:`,
+    example: `<span>CREATE TYPE</span> user_status AS ENUM ('active', 'inactive');`
+  },
 
 ];
 
@@ -272,3 +291,38 @@ function renderData() {
 }
 
 renderData()
+
+
+// // v14.6.2 Mathematical Functions
+// // Name	Description
+// ABS()	    Return the absolute value
+// ACOS()	  Return the arc cosine
+// ASIN()	  Return the arc sine
+// ATAN()	  Return the arc tangent
+// ATAN2()   Return the arc tangent of the two arguments
+// ATAN()	  Return the arc tangent of the two arguments
+// CEIL()	  Return the smallest integer value not less than the argument
+// CEILING()	Return the smallest integer value not less than the argument
+// CONV()	  Convert numbers between different number bases
+// COS()	    Return the cosine
+// COT()	    Return the cotangent
+// CRC32()	  Compute a cyclic redundancy check value
+// DEGREES()	Convert radians to degrees
+// EXP()	    Raise to the power of
+// FLOOR() 	Return the largest integer value not greater than the argument
+// LN()	    Return the natural logarithm of the argument
+// LOG()	    Return the natural logarithm of the first argument
+// LOG10() 	Return the base - 10 logarithm of the argument
+// LOG2()	  Return the base - 2 logarithm of the argument
+// MOD()	    Return the remainder
+// PI()	    Return the value of pi
+// POW()	    Return the argument raised to the specified power
+// POWER()	  Return the argument raised to the specified power
+// RADIANS()	Return argument converted to radians
+// RAND()	  Return a random floating - point value
+// ROUND()	  Round the argument
+// SIGN()	  Return the sign of the argument
+// SIN()	    Return the sine of the argument
+// SQRT()	  Return the square root of the argument
+// TAN()	    Return the tangent of the argument
+// TRUNCATE()Truncate to specified number of decimal places

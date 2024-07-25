@@ -3,24 +3,24 @@ const passport = require('passport');
 
 
 passport.serializeUser(function (user, done) {
-	console.log(`serializeUser`, user)
-	done(null, user);
+  console.log(`serializeUser`, user)
+  done(null, user);
 });
 
 passport.deserializeUser(function (user, done) {
-	console.log(`deserializeUser`, user)
-		done(null, user);
-	
+  console.log(`deserializeUser`, user)
+  done(null, user);
+
 });
 
 passport.use(new GoogleStrategy({
-	clientID: "975129130799-h9hgh2j4vgbli5l80jibindiqv0irbep.apps.googleusercontent.com",
-	clientSecret: "KQXmpcZzgWuOgjtJe0dQC-z8",
-	callbackURL: "http://localhost:3000/auth/google/redirect"
+  clientID: "144505819167-ej0d7kbvrvj5hnnqv993k33qt22m4qga.apps.googleusercontent.com",
+  clientSecret: "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",
+  callbackURL: "http://localhost:3000/auth/google/redirect" //petq 1 hamynkni https://console.developers.google.com/?hl=ru sayti "Authorized redirect URIs"-i het
 },
-	function (accessToken, refreshToken, profile, done) {
-		console.log(`object`, profile)
-			return done(null, profile);
-		
-	}
+  function (accessToken, refreshToken, profile, done) {
+    console.log(`object`, profile)
+    return done(null, profile);
+
+  }
 ));

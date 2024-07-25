@@ -60,6 +60,7 @@ tr:nth-of-type(even) {
 
 .example {
   min-width: 450px;
+  tab-size: 20px;
 }
 
 td.desc {
@@ -94,7 +95,7 @@ td.commads .keyword {
   padding: 4px;
   top: 5px;
   right: 10px;
-  background-color: #d4c3b3;
+  background-color: rgba(29, 195, 118, 0.983);
   color: #000;
   border-bottom: 1px solid #268333;
   border-radius: 6px 6px 0 0;
@@ -102,7 +103,8 @@ td.commads .keyword {
   line-height: 1.3;
   letter-spacing: 1px;
   min-width: 50px;
-  font-size: 14px;
+  color: #111;
+  font-size: calc(14px + 0.53);
   text-align: center;
   box-shadow: 2px 5px 12px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 }

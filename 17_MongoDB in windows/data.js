@@ -1,4 +1,23 @@
-db.createCollection("users");
+// ## Collection Methods
+// https://www.mongodb.com/docs/manual/reference/method/js-collection/
+
+
+// db.users.dataSize() => The dataSize command returns the size in bytes for the specified data
+// db.users.distinct('name') //distinct մեթթոդը կվերադարձնի փոխանցած "key"-ի բոլոր արժեքները հակառակ դեպքում ՝ {}
+
+Model.deleteMany()
+Model.deleteOne()
+Model.find()
+
+Model.findOne()
+Model.findOneAndDelete()
+
+Model.findOneAndReplace()
+Model.findOneAndUpdate()
+Model.replaceOne()
+Model.updateMany()
+Model.updateOne()
+
 
 db.users.insertOne({
   'name': "Jhon",
@@ -21,7 +40,7 @@ db.users.insertMany([
   {
     'name': "Seastian",
     "email": "example2@mail.ru",
-    'avto': true,
+    'avto': false,
     'age': 26,
     'score': [21, 36, 20, 7, 6, 51],
     'birthday': new Date("1986-11-2-19")
@@ -99,10 +118,11 @@ db.users.updateMany({ age: 23 }, { $set: { name: "new Name", email: "poxacEmail.
 
 
 
-//amboxj object-i popoxumy nshvacnerov
+//ամբողջական դոկումենտի փոփթխում նշվածով
 db.users.replaceOne(
   { age: 41 },
-  { name: "new User", avto: false, password: 123456, age: 23 }
+  { name: "new User", avto: false, password: 123456, age: 23 },
+  { upsert: true } // ստեղծել նորը չգտնելու դեպքում
 )
 
 
@@ -112,7 +132,8 @@ db.users.replaceOne(
 db.users.deleteMany(
   { age: { $gt: 20 }, age: { $lt: 30 } },
 )
-
+//Ջնջում է բոլոր այն դոկումենտները,որոնք չունեն "age" հատկություն
+db.users.deleteMany({ age: { $exists: false } })
 db.CollectionName.drop()
 
 /*Объединение запросов в БД
@@ -154,22 +175,6 @@ db.users.bulkWrite([
 
 ])
 
-Model.deleteMany()
-Model.deleteOne()
-Model.find()
-Model.findByIdAndDelete()
-Model.findByIdAndReplace()
-Model.findByIdAndUpdate()
-Model.findOne()
-Model.findOneAndDelete()
-Model.findOneAndRemove()
-Model.findOneAndReplace()
-Model.findOneAndUpdate()
-Model.replaceOne()
-Model.updateMany()
-Model.updateOne()
-
-
 db.users.insertMany([
   { name: "Karen", age: 24, city: "erevan" },
   { name: "Karine", age: 18, city: "erevan" },
@@ -180,6 +185,11 @@ db.users.insertMany([
   { name: "Lilit", age: 44, city: "gyumri" },
   { name: "Ani", age: 29, city: "erevan" },
 ])
+//  1. Lilit անունը փոխել սարգելով "Lilith"
+//  2. բոլոր Երեվանցիների տարիքը ավելացնել 2-ով
+//  3. Ջնջել բոլոր Գյումրեցիներին
+//  4. վերադարձնել այն մարդկանց անունները,որոնք ապրում են Վանաձորում
+
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
@@ -204,7 +214,8 @@ let x = db.collection("users").find().sort({ age: -1 });
 x.forEach(elem => console.log(elem))
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
-
+// db.collection.findOneAndReplace(filter, replacement, options)
+// փոխում է դոկումենտը եթե filter-ը համընկնում չի գտել
 db.collection("users").findOneAndReplace(
   { "age": { $lt: 40 } },
   { "newProperty": "Observant Badgers", "age": 20 },
@@ -243,3 +254,26 @@ const result = await collection.updateOne({ _id: new ObjectId("6440eac0f13898dad
 
 //ջնջում է  ՛age՛ հատկությունը
 db.Films.updateOne({ _id: 1 }, { $unset: { age: true } })
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+db.scores.findOneAndDelete(
+  { "name": "M. Tagnum" },
+  {
+    writeConcern: {
+      w: 1,
+      j: true,
+      wtimeout: 1000
+    }
+  },
+  { sort: { "points": 1 }, projection: { "assignment": 1 } }
+)
+// վերադարձնում է ջնջված դոկումենտը:
+// projection => ՋՆՋՎԱԾ դոկումենտի որ դաշտը ցույց տալ
+//|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
+
+db.people.findAndModify(
+  {
+    query: { name: "Andy" },
+    update: { $inc: { score: 1 } },
+    upsert: true // եթե true ապա ստեղծում է նոր դոկումենտ եթե "query" -ով համընկնում չի եղել
+  }
+)

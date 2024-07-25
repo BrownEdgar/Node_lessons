@@ -27,7 +27,7 @@ app.use('/', indexRouter);
 app.use('/posts', postRouter);
 
 // Mongoose connect
-mongoose.connect('mongodb://0.0.0.0:27017/klaus')
+mongoose.connect('mongodb://0.0.0.0:27017/test')
   .then(() => console.log('Connected!'));
 
 mongoose.connection.on('error', err => {

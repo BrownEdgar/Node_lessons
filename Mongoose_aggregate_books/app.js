@@ -42,7 +42,7 @@ app.services = {
 async function start() {
   try {
     await mongoose.connect(
-      'mongodb+srv://sebastian:sebastian25@cluster0.ylctqet.mongodb.net/main-db')
+      'mongodb://localhost:27017/test')
     app.listen(3333, () => {
       console.log('Server has been started...')
     })

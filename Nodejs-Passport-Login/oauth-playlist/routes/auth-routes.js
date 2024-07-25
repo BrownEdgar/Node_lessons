@@ -8,8 +8,10 @@ router.get('/login', (req, res) => {
 
 
 router.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/auth/login');
+  req.logout(function (err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
 
 router.get('/google', passport.authenticate('google', {
