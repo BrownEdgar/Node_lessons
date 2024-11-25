@@ -1,25 +1,4 @@
 const button = document.querySelector("button")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 button.addEventListener("click", () => {
   fetch("http://localhost:3333/create-checkout-session", {
     method: "POST",

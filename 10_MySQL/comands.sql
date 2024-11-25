@@ -65,5 +65,5 @@
 
 # SELECT * FROM `cities`
 # ORDER BY population ASC;
-
-SELECT *  FROM `books`
+use db;
+SELECT *  FROM `users`

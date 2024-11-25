@@ -1,1 +1,11 @@
-use test;
+-- use db;
+-- SELECT *
+-- FROM users
+-- where name LIKE "K_r%";
+-- where name LIKE "K%";
+-- where name LIKE "_";
+-- ALTER TABLE users
+-- MODIFY COLUMN profit DECIMAL(10,2) default 10000;
+-- UPDATE users
+-- SET profit = 10000
+-- where id > 100;

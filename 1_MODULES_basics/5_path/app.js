@@ -2,10 +2,10 @@ const path = require('path');
 const fs = require('fs');
 
 
-console.log(1)
-const data = fs.readFileSync(path.join(__dirname, 'test.txt'), "utf-8")
-console.log(data)
-console.log(2)
+// console.log(1)
+// const data = fs.readFileSync(path.join(__dirname, 'test.txt'), "utf-8")
+// console.log(data)
+// console.log(2)
 
 
 
@@ -13,23 +13,28 @@ console.log(2)
 /*  path մոդուլը տրամադրում է գործիքներ Ֆայլերի ուղիների և դիրեկտորյաների հետ աշխատանքի համար */
 
 //path.extname մեթոդը։ վերադարձնում է ֆայլի ընդլայնում
-// path.extname('index.html'); // '.html'
+console.log(path.extname('index.html')) // '.html'
 
 // path.extname('index.coffee.md'); // '.md'
-
+console.log(
+  __dirname
+)
 // path.extname('index.'); // '.'
 
 // path.extname('index'); // ''
 
 // path.extname('.index'); // ''
 
-// let p = path.format({
-// 	root: 'H:\\',
-// 	dir: 'H:\\NODE LESSON\\5_path',
-// 	base: 'test.txt'
-// });
+let p = path.format({
+  root: 'c:/',
 
-// console.log(`p: ${p}`);
+  name: "style",
+  ext: ".css"
+
+
+});
+
+console.log(`p: ${p}`);
 // Կվերադարձնի: 'H:\NODE LESSON\5_path\test.txt'
 
 //path.join()- ծառայում է ուղիների գեներացման համար
@@ -44,7 +49,9 @@ console.log(2)
 // console.log(path.join(__dirname, "test", "index.html")); // ...\5_path\test\index.html
 
 
-// console.log(path.parse(__filename)); // վերծանում է ֆայլի ուղին վերադարձնելով մեզ օբյեկտ
+// console.log(path.parse(__filename).ext); // վերծանում է ֆայլի ուղին վերադարձնելով մեզ օբյեկտ
+
+
 
 
 
