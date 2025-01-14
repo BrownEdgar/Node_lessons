@@ -1,11 +1,8 @@
 npm i express bcrypt
 npm i nodemon --save-dev
 
-
-
-
 --> genSaltSync(rounds, minor)
---> 	Параметр rounds в bcrypt является логарифмическим. Фактическое число повторных циклов хэширования, выполненных в bcrypt, равно Math.pow(2,rounds)
+-->  Параметр rounds в bcrypt является логарифмическим. Фактическое число повторных циклов хэширования, выполненных в bcrypt, равно Math.pow(2,rounds)
 --> rounds- [ДОПОЛНИТЕЛЬНО] - стоимость обработки данных. (по умолчанию - 10)
 --> minor- [НЕОБЯЗАТЕЛЬНО] - дополнительная версия bcrypt для использования. (по умолчанию - б)
 --> genSalt(rounds, minor, cb)
@@ -35,4 +32,4 @@ npm i nodemon --save-dev
 --> getRounds(encrypted) - вернуть количество раундов, использованных для шифрования данного хэша
 --> encrypted - [ОБЯЗАТЕЛЬНО] - хеш, из которого следует извлечь количество использованных раундов.
 
-link ==> https://youtu.be/Ud5xKCYQTjM
+link ==> <https://youtu.be/Ud5xKCYQTjM>

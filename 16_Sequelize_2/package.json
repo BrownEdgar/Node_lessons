@@ -15,7 +15,7 @@
     "mysql": "^2.17.1",
     "mysql2": "^1.7.0",
     "nodemon": "^1.19.2",
-    "sequelize": "^5.18.1",
+    "sequelize": "^5.22.5",
     "tedious": "^6.3.0"
   }
 }

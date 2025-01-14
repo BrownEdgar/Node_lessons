@@ -9,15 +9,13 @@
 Тип данных Array позволяет вам сохранять JavaScript-подобные массивы. Благодаря этому типу данных вы можете выполнять над данными типичные JavaScript операции над массивами, например, push, pop, shift, slice и т.д.
 
 cli cd C:\Program Files\MongoDB\Server\4.2\bin
-		>mongod
+  >mongod
 
 cli cd C:\Program Files\MongoDB\Server\4.2\bin
 cli  > mongo
 
-
-
-
 # Mongoose-ի սեփական մեթոդների ավելացման տարբերակ
+
 catSchema.statics.findByName = function(name) {
   return this.find({ name: new RegExp(name, 'i') })
 }

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Products');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const path = require('path');
-const multer = require("multer");
+const multer = require('multer');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     //Այստեղ նշում ենք Ֆայլլի անունը  անունը
     cb(null, file.originalname);
-  }
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -23,50 +23,49 @@ router.get('/', function (req, res, next) {
   Product.find()
     .select('name price productImage _id') // yntrum enq cucadrvox dashtery aranc "_v" dashti, _id dashty chi kara chlini
     .exec()
-    .then(docs => {
+    .then((docs) => {
       const allproduct = {
         count: docs.length,
-        products: docs.map(doc => {
+        products: docs.map((doc) => {
           return {
             _id: doc._id,
             name: doc.name,
             price: doc.price,
             productImage: doc.productImage,
             request: {
-              type: "GET",
-              url: "http://localhost:3005/products/" + doc._id
-            }
-          }
-        })
-      }
+              type: 'GET',
+              url: 'http://localhost:3005/products/' + doc._id,
+            },
+          };
+        }),
+      };
       res.status(201).json(allproduct);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
-      })
+        error: err,
+      });
     });
 });
-
 
 // name = "productImage" input պետքա լինի էջում կամ postman => body => form
 router.post('/', upload.single('productImage'), function (req, res, next) {
   console.log('req.file', req.file);
-  console.log('req.file.path', req.file.path);//uploads\test1.jpg
-  console.log('req.file.path', req.body.name)
+  console.log('req.file.path', req.file.path); //uploads\test1.jpg
+  console.log('req.file.path', req.body.name);
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
-    productImage: req.file.path
-  })
+    productImage: req.file.path,
+  });
   product
     .save()
-    .then(result => {
+    .then((result) => {
       console.log(result);
       res.status(201).json({
-        message: "Created product successfully",
+        message: 'Created product successfully',
         createdProduct: {
           name: result.name,
           price: result.price,
@@ -74,16 +73,16 @@ router.post('/', upload.single('productImage'), function (req, res, next) {
           _id: result._id,
           request: {
             type: 'GET',
-            url: "http://localhost:3005/products/" + result._id
-          }
-        }
+            url: 'http://localhost:3005/products/' + result._id,
+          },
+        },
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
-      })
+        error: err,
+      });
     });
 });
 
@@ -92,22 +91,21 @@ router.get('/:productId', function (req, res, next) {
   Product.findById(id)
     .select('name price  productImage _id')
     .exec()
-    .then(doc => {
-      console.log("From DB: ", doc);
+    .then((doc) => {
+      console.log('From DB: ', doc);
       if (doc) {
         res.status(200).json({ doc });
       } else {
         res.status(404).json({
-          message: "no valid ID"
+          message: 'no valid ID',
         });
-
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
-      })
+        error: err,
+      });
     });
 });
 
@@ -117,22 +115,24 @@ router.patch('/:productId', function (req, res, next) {
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Product.update({
-    _id: id
-  },
+  Product.update(
     {
-      $set: updateOps
-    })
+      _id: id,
+    },
+    {
+      $set: updateOps,
+    }
+  )
     .exec()
-    .then(res => {
+    .then((res) => {
       console.log(res);
       res.status(200).json(res);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
-      })
+        error: err,
+      });
     });
 });
 
@@ -140,30 +140,27 @@ router.delete('/:productId', function (req, res, next) {
   const id = req.params.productId;
   Product.remove({ _id: id })
     .exec()
-    .then(result => {
+    .then((result) => {
       res.status(201).json({
-        message: "product Deleted",
+        message: 'product Deleted',
         request: {
-          type: "POST",
-          url: "http://localhost:3005/products/",
+          type: 'POST',
+          url: 'http://localhost:3005/products/',
           body: {
-            name: "String",
-            price: "Number"
-          }
-        }
+            name: 'String',
+            price: 'Number',
+          },
+        },
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
-      })
+        error: err,
+      });
     });
 });
 
 module.exports = router;
-
-
-
 
 // https://www.youtube.com/watch?v=srPXMt1Q0nY video

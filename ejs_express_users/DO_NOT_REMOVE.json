@@ -1,0 +1,47 @@
+[
+	{
+		"id": "69849de8-fe35-4d85-b09c-da80a464dd97",
+		"date": "2024-04-19T12:51:04.339Z",
+		"password": "$2a$10$F7CGrPFu6JMlFSTj6dncLeAAjrtGnHMpjwoOkB0cZcZ3mhzduPj6a",
+		"name": "Adam",
+		"email": "adam@ex.com",
+		"salary": 1000,
+		"role": "manager"
+	},
+	{
+		"id": "98f571a5-93a6-4459-a22b-b9052d793dc3",
+		"date": "2024-04-19T12:45:10.027Z",
+		"password": "$2a$10$9t09iKfL6bzAhUPO0MYLHuAfuGNAhEOJ046cQRcbypmDGc/ib4XGK",
+		"name": "Bill",
+		"email": "bill@ex.com",
+		"salary": 900,
+		"role": "courier"
+	},
+	{
+		"id": "3f0f8533-901e-4230-8e08-7e47b7dee9aa",
+		"date": "2024-04-19T12:46:19.379Z",
+		"password": "$2a$10$9ml/kBlsJKp5rJowCShkDONfcOfetT/v2V7jkN5F88soNGKOUKbSG",
+		"name": "Dave",
+		"email": "dave@ex.com",
+		"salary": 700,
+		"role": "driver"
+	},
+	{
+		"id": "1a1b8144-cc62-4ea4-96a9-ad6983da93c8",
+		"date": "2024-04-19T12:45:39.452Z",
+		"password": "$2a$10$4gCbTPgpmvjepqnLJMzSIeyThEDQdNdwxlNZ4MO5l3cK9Q8iPwic.",
+		"name": "John",
+		"email": "john@ex.com",
+		"salary": 1200,
+		"role": "administrator"
+	},
+	{
+		"id": "b7d2dca1-3db2-4765-bb6a-8f6e1baee021",
+		"date": "2024-04-19T12:51:14.315Z",
+		"password": "$2a$10$Ow7GfzNKQQXyPjmG6cqySulshl6Vohhl9PV6l15w3lCGpq2uIHeN2",
+		"name": "Adam",
+		"email": "adam@ex.com",
+		"salary": 1000,
+		"role": "manager"
+	}
+]

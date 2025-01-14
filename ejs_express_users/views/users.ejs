@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/users.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Users</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Sign In</a></li>
+          <li><a href="/signup">Sign Up </a></li>
+          <li><a href="/users">Users</a></li>
+        </ul>
+      </nav>
+    </header>
+    <dialog>
+      <form action="/users" method="dialog">
+        <button type="button" name="closeButton">X</button>
+        <input type="hidden" name="id">
+        <input type="text" name="name" placeholder="name..." required>
+        <input type="email" name="email" placeholder="email..." required>
+        <input type="number" name="salary" placeholder="salary..." required>
+        <select name="role">
+          <option value="administrator" >administrator</option>
+          <option value="manager">manager</option>
+          <option value="driver">driver</option>
+          <option value="courier">courier</option>
+        </select>
+        <input type="password" name="password" placeholder="password..." required>
+        <input type="submit" value="Update">
+      </form>
+    </dialog>
+    <div class="usersDiv">
+      <footer>
+        <menu>
+          <li>
+            <button type="button" name="deleteAllButton">Delete All Users 💣</button>
+          </li>
+          <li>
+            <label for="sortBy">Sort by:</label>
+            <select name="sort" id="sortBy">
+              <option value=""> - - -</option>
+              <option value="name_asc">name ( A - Z )</option>
+              <option value="name_desc">name ( Z - A )</option>
+              <option value="salary_asc">salary ( low - high )</option>
+              <option value="salary_desc">salary ( high - low )</option>
+              <option value="date_asc">from ( old - new )</option>
+              <option value="date_desc">from ( new - old )</option>
+            </select>
+          </li>
+        </menu>
+      </footer>
+      <% users.forEach((user)=>{ %> <article>
+          <h2>
+            <%= user.name %>
+          </h2>
+          <section>
+            <h3>Personal Info </h3>
+            <ul>
+              <li>
+                <p><b>email:</b>
+                  <%= user.email %>
+                </p>
+              </li>
+              <li>
+                <p><b>role:</b>
+                  <%= user.role %>
+                </p>
+              </li>
+              <li>
+                <p><b>salary:</b>
+                  <%= user.salary %>
+                </p>
+              </li>
+              <li>
+                <p><b>from:</b>
+                  <%= new Date(user.date).toLocaleString() %>
+                </p>
+              </li>
+            </ul>
+          </section>
+          <footer>
+            <menu>
+              <li><button type="button" name="editButton" data-user="<%= JSON.stringify(user) %>">📝</button></li>
+              <li><button type="button" name="deleteButton" data-id="<%= user.id %>">🗑️</button></li>
+            </menu>
+          </footer>
+        </article>
+        <% }) %>
+    </div>
+  </div>
+</body>
+
+</html>

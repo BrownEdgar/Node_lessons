@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const PostSchema = mongoose.Schema({
   title: {
@@ -6,20 +6,20 @@ const PostSchema = mongoose.Schema({
     required: true,
     validate(value) {
       if (value.length < 2) {
-        throw new Error("Too short title")
+        throw new Error('Too short title');
       }
-      return true
-    }
+      return true;
+    },
   },
   discription: {
     type: String,
     required: true,
     validate(value) {
       if (value.length < 20) {
-        throw new Error("Too short discription")
+        throw new Error('Too short discription');
       }
-      return true
-    }
+      return true;
+    },
   },
   img: {
     type: String,
@@ -27,8 +27,8 @@ const PostSchema = mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model('Post', PostSchema);

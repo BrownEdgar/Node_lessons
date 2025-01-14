@@ -1,22 +1,20 @@
-const mongoose = require("mongoose");
-
+const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
   sepakan: {
     type: String,
-    required: true
+    required: true,
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
-    required: true
+    required: true,
   },
   order: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
-    required: true
-  }
+    required: true,
+  },
 });
 
-
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);

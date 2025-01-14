@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Sign Up</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+          <li><a href="/users">Users</a></li>
+        </ul>
+      </nav>
+    </header>
+    <form action="/users" method="POST">
+      <input type="text" name="name" placeholder="name..." required>
+      <input type="email" name="email" placeholder="email..." required>
+      <input type="number" name="salary" placeholder="salary..." required>
+      <select name="role">
+        <option value="administrator">administrator</option>
+        <option value="manager">manager</option>
+        <option value="driver">driver</option>
+        <option value="courier">courier</option>
+      </select>
+      <input type="password" name="password" placeholder="password..." required>
+      <input type="password" name="repeat_password" placeholder="repeat password..." required>
+      <input type="submit" value="Add">
+    </form>
+  </div>
+</body>
+
+</html>

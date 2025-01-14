@@ -3,12 +3,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-
-const indexRouter = require('./routes/index');;
+const indexRouter = require('./routes/index');
 const postRouter = require('./routes/posts');
-
 
 const app = express();
 
@@ -27,10 +25,9 @@ app.use('/', indexRouter);
 app.use('/posts', postRouter);
 
 // Mongoose connect
-mongoose.connect('mongodb://0.0.0.0:27017/klaus')
-  .then(() => console.log('Connected!'));
+mongoose.connect('mongodb://0.0.0.0:27017/klaus').then(() => console.log('Connected!'));
 
-mongoose.connection.on('error', err => {
+mongoose.connection.on('error', (err) => {
   console.log(err);
 });
 
