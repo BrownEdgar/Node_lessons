@@ -2,6 +2,7 @@
   "name": "simple_socket",
   "version": "1.0.0",
   "description": "",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js"
@@ -10,11 +11,12 @@
   "author": "Edgar",
   "license": "ISC",
   "dependencies": {
-  "express": "^4.17.1",
-	"socket.io": "^2.3.0",
-	"delivery": "0.0.6"
+    "delivery": "0.0.6",
+    "express": "^4.17.1",
+    "socket.io": "^2.5.1"
   },
   "devDependencies": {
+    "@types/socket.io": "^3.0.1",
     "delivery": "0.0.6",
     "nodemon": "^2.0.4"
   }

@@ -1,13 +1,12 @@
 # Աշխատացնել այս հասցեով, 3000 պորտի տակ չի բացի
-http://127.0.0.1:5500/index.html կամ "Live Server"-ով
 
+<http://127.0.0.1:5500/index.html> կամ "Live Server"-ով
 
 # Новый Socket.IO, обмен данными в реальном времени
-# tutorial link => https://habr.com/ru/post/127525/
 
+# tutorial link => <https://habr.com/ru/post/127525/>
 
-# https://socket.io/get-started/chat/
-
+# <https://socket.io/get-started/chat/>
 
 // отправить текущему сокету сформировавшему запрос (туда откуда пришла)
 socket.emit('eventClient', "this is a test");

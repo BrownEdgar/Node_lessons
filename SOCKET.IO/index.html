@@ -1,225 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Socket.IO chat</title>
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-	<title>Document</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
 
-		body {
-			font: 13px Helvetica, Arial;
-		}
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #input:focus {
+        outline: none;
+      }
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
 
-		#messageform {
-			background: #000;
-			padding: 3px;
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			display: flex;
-			justify-content: flex-start;
-			align-items: center;
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action=""><input id="input" autocomplete="off" /><button>Send</button></form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io()
 
-		}
-
-	
-		#messageform input {
-			border: 0;
-			padding: 10px;
-			flex-grow: 1;
-			margin-right: 0.5%;
-
-		}
-
-		#messageform button {
-			width: 9%;
-			background: rgb(130, 224, 255);
-			border: none;
-			padding: 10px;
-		}
-
-		.messages-box {
-			position: relative;
-			top: 0px;
-			background-color: #dedede;
-			height: 80vh !important;
-			overflow-y: scroll;
-		}
-
-		#messages {
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
-			/* Որպեսզի ֆորման նկարը չծածկի  */
-			position: relative;
-
-		}
-
-		#messages li {
-			margin: 5px;
-			padding: 5px 10px;
-		}
-
-		#messages li:nth-child(odd) {
-			background: #eee;
-		}
-
-		.position-fixed {
-			top: 0;
-			right: 0;
-		}
-
-		#main {
-			display: none;
-		}
-
-		ul {
-			list-style-type: none;
-		}
-
-		#users li::before {
-			font-family: "Font Awesome 5 Free";
-			content: '\f007';
-			display: inline-block;
-			padding-right: 10px;
-			vertical-align: middle;
-			font-weight: 900;
-		}
-
-		#messages li img {
-			width: 100%;
-			height: 300px;
-		}
-	</style>
-	<link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
-</head>
-
-<body>
-	<!-- UserName form -->
-	<form action="#" id="userForm">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<div class="form-group has-success">
-					<label class="form-control-label" for="username">Enter UserName</label>
-					<input type="text" placeholder="name here" class="form-control is-valid" id="username">
-					<input type="submit" class="btn btn-primary" value="Login" />
-				</div>
-			</div>
-		</div>
-	</form>
-
-	<div class="container-fluid mt-3 p-0 " id="main">
-		<div class="row w-100">
-			<div class="col-md-4">
-				<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-					<div class="card-header">Online Users</div>
-					<div class="card-body">
-						<ul class="card-title" id="users"></ul>
-					</div>
-
-				</div>
-			</div>
-			<div class="col-md-5 messages-box">
-				<ul id="messages" class="table-success"></ul>
-
-			</div>
-		</div>
-
-		<!-- Push notifikation  -->
-		<div class="toast show position-fixed w25" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="toast-header">
-				<strong class="mr-auto">Socket.io chat</strong>
-				<small id="time"></small>
-				<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-
-		</div>
-
-		<!-- message form -->
-		<form action="" id="messageform">
-			<input id="m" autocomplete="off" />
-			<input type="file" name="imagefile" id="imagefile">
-			<button>Send</button>
-		</form>
-	</div>
-
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script>
-		$(function () {
-			const socket = io();
-			$('#imagefile').on('change', function (e) {
-				console.log('object', e)
-				const file = e.originalEvent.target.files[0],
-					reader = new FileReader();
-				//When the file has been read...
-				reader.onload = function (evt) {
-					//image in base64 format
-					console.log("evt.target.result", evt.target.result);
-					socket.emit('user image', evt.target.result);
-				};
-				//And now, read the image and base64
-				let r = reader.readAsDataURL(file);
-			});
-
-			let $messageform = $('#messageform');
-			let $userForm = $('#userForm');
-			let $username = $('#username');
-			let $users = $('#users');
-			let $main = $('#main');
-			$('form').on('submit', function (e) {
-				e.preventDefault();
-				socket.emit('chat message', $('#m').val()); // ստանում ենք 'chat message'-ի հաղորդագրությունը
-				$('#m').val(''); // մաքրում ենք "input"- ը ուղարկելուց հետո
-				return false;
-			});
-			socket.on('chat message', function (msg) {
-				if (msg !== '') {
-					$('#messages').append($('<li>').text(msg));
-				}
-			});
-
-			$userForm.on('submit', function (e) {
-				e.preventDefault();
-				socket.emit('new user', $username.val(), function (data) {
-					console.log('data', data)
-					if (data) {
-						$userForm.fadeOut(100);
-						$main.fadeIn(100)
-					}
-				});
-				$username.val('');
-				return false;
-			});
-			socket.on('get users', function (data) {
-				console.log("data", data);
-				let html = '';
-				for (let i = 0; i < data.length; i++) {
-					html += `<li>${data[i]}</li>`
-				}
-				$users.html(html)
-			})
-			//նկարի ընդունում սերվերից
-			socket.on('user image', image);
-
-			function image(from, base64Image) {
-				$('#messages').append($('<li>').append($('<b>').text(from),
-					'<img src="' + base64Image + '" />'));
-			}
-		});
-	</script>
-</body>
-
+      const form = document.getElementById('form')
+      const input = document.getElementById('input')
+      const messages = document.getElementById('messages')
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        if (input.value) {
+          socket.emit('chat message', input.value)
+          input.value = ''
+        }
+      })
+      socket.on('chat message', (msg) => {
+        const item = document.createElement('li')
+        item.textContent = msg
+        messages.appendChild(item)
+        window.scrollTo(0, document.body.scrollHeight)
+      })
+    </script>
+  </body>
 </html>
-

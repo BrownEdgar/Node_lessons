@@ -109,6 +109,7 @@ app.get('/specialPost/:id', (req, res) => {
     res.send(result);
   });
 });
+
 //update post
 app.get('/updatepost/:id', (req, res) => {
   let newTitle = 'Popoxvac text';
@@ -120,6 +121,7 @@ app.get('/updatepost/:id', (req, res) => {
     res.send('Post Updated!!!');
   });
 });
+
 //delete post
 app.get('/deletepost/:id', (req, res) => {
   let newTitle = 'Popoxvac text';
