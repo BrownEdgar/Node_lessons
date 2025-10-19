@@ -1,8 +1,8 @@
-var fs = require('fs');
+const fs = require('fs');
 
- fs.rename("mynewfile1.txt", "RenameFile.txt", function(err){
- 	if (err.code == "ENOENT") {
-			console.log("Edpisi fayl chka");
-	 }
-  	console.log('File Renamed!');
- });
+fs.rename('mynewfile1.txt', 'RenameFile.txt', (err) => {
+  if (err.code == 'ENOENT') {
+    console.log('Edpisi fayl chka');
+  }
+  console.log('File Renamed!');
+});

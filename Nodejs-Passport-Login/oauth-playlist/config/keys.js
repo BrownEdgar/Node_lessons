@@ -1,4 +1,4 @@
-//ԱՅՍ ՖԱՅԼԸ ՊԵՏՔ Է ԳՑԵԼ .gitignore
+// ԱՅՍ ՖԱՅԼԸ ՊԵՏՔ Է ԳՑԵԼ .gitignore
 module.exports = {
   google: {
     clientID: '1018420280832-mpk20tut748a9hkfflaa7b7ths8cch67.apps.googleusercontent.com',
@@ -10,4 +10,4 @@ module.exports = {
   session: {
     cookieKey: 'thenetninjaisawesomeiguess',
   },
-}
+};

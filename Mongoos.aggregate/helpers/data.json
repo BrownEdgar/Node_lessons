@@ -1,123 +1,76 @@
 {
-	"data":[
-		{ 
-			"product": "uteliq",  
-			"total": 5800,  
-			"name": "Karen",  
-			"gender": "male",   
-			"age": 21, 
-			"hobbies": [
-				"games",
-				"chess",
-				"sport",
-				"music",
-				"reading"
-			]
-		},
-		{ 
-			"product": "ayl",     
-			"total": 12540, 
-			"name": "Karen",  
-			"gender": "male",   
-			"age": 25, 
-			"hobbies": [
-				"swiming",
-				"chess",
-				"sport",
-				"music",
-				"reading"
-			]
-		},
-		{ 
-			"product": "grenakan",
-			"total": 2600,  
-			"name": "Karen",  
-			"gender": "male",   
-			"age": 45, 
-			"hobbies": [
-				"showboard",
-				"chess",
-				"sport",
-				"music"
-			]
-		},
-		{ 
-			"product": "texnika", 
-			"total": 15000, 
-			"name": "Anahit", 
-			"gender": "female", 
-			"age": 18, 
-			"hobbies": [
-				"games",
-				"chess",
-				"sport",
-				"music"
-			]
-		},
-		{ 
-			"product": "uteliq",  
-			"age": 36, 
-			"total": 5800,  
-			"name": "Anahit", 
-			"gender": "female", 
-			"hobbies": [
-				"games",
-				"showboard",
-				"sport",
-				"reading"
-			]
-		},
-		{ 
-			"product": "ayl",     
-			"total": 6900,  
-			"name": "Anahit", 
-			"gender": "female", 
-			"age": 40, 
-			"hobbies": [
-				"games",
-				"chess",
-				"sport",
-				"reading"
-			]
-		},
-		{ 
-			"product": "texnika", 
-			"total": 35800, 
-			"name": "Vardan", 
-			"gender": "male",   
-			"age": 45, 
-			"hobbies": [
-				"games",
-				"sport",
-				"music",
-				"reading"
-			]
-		},
-		{ 
-			"product": "grenakan",
-			"total": 4100,  
-			"name": "Vardan", 
-			"gender": "male",   
-			"age": 38, 
-			"hobbies": [
-				"sport",
-				"music",
-				"reading"
-			]
-		},
-		{ 
-			"product": "ayl",     
-			"total": 15300, 
-			"name": "Vardan", 
-			"gender": "male",   
-			"age": 27, 
-			"hobbies": [
-				"games",
-				"chess",
-				"sport",
-				"music",
-				"reading"
-			]
-		}
-	]
+  "data": [
+    {
+      "product": "uteliq",
+      "total": 5800,
+      "name": "Karen",
+      "gender": "male",
+      "age": 21,
+      "hobbies": ["games", "chess", "sport", "music", "reading"]
+    },
+    {
+      "product": "ayl",
+      "total": 12540,
+      "name": "Karen",
+      "gender": "male",
+      "age": 25,
+      "hobbies": ["swiming", "chess", "sport", "music", "reading"]
+    },
+    {
+      "product": "grenakan",
+      "total": 2600,
+      "name": "Karen",
+      "gender": "male",
+      "age": 45,
+      "hobbies": ["showboard", "chess", "sport", "music"]
+    },
+    {
+      "product": "texnika",
+      "total": 15000,
+      "name": "Anahit",
+      "gender": "female",
+      "age": 18,
+      "hobbies": ["games", "chess", "sport", "music"]
+    },
+    {
+      "product": "uteliq",
+      "age": 36,
+      "total": 5800,
+      "name": "Anahit",
+      "gender": "female",
+      "hobbies": ["games", "showboard", "sport", "reading"]
+    },
+    {
+      "product": "ayl",
+      "total": 6900,
+      "name": "Anahit",
+      "gender": "female",
+      "age": 40,
+      "hobbies": ["games", "chess", "sport", "reading"]
+    },
+    {
+      "product": "texnika",
+      "total": 35800,
+      "name": "Vardan",
+      "gender": "male",
+      "age": 45,
+      "hobbies": ["games", "sport", "music", "reading"]
+    },
+    {
+      "product": "grenakan",
+      "total": 4100,
+      "name": "Vardan",
+      "gender": "male",
+      "age": 38,
+      "hobbies": ["sport", "music", "reading"]
+    },
+    {
+      "product": "ayl",
+      "total": 15300,
+      "name": "Vardan",
+      "gender": "male",
+      "age": 27,
+      "hobbies": ["games", "chess", "sport", "music", "reading"]
+    }
+  ]
 }

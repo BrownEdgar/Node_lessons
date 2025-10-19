@@ -4,7 +4,6 @@
 // const app = express();
 // const port = 8889;
 
-
 // /* объект Sequelize:*/
 // const sequelize = new Sequelize("test", "root", "xxx", {
 //   dialect: "mysql",

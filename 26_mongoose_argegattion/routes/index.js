@@ -1,23 +1,22 @@
-const { Router } = require('express')
-const Userschema = require('../models/Users')
+const { Router } = require('express');
 
-const router = Router()
+const Userschema = require('../models/Users');
+
+const router = Router();
 
 router.get('/', async (req, res) => {
-  res.render("index");
-
-
-})
-router.post("/create", async (req, res) => {
-  const { name, surname, age, email } = req.body
-  let newUser = new Userschema({
+  res.render('index');
+});
+router.post('/create', async (req, res) => {
+  const { name, surname, age, email } = req.body;
+  const newUser = new Userschema({
     name,
     surname,
     age,
-    email
-  })
+    email,
+  });
   newUser.save();
-  res.redirect("/")
-})
+  res.redirect('/');
+});
 
-module.exports = router
+module.exports = router;

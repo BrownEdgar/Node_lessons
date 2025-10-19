@@ -1,13 +1,14 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
 
 const AddressSchema = new Schema({
-  street: String, house: Number
-})
+  street: String,
+  house: Number,
+});
 
 const Userschema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   skills: {
     type: [String],
@@ -19,11 +20,11 @@ const Userschema = new Schema({
   },
   age: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: AddressSchema,
@@ -32,15 +33,15 @@ const Userschema = new Schema({
   eyeColor: {
     type: 'string',
     required: true,
-    enum: ['black', 'blue', 'brown', 'green']
+    enum: ['black', 'blue', 'brown', 'green'],
   },
   salary: {
     type: Number,
     min: 67000,
     max: 1e7,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-module.exports = model('user', Userschema)
+module.exports = model('user', Userschema);
 //  կա նաև middleware-ր .pre և .post

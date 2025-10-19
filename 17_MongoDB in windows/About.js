@@ -133,7 +133,10 @@ db.collection('Persons').countDocuments({ age: 23 }, { limit: 1 }, (err, user) =
 });
 
 // ================================
-db.collection('Persons').replaceOne({ avto: false }, { name: 'new User', avto: 23, password: 123456, age: 23 });
+db.collection('Persons').replaceOne(
+  { avto: false },
+  { name: 'new User', avto: 23, password: 123456, age: 23 }
+);
 
 // ================================
 
@@ -176,11 +179,19 @@ x.forEach((elem) => console.log(elem));
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
-db.collection('users').findOneAndReplace({ age: { $lt: 40 } }, { newProperty: 'Observant Badgers', age: 20 }, { sort: { score: 1 } });
+db.collection('users').findOneAndReplace(
+  { age: { $lt: 40 } },
+  { newProperty: 'Observant Badgers', age: 20 },
+  { sort: { score: 1 } }
+);
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
-db.collection('users').findOneAndUpdate({ age: 41 }, { $set: { name: 'new name' }, $inc: { age: 5 } }, { sort: { age: 1 } });
+db.collection('users').findOneAndUpdate(
+  { age: 41 },
+  { $set: { name: 'new name' }, $inc: { age: 5 } },
+  { sort: { age: 1 } }
+);
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 

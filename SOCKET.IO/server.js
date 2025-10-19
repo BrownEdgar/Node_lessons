@@ -1,19 +1,22 @@
-const express = require('express')
-const app = express()
-const server = require('http').createServer(app)
-const io = require('socket.io').listen(server)
+const http = require('http');
+const path = require('path');
 
-const users = []
-const connections = []
+const express = require('express');
+const { Server } = require('socket.io');
 
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html') //առանց "․"-ի
-})
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server);
+
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg)
-  })
-})
+    io.emit('chat message', msg);
+  });
+});
 // io.on('connection', (socket) => {
 //   //Ընդունում ենք ֆայլը ուղարկելով հետ
 //   socket.on('user image', function (msg) {
@@ -49,8 +52,8 @@ io.on('connection', (socket) => {
 // })
 
 // ԿԱՐևՈՐ: app.listen(3000) այստեղ չի աշխատի!
-server.listen(process.env.PORT || 3000)
-console.log('server is runnning')
+server.listen(process.env.PORT || 3000);
+console.log('server is runnning');
 
 // import express from 'express'
 // import { createServer } from 'node:http'

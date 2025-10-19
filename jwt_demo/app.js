@@ -1,20 +1,20 @@
-const createError = require('http-errors');
-const express = require('express');
-const dotenv = require('dotenv');
 const path = require('path');
-const mongoose = require('mongoose');
+
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+const express = require('express');
+const createError = require('http-errors');
+const mongoose = require('mongoose');
 const logger = require('morgan');
 
 dotenv.config();
 
-const models = require('./models')
-const services = require('./services')
-
-
+const models = require('./models');
+const authRouter = require('./routes/auth');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
+const services = require('./services');
+
 const app = express();
 
 // view engine setup
@@ -32,25 +32,22 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 
 app.models = {
-  users: models.users
-}
+  users: models.users,
+};
 app.services = {
   users: new services.users(app.models),
   auth: new services.auth(app.models),
-}
+};
 
-
-
-mongoose.connect("mongodb://localhost:27017/local")
-  .then(() => console.log('connected'))
+mongoose.connect('mongodb://localhost:27017/local').then(() => console.log('connected'));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, _next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

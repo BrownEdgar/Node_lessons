@@ -1,5 +1,6 @@
-const usersRouter = require("express").Router();
-const usersService = require("../../services/users-service");
+const usersRouter = require('express').Router();
+
+const usersService = require('../../services/users-service');
 
 const createUser = (req, res) => {
   const createdUser = usersService.createUser(req.body);
@@ -7,7 +8,7 @@ const createUser = (req, res) => {
     res.json(createdUser);
   } else {
     res.status(409).json({
-      message: "user olready exists",
+      message: 'user olready exists',
     });
   }
 };
@@ -23,43 +24,43 @@ const getUserByEmail = (req, res) => {
     res.json(user);
   } else {
     res.status(404).json({
-      message: "User not found",
+      message: 'User not found',
     });
   }
 };
 
 const getUsersWithOnlyEmails = (req, res) => {
   const users = usersService.getUsersWithOnlyEmails();
-  res.json(users)
+  res.json(users);
 };
 
 const changePassword = (req, res) => {
-  const user = usersService.changeUsersPassword(req.params.id, req.body.password)
+  const user = usersService.changeUsersPassword(req.params.id, req.body.password);
   if (user === null) {
     res.status(404).json({
-      message: "user not found"
-    })
+      message: 'user not found',
+    });
   } else {
-    res.json(user)
+    res.json(user);
   }
-}
+};
 
-const deleteUser = (req,res) => {
+const deleteUser = (req, res) => {
   const user = usersService.deleteUser(req.params.id);
-   if (user === null) {
+  if (user === null) {
     res.status(404).json({
-      message: "user not found"
-    })
-   }else{
-     res.json(user)
-   }
-}
+      message: 'user not found',
+    });
+  } else {
+    res.json(user);
+  }
+};
 
-usersRouter.get("/", getUsers);
-usersRouter.get("/emails/:email", getUserByEmail);
-usersRouter.get("/emails", getUsersWithOnlyEmails);
-usersRouter.post("/", createUser);
-usersRouter.put("/change/:id", changePassword);
-usersRouter.delete("/delete/:id", deleteUser)
+usersRouter.get('/', getUsers);
+usersRouter.get('/emails/:email', getUserByEmail);
+usersRouter.get('/emails', getUsersWithOnlyEmails);
+usersRouter.post('/', createUser);
+usersRouter.put('/change/:id', changePassword);
+usersRouter.delete('/delete/:id', deleteUser);
 
 module.exports = usersRouter;

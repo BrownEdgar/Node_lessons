@@ -1,10 +1,12 @@
 const express = require('express');
+
 const router = express.Router();
 const mongoose = require('mongoose');
+
 const Order = require('../models/order');
 
 /* GET orders page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
   Order.find()
     .select('product quantity _id') // yntrum enq cucadrvox dashtery aranc "_v" dashti, _id dashty chi kara chlini
     .populate('product', 'name')
@@ -12,17 +14,15 @@ router.get('/', function (req, res, next) {
     .then((docs) => {
       const allOrders = {
         count: docs.length,
-        orders: docs.map((doc) => {
-          return {
-            _id: doc._id,
-            product: doc.product,
-            quantity: doc.quantity,
-            request: {
-              type: 'GET',
-              url: 'http://localhost:3005/orders/' + doc._id,
-            },
-          };
-        }),
+        orders: docs.map((doc) => ({
+          _id: doc._id,
+          product: doc.product,
+          quantity: doc.quantity,
+          request: {
+            type: 'GET',
+            url: `http://localhost:3005/orders/${doc._id}`,
+          },
+        })),
       };
       res.status(201).json(allOrders);
     })
@@ -34,7 +34,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.post('/', function (req, res, next) {
+router.post('/', (req, res, next) => {
   const order = new Order({
     _id: new mongoose.Types.ObjectId(),
     product: req.body.productId,
@@ -53,7 +53,7 @@ router.post('/', function (req, res, next) {
         request: {
           message: 'Order is sorted',
           type: 'GET',
-          url: 'http://localhost:3005/orders/' + result._id,
+          url: `http://localhost:3005/orders/${result._id}`,
         },
       });
     })
@@ -64,7 +64,7 @@ router.post('/', function (req, res, next) {
       });
     });
 });
-router.get('/:orderId', function (req, res, next) {
+router.get('/:orderId', (req, res, next) => {
   const id = req.params.orderId;
   Order.findById(id)
     .populate('product')
@@ -78,7 +78,7 @@ router.get('/:orderId', function (req, res, next) {
         });
       }
       res.status(200).json({
-        order: order,
+        order,
         request: {
           type: 'GET',
           url: 'http://localhost:3005/orders',
@@ -92,7 +92,7 @@ router.get('/:orderId', function (req, res, next) {
       });
     });
 });
-router.delete('/:orderID', function (req, res, next) {
+router.delete('/:orderID', (req, res, next) => {
   const id = req.params.orderID;
   Order.remove({ _id: id })
     .exec()

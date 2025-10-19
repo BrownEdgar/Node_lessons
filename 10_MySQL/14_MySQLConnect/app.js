@@ -1,86 +1,101 @@
-var express = require('express')
-var mysql = require('mysql')
-var app = express()
+const express = require('express');
+const mysql = require('mysql');
 
-var bodyParser = require('body-parser')
-app.use(bodyParser.json())
+const app = express();
+
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
 
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
   port: 3306,
   password: 'xxx',
-  database: 'nodemysql', //ete sax normal ancni http://localhost/phpmyadmin ksarqi baza ajs anunov
-})
+  database: 'nodemysql', // ete sax normal ancni http://localhost/phpmyadmin ksarqi baza ajs anunov
+});
 
 db.connect((err) => {
-  if (err) throw err
-  console.log('MySql Connected...')
-})
+  if (err) {
+    throw err;
+  }
+  console.log('MySql Connected...');
+});
 
-app.get('/', function (_, res) {
-  res.send('Home Page...')
-})
+app.get('/', (_, res) => {
+  res.send('Home Page...');
+});
 
-app.get('/createdb', function (_, res) {
-  //13-rd toxy piti chlni vor stexci db
-  let sql = 'CREATE DATABASE nodemysql23'
+app.get('/createdb', (_, res) => {
+  // 13-rd toxy piti chlni vor stexci db
+  const sql = 'CREATE DATABASE nodemysql23';
   db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send('Database created...')
-  })
-})
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send('Database created...');
+  });
+});
 
-//create table
-app.get('/createtable', function (_, res) {
-  let sql = 'CREATE TABLE posts(id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY(id))'
+// create table
+app.get('/createtable', (_, res) => {
+  const sql =
+    'CREATE TABLE posts(id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY(id))';
   db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send('Post table created...')
-  })
-})
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send('Post table created...');
+  });
+});
 
-//add post 1
+// add post 1
 app.get('/addpost1', (_, res) => {
-  //phpMyadmin - Обзор
-  let post = {
+  // phpMyadmin - Обзор
+  const post = {
     title: 'Post one',
     body: 'im arajin posty MySQL-um',
-  }
-  let sql = 'INSERT INTO posts SET ?'
-  let query = db.query(sql, post, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send('Post 1 avelacvac e...')
-  })
-})
-//add post 2
+  };
+  const sql = 'INSERT INTO posts SET ?';
+  const query = db.query(sql, post, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send('Post 1 avelacvac e...');
+  });
+});
+// add post 2
 app.get('/addpost2', (_, res) => {
-  //phpMyadmin - Обзор
-  let post = {
+  // phpMyadmin - Обзор
+  const post = {
     title: 'Post two',
     body: 'im erkrord posty MySQL-um',
-  }
-  let sql = 'INSERT INTO posts SET ?'
-  let query = db.query(sql, post, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send('Post 2 avelacvac e...')
-  })
-})
-//tpel postery
+  };
+  const sql = 'INSERT INTO posts SET ?';
+  const query = db.query(sql, post, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send('Post 2 avelacvac e...');
+  });
+});
+// tpel postery
 app.get('/getposts', (_, res) => {
-  let sql = 'SELECT * FROM posts'
-  let query = db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send(result)
-  })
-})
+  const sql = 'SELECT * FROM posts';
+  const query = db.query(sql, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send(result);
+  });
+});
 
-//ymntrel
+// ymntrel
 // app.get('/specialPost/:id', (req, res) => {
 // 	let sql = `SELECT * FROM posts WHERE id = ${req.params.id}`;
 // 	let query = db.query(sql, (err, result) => {
@@ -90,33 +105,37 @@ app.get('/getposts', (_, res) => {
 // 	});
 // });
 
-//update post
+// update post
 app.get('/specialPost/:id', (req, res) => {
-  let newTitle = 'Popoxvac text'
-  let sql = `UPDATE posts SET title = '${newTitle}' WHERE id = ${req.params.id}`
-  let query = db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log(result)
+  const newTitle = 'Popoxvac text';
+  const sql = `UPDATE posts SET title = '${newTitle}' WHERE id = ${req.params.id}`;
+  const query = db.query(sql, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
 
-    res.send('Post Updated!!!')
-  })
-})
+    res.send('Post Updated!!!');
+  });
+});
 
-//delete post
+// delete post
 app.get('/deletepost/:id', (req, res) => {
-  let sql = `DELETE FROM posts WHERE id = ${req.params.id}`
-  let query = db.query(sql, (err, result) => {
-    if (err) throw err
-    console.log(result)
-    res.send('Post deleted!!!')
-  })
-})
+  const sql = `DELETE FROM posts WHERE id = ${req.params.id}`;
+  const query = db.query(sql, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.send('Post deleted!!!');
+  });
+});
 
 app.post('/post', (req, res) => {
-  console.log('req.body', req.body)
-  res.send(req.body.name)
-})
+  console.log('req.body', req.body);
+  res.send(req.body.name);
+});
 
-app.listen(3030, function () {
-  console.log('Example app listening on port 3030!')
-})
+app.listen(3030, () => {
+  console.log('Example app listening on port 3030!');
+});

@@ -15,10 +15,14 @@ const ClientSchema = mongoose.Schema({
   password: {
     type: String,
     validate: (value) => {
-      let hasNumber = value.match(/\d/g);
-      let hasupperCase = value.match(/[A-Z]/g);
-      if (!hasNumber) throw new Error('Password must by contain number');
-      if (!hasupperCase) throw new Error('Password must by contain at least uppercase');
+      const hasNumber = value.match(/\d/g);
+      const hasupperCase = value.match(/[A-Z]/g);
+      if (!hasNumber) {
+        throw new Error('Password must by contain number');
+      }
+      if (!hasupperCase) {
+        throw new Error('Password must by contain at least uppercase');
+      }
       return true;
     },
     minLength: [8, 'Password cant by low at 8 charasters'],

@@ -1,3 +1,5 @@
+const Products = require('./Products');
+
 module.exports = {
-	product: require('./Products'),
-}
+  product: Products,
+};

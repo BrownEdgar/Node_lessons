@@ -1,3 +1,1 @@
-export const CreateData = () =>{
-	return 
-}
+export const CreateData = () => {};

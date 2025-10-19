@@ -1,19 +1,22 @@
-const passport = require('passport')
-const GoogleStrategy = require('passport-google-oauth20').Strategy
-const keys = require('./keys')
-const User = require('../models/user-model')
+const passport = require('passport');
+const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
+
+const User = require('../models/user-model');
+
+const keys = require('./keys');
 // serializeUser որոշում է թե, User-օբյեկտի որ տվյալները պետք է պահպանվեն
 // Session-ի մեջ
 passport.serializeUser((user, done) => {
-  done(null, user.id)
-})
+  done(null, user.id);
+});
 
-//passport.deserializeUser առաջին արգումենտը serializeUser-ում done ֆունկցիային փողանցած 2-րդ արգումենտն է։
+// passport.deserializeUser առաջին արգումենտը
+// serializeUser-ում done ֆունկցիային փողանցած 2-րդ արգումենտն է։
 passport.deserializeUser((id, done) => {
   User.findById(id).then((user) => {
-    done(null, user)
-  })
-})
+    done(null, user);
+  });
+});
 
 // passport.use(
 //   new GoogleStrategy(
@@ -67,12 +70,12 @@ passport.use(
       clientSecret: keys.google.clientSecret,
       callbackURL: 'http://localhost:3000/auth/google/callback',
     },
-    function (accessToken, refreshToken, profile, done) {
-      console.log('profile:', profile)
+    (accessToken, refreshToken, profile, done) => {
+      console.log('profile:', profile);
 
       User.findOne({ googleId: profile.id }).then((currentUser) => {
         if (currentUser) {
-          done(null, currentUser)
+          done(null, currentUser);
         } else {
           // եթե չկա ստեղծում ենք նոր user
           new User({
@@ -82,11 +85,11 @@ passport.use(
           })
             .save()
             .then((newUser) => {
-              console.log('created new user: ', newUser)
-              done(null, newUser)
-            })
+              console.log('created new user: ', newUser);
+              done(null, newUser);
+            });
         }
-      })
-    },
-  ),
-)
+      });
+    }
+  )
+);

@@ -1,0 +1,132 @@
+image: node:18-alpine
+
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+cache:
+  paths:
+    - node_modules/
+
+# Linting Stage
+lint:
+  stage: lint
+  script:
+    - npm ci
+    - npm run lint
+    - npm run format:check
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Testing Stage
+test:unit:
+  stage: test
+  services:
+    - mongo:7
+    - redis:7-alpine
+  variables:
+    MONGODB_URI: "mongodb://mongo:27017/test"
+    REDIS_HOST: "redis"
+    REDIS_PORT: "6379"
+  script:
+    - npm ci
+    - npm run test:unit
+  coverage: '/Statements\s*:\s*(\d+.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+  only:
+    - merge_requests
+    - main
+    - develop
+
+test:integration:
+  stage: test
+  services:
+    - mongo:7
+    - redis:7-alpine
+  variables:
+    MONGODB_URI: "mongodb://mongo:27017/test"
+    REDIS_HOST: "redis"
+    REDIS_PORT: "6379"
+  script:
+    - npm ci
+    - npm run test:integration
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Security Scan
+security:
+  stage: test
+  script:
+    - npm ci
+    - npm audit --audit-level=moderate
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+
+# Build Docker Image
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - main
+    - develop
+
+# Deploy to Staging
+deploy:staging:
+  stage: deploy
+  environment:
+    name: staging
+    url: https://staging.myapp.com
+  script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $STAGING_SERVER >> ~/.ssh/known_hosts
+    - ssh $STAGING_USER@$STAGING_SERVER "cd /app && docker-compose pull && docker-compose up -d"
+  only:
+    - develop
+
+# Deploy to Production
+deploy:production:
+  stage: deploy
+  environment:
+    name: production
+    url: https://myapp.com
+  script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $PROD_SERVER >> ~/.ssh/known_hosts
+    - ssh $PROD_USER@$PROD_SERVER "cd /app && docker-compose pull && docker-compose up -d"
+  when: manual
+  only:
+    - main
+

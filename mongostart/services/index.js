@@ -1,3 +1,5 @@
+const WineServices = require('./WineServices');
+
 module.exports = {
-	wine: require('./WineServices'),
-}
+  wine: WineServices,
+};

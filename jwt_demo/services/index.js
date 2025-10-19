@@ -1,5 +1,7 @@
-module.exports = {
-  users: require('./UserService'),
-  auth: require('./AuthService'),
+const AuthService = require('./AuthService');
+const UserService = require('./UserService');
 
-}
+module.exports = {
+  users: UserService,
+  auth: AuthService,
+};

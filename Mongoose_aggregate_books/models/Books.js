@@ -1,8 +1,5 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
 
-const BooksSchema = new Schema({
+const BooksSchema = new Schema({});
 
-
-})
-
-module.exports = model('book', BooksSchema)
+module.exports = model('book', BooksSchema);

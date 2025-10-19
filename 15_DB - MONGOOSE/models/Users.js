@@ -11,8 +11,8 @@ const UserSchema = mongoose.Schema({
     type: Number,
     required: true,
     // Կաշխատի եթե բոլոր դաշտերը ճիշտ են լրացված
-    //կամ եթե բացակայում է այլ ստուգումներ
-    //Օրինակ min: ['2', "age shat poqr e"],
+    // կամ եթե բացակայում է այլ ստուգումներ
+    // Օրինակ min: ['2', "age shat poqr e"],
     validate: (value) => {
       // այս ֆունկցիայում եթե լինի "syntax"-ի error; կոդի "chatch" բլոկը կաշխատի
       console.log('validate Function running', value);

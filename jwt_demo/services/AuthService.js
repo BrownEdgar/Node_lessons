@@ -4,8 +4,8 @@ class AuthService {
   }
 
   async signUp(body) {
-    const user = await new this.models.users({ ...body })
-    await user.save()
+    const user = await new this.models.users({ ...body });
+    await user.save();
     return user;
   }
 }

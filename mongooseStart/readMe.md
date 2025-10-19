@@ -26,39 +26,39 @@ link =><https://mongoosejs.com/docs/api.html#SchemaStringOptions>
 
 # Client / User ստեղծելու տարբերակները
 
- router.post("/", async (req, res) => {
-  const {name, age, gender} = req.body
- try {
-  let client = await new Client({
-   name,
-   age,
-   gender
-  })
-  //  client.save((err)=>{
-  //   if (err) {
-  //    return res.json({ message: err })
-  //   }
-  //   res.json({message: "User saved!"})
-  //  })
+router.post("/", async (req, res) => {
+const {name, age, gender} = req.body
+try {
+let client = await new Client({
+name,
+age,
+gender
+})
+// client.save((err)=>{
+// if (err) {
+// return res.json({ message: err })
+// }
+// res.json({message: "User saved!"})
+// })
 
-   // Client ստեղծելու ևս մեկ տարբերակ
-  Client.create({ name, age, gender }, function (err, small) {
-   if (err)  return res.json({ message: err });
-   // saved!
-   res.json({ message: "User saved!" })
-  });
+// Client ստեղծելու ևս մեկ տարբերակ
+Client.create({ name, age, gender }, function (err, small) {
+if (err) return res.json({ message: err });
+// saved!
+res.json({ message: "User saved!" })
+});
 
-  // կամ ՄԻ ՔԱՆԻ "Client/User" ՄԻԱՆԳԱՄԻՑ
-  Client.insertMany([{name, age, gender}], function (err) {
-   if (err) return res.json({ message: err });
-   // saved!
-   res.json({ message: "User saved!" })
-  });
-  
- } catch (error) {
-  console.log("chatch block");
-  res.json({ message: error.message })
- }
+// կամ ՄԻ ՔԱՆԻ "Client/User" ՄԻԱՆԳԱՄԻՑ
+Client.insertMany([{name, age, gender}], function (err) {
+if (err) return res.json({ message: err });
+// saved!
+res.json({ message: "User saved!" })
+});
+
+} catch (error) {
+console.log("chatch block");
+res.json({ message: error.message })
+}
 })
 
 link => <https://mongoosejs.com/docs/schematypes.html>

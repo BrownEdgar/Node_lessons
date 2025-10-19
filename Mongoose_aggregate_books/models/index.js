@@ -1,5 +1,7 @@
-module.exports = {
-  clientInfo: require('./Product'),
-  books: require('./Books'),
+const books = require('./Books');
+const clientInfo = require('./Product');
 
-}
+module.exports = {
+  clientInfo,
+  books,
+};

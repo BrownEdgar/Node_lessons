@@ -1,13 +1,12 @@
-const { Router } = require('express')
-const Userschema = require('../models/user')
+const { Router } = require('express');
 
-const router = Router()
+const Userschema = require('../models/user');
 
-router.get('/', async (req, res) => {
-	let result = await Userschema.find();
-	console.log('result', result)
-	res.render("users", { layout: "./users", users: result}); //  Եթե չգրելք ելի "Main.ejs" կնկարի
-})
+const router = Router();
 
+router.get('/', async (_req, res) => {
+  const result = await Userschema.find();
+  res.render('users', { layout: './users', users: result }); //  if not write layout, it will render "Main.ejs"
+});
 
-module.exports = router
+module.exports = router;

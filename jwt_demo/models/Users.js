@@ -1,13 +1,12 @@
-const { Schema, model } = require('mongoose');
 const bcryptjs = require('bcryptjs');
-
+const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
   email: {
     type: String,
     require: true,
     lowercase: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
@@ -16,23 +15,25 @@ const userSchema = new Schema({
     max: 18,
     validate: (value) => {
       if (/^[A-Z]/.test(value.trim())) {
-        return true
+        return true;
       }
-      throw 'Password must by start with Uppercase'
-    }
-  }
-})
+      throw new Error('Password must by start with Uppercase');
+    },
+  },
+});
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', function (next) {
   const hashPassword = bcryptjs.hashSync(this.password, 10);
   this.password = hashPassword;
-  next()
-})
+  next();
+});
 
-userSchema.post('save', function errorHandler(err, doc, next) {
-  console.log('err', err)
+userSchema.post('save', (err, doc, next) => {
+  console.log('err', err);
   // "E11000 duplicate key error collection"
-  if (err.code === 11000) return next(Error('Duplicate email'));
+  if (err.code === 11000) {
+    return next(Error('Duplicate email'));
+  }
   next(err);
 });
 
@@ -44,7 +45,7 @@ userSchema.static.login = async function (email, password) {
       return user;
     }
   }
-  throw Error("Invalid Email")
-}
+  throw Error('Invalid Email');
+};
 
-module.exports = model("user", userSchema);
+module.exports = model('user', userSchema);

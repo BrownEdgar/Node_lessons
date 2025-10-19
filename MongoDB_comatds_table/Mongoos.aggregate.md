@@ -1,25 +1,25 @@
 ## Նախնական կառուցվածքը
 
- User.aggregate([ {} ])
+User.aggregate([ {} ])
 
- $match |  $group | $project | $sort | $count | $limit | $skip | $out |
+$match | $group | $project | $sort | $count | $limit | $skip | $out |
 
 ## $match examples
 
 #
 
- User.aggregate([
- { $match: {hasWife: true }},
+User.aggregate([
+{ $match: {hasWife: true }},
 
- { $match: {age: {$gt:18} }},
- { $match: { status: "urgent" } },
+{ $match: {age: {$gt:18} }},
+{ $match: { status: "urgent" } },
   { $match: { name: "Ivan" } }, { $sort: { age: 1 } }
   {$match: {name: "Ivan"}}, {$sort: {age: -1}}, {$limit: 1}
- { $match: { "address.city": "McKenziehaven" } }
+{ $match: { "address.city": "McKenziehaven" } }
  { $match: { $and: [ {"gender": "male" }, {"age": {$gt:30} }]}},
-  {$match: {paid: { $ne: null }}},
+{$match: {paid: { $ne: null }}},
   {$match: {productType: {$in: ['shoe', 'shirt']}}},
- ])
+])
 
 ## $group examples
 
@@ -27,26 +27,26 @@
 
 #
 
-  { $group: { _id: '$age'} }  
-  { $group: {_id: { age:'$age', name:"$name"}} }
+{ $group: { _id: '$age'} }  
+ { $group: {_id: { age:'$age', name:"$name"}} }
   { $group: _id: {name: "$name", "email": "$email"} }
 
 ### `այս օրինակը կգտնի բոլոր հնարավոր տարիքի մարդկանց, + ցույց կտա նրանց քանակը`
 
-  { $group: _id: {
+{ $group: _id: {
   _id: {age: "$age"}, total: {$sum:1}
 } }
-  
+
 ### `այս օրինակը կվերադարձնի միայն այն "User"-ին որոնց մոտ "hobby․length"-ը  3 կլինի``Նույն արդյունքը կլինի եթե․՝ User.find({hobby: {#size:3}}) կանչենք`
 
 `Օրինակ hobby:[ 1,2,3 ]`
 
 #
 
- User.aggregate([
-   { $match: {hobby: {#size:3} }}
+User.aggregate([
+{ $match: {hobby: {#size:3} }}
 
- ])
+])
 
 #
 
@@ -56,10 +56,10 @@
 
 #
 
- Girq.aggregate([
-  {$match: {type: "a"}},
-  {$group:{_id: "$type", total:{$sum: "$price"}}}
- ])
+Girq.aggregate([
+{$match: {type: "a"}},
+{$group:{_id: "$type", total:{$sum: "$price"}}}
+])
 
 #
 
@@ -67,10 +67,10 @@
 
 #
 
- ProductSchema.aggregate([
-  { $match: { gnord:"Karen" } },
-  { $group: { _id: { product: "ayl" } } },
- ])
+ProductSchema.aggregate([
+{ $match: { gnord:"Karen" } },
+{ $group: { _id: { product: "ayl" } } },
+])
 
 # $sum
 
@@ -78,15 +78,16 @@
 
 #
 
- ProductSchema.aggregate([
+ProductSchema.aggregate([
 
 { $match: {} },
   { $group: { _id: '$name', total: { $sum: "$total" } } }
-  ------------
 
-  { $group: { _id: '$price', count: { $sum: 1 } } }
+---
+
+{ $group: { _id: '$price', count: { $sum: 1 } } }
   { $group: { _id: '$age', count: { $sum: 1 } } }
- ])
+])
 
 #
 
@@ -97,25 +98,25 @@
 ### `_id-ն default գալիսա, դրա համար դնում ենք "0", որ չցուցադրվի`
 
 - `$multiply` բազմապատկում է նծշված դաշտերը
-{ $project: { date: 1, item: 1, total: { $multiply: [ "$price", "$quantity" ] } } }
+  { $project: { date: 1, item: 1, total: { $multiply: [ "$price", "$quantity" ] } } }
 
 #
 
- WineSchema.aggregate([
-  { $match: { $and: [{ winename: winename }, { price: { $gt: +price } }] } },
-  { $project: { winename: 1, price: 1,_id: 0} }
- ])
+WineSchema.aggregate([
+{ $match: { $and: [{ winename: winename }, { price: { $gt: +price } }] } },
+{ $project: { winename: 1, price: 1,\_id: 0} }
+])
 
- User.aggregate([
-  { $project: {
-  _id: 0,
-   name:1,
-   info:{
-   city: "$address.city",
-   street: "#address.street"
-   }
-  }}
- ])
+User.aggregate([
+{ $project: {
+_id: 0,
+name:1,
+info:{
+city: "$address.city",
+street: "#address.street"
+}
+}}
+])
 
 #
 
@@ -123,14 +124,14 @@
 
 #
 
- WineSchema.aggregate([
- {
-  $group:{_id:null, maxPrice: { $max: "$price",} }
- },
- {
-  $unset: ["_id"]// ԱՌԱՆՑ "_id" ԴԱՇՏԻ
- }
- ])
+WineSchema.aggregate([
+{
+$group:{_id:null, maxPrice: { $max: "$price",} }
+},
+{
+$unset: ["_id"]// ԱՌԱՆՑ "\_id" ԴԱՇՏԻ
+}
+])
 
 #
 
@@ -138,14 +139,14 @@
 
 #
 
- WineSchema.aggregate([
-  { $count: "allDocumentsCount" }, // => կվերադարձնի DB-ի բոլոր "Document"-րի քանակը
-  { $count: "company" }, => կվերադարձնի բոլոր "company"-րի քանակը
- ])
-  WineSchema.aggregate([
-  { $group: {_id:"address.street"} },
-  { $count: "streetsCounts" },
- ])
+WineSchema.aggregate([
+{ $count: "allDocumentsCount" }, // => կվերադարձնի DB-ի բոլոր "Document"-րի քանակը
+{ $count: "company" }, => կվերադարձնի բոլոր "company"-րի քանակը
+])
+WineSchema.aggregate([
+{ $group: {_id:"address.street"} },
+{ $count: "streetsCounts" },
+])
 
 #
 
@@ -153,10 +154,10 @@
 
 #
 
- WineSchema.aggregate([
-  { $sample: { size: 10}  },
-  { $unset: ["__v"] }
- ])
+WineSchema.aggregate([
+{ $sample: { size: 10} },
+{ $unset: ["__v"] }
+])
 
 #
 
@@ -165,12 +166,13 @@
 #
 
 WineSchema.aggregate([
-  { $group: { _id: {age: "$age", name: "$name" }} }
-  { $match: {salary: {$gt: 150_000 }} },
- ]) => 0 documents
- --------------
+{ $group: { _id: {age: "$age", name: "$name" }} }
+{ $match: {salary: {$gt: 150_000 }} },
+]) => 0 documents
 
- { $match: {_id.age: {$gt: 27 }} } // right example
+---
+
+{ $match: {_id.age: {$gt: 27 }} } // right example
 
 ## $sort
 
@@ -180,15 +182,16 @@ WineSchema.aggregate([
 
 #
 
- WineSchema.aggregate([
+WineSchema.aggregate([
 
 { $sort: { name: 1 }}
-  { $sort: { name: 1, age: 1 }} // => կսորտավորի ըստ անունների հետո նոր ըստ տարիքի
-  ---------------------
+{ $sort: { name: 1, age: 1 }} // => կսորտավորի ըստ անունների հետո նոր ըստ տարիքի
 
-  { $group: { _id: "$age" } }
-  { $sort: { _id: 1 }}
- ])
+---
+
+{ $group: { _id: "$age" } }
+{ $sort: { \_id: 1 }}
+])
 
 ## $limit $ne
 
@@ -196,16 +199,17 @@ WineSchema.aggregate([
 
 #
 
- WineSchema.aggregate([
+WineSchema.aggregate([
 
 { $limit: 10}
   { $match: { age: {$gte: 50 }}
-  { $group: { _id: "$age" } }
-  ----------------
+{ $group: { _id: "$age" } }
 
-  { $limit: 3}
+---
+
+{ $limit: 3}
   { $match: { eyeColor: {$ne: "black" }} => աչքերի գույնը՝ ոչ սև
- ])
+])
 
 ## $avg
 
@@ -213,11 +217,11 @@ WineSchema.aggregate([
 
 #
 
- WineSchema.aggregate([
-  { $group: {
-     _id: "$winename",
-     avgPrice: { $avg: "$price"}
- }}])  
+WineSchema.aggregate([
+{ $group: {
+_id: "$winename",
+avgPrice: { $avg: "$price"}
+}}])
 
 #
 
@@ -228,12 +232,12 @@ WineSchema.aggregate([
 - $type: Վերադարձնում է փախանցած դաշտի ՏԻՊԸ։ Օր․՝ "int" | "date" | "string"
 
   WineSchema.aggregate([
-   {$project:{
-    name:1,
-    domType: {$type: "$dom",}
-    kindType: {$type: "$kind",}
-    priceType: {$type: "$price",}
-   }}
+  {$project:{
+  name:1,
+  domType: {$type: "$dom",}
+  kindType: {$type: "$kind",}
+  priceType: {$type: "$price",}
+  }}
   ])
 
 #
@@ -241,46 +245,48 @@ WineSchema.aggregate([
 - $out: այս ակումուլյատորը կստեղծի "newCollection" անունով ՆՈՐ ԿՈԼԵԿՑԻԱ մեր DB-ում, որի մեջ կլինեն "aggregate" մեթոդի վերադարձված արժեքները
 
   WineSchema.aggregate([
-   {$project:{
-    name:1,
-    domType: {$type: "$dom",}
-    kindType: {$type: "$kind",}
-    priceType: {$type: "$price",}
-   }}
-   {$out: "newCollection"}
+  {$project:{
+  name:1,
+  domType: {$type: "$dom",}
+  kindType: {$type: "$kind",}
+  priceType: {$type: "$price",}
+  }}
+  {$out: "newCollection"}
   ])
 
-  -------------------------------------------------
+  ***
 
 X.aggregate([
-   {$match : {name: "Karen"}},
-   {$group: _id: "$age"}
-   {$sort: 1}
-  ])
-  -------------------------------------------------
+{$match : {name: "Karen"}},
+{$group: _id: "$age"}
+{$sort: 1}
+])
+
+---
 
 - Բոլորի համար ավելացնել "age" հատկություն պատահական թվով 0-98 միջակայքից
   aggregate(
-      [
-        {
-          $set: {
-            age: {
-              $floor: {
-                $multiply: [{ $rand: {} }, 98]
-              }
-            }
-          },
-        }
-      ]
-    )
+  [
+  {
+  $set: {
+  age: {
+  $floor: {
+  $multiply: [{ $rand: {} }, 98]
+  }
+  }
+  },
+  }
+  ]
+  )
 
-  -------------------------------------------------
+  ***
 
-    const x = await this.models.clients.remove()
+  const x = await this.models.clients.remove()
 
         //https://youtu.be/9vH3zsARqw4?list=PLWkguCWKqN9OwcbdYm4nUIXnA2IoXX0LI
-    // const allClients = this.models.clients.aggregate([
-    // { $match: {} },// բոլորը
+
+  // const allClients = this.models.clients.aggregate([
+  // { $match: {} },// բոլորը
 
 ## ============================
 
@@ -292,13 +298,14 @@ X.aggregate([
     // { $limit: 3 },
 
 ## =========== | append | =================
+
 <!--  Թույլ է տալիս միավորել մի քանի aggregate օբյեկտներ մեկի ~~մեջ~~ -->
+
 aggregate.append({ $project: { field: 1 }}, { $limit: 2 });
 
 // or pass an array
 const pipeline = [{ $match: { daw: 'Logic Audio X' }} ];
 aggregate.append(pipeline);
-
 
 ## ============ | կարող ենք ընտրել կոնկրետ որ դաշտերն ենք ուզում ցուցադրել |================
 
@@ -311,7 +318,7 @@ aggregate.append(pipeline);
     //   }
     // },
 
-## ============ |  կոնկրետ  դաշտի բոլոր հնարավոր տարբետակները   |================
+## ============ | կոնկրետ դաշտի բոլոր հնարավոր տարբետակները |================
 
     //ցուցադրման համար կարող ենք ընտրել օրինակ ինչքան հնարավոր "category", "website" կա,
     // վերադարձվում է [ {"_id": "ola.org"} ... {}, {} տարբերակ]
@@ -320,7 +327,7 @@ aggregate.append(pipeline);
 
     // { $group: { "_id": "$edgar" } }
 
-## ============ |    |================
+## ============ | |================
 
     // { $group: { "_id": "$edgar" } }
     // ============ |   Գտնել և սորտավորոել ըստ "email" դաշտի |================
@@ -333,7 +340,7 @@ aggregate.append(pipeline);
     //   }
     // }
 
-## ============ |    |================
+## ============ | |================
 
     // {
     //   $project: {
@@ -346,27 +353,28 @@ aggregate.append(pipeline);
     // }
     // ])
 
-({ "_id" : 1, "item" : "ABC1", sizes: [ "S", "M", "L"] }).aggregate( [ { $unwind : "$sizes" } ] ) =>
+({ "\_id" : 1, "item" : "ABC1", sizes: [ "S", "M", "L"] }).aggregate( [ { $unwind : "$sizes" } ] ) =>
 
-{ "_id" : 1, "item" : "ABC1", "sizes" : "S" }
-{ "_id" : 1, "item" : "ABC1", "sizes" : "M" }
-{ "_id" : 1, "item" : "ABC1", "sizes" : "L" }
+{ "\_id" : 1, "item" : "ABC1", "sizes" : "S" }
+{ "\_id" : 1, "item" : "ABC1", "sizes" : "M" }
+{ "\_id" : 1, "item" : "ABC1", "sizes" : "L" }
 
     db.orders.insertMany( [
-   { _id: 0, name: "Pepperoni", size: "small", price: 19,
-     quantity: 10, date: ISODate( "2021-03-13T08:14:30Z" ) },
-   {_id: 1, name: "Pepperoni", size: "medium", price: 20,
-     quantity: 20, date : ISODate( "2021-03-13T09:13:24Z" ) },
-   { _id: 2, name: "Pepperoni", size: "large", price: 21,
-     quantity: 30, date : ISODate( "2021-03-17T09:22:12Z" ) },
-   {_id: 3, name: "Cheese", size: "small", price: 12,
-     quantity: 15, date : ISODate( "2021-03-13T11:21:39.736Z" ) },
-   { _id: 4, name: "Cheese", size: "medium", price: 13,
-     quantity:50, date : ISODate( "2022-01-12T21:23:13.331Z" ) },
-   {_id: 5, name: "Cheese", size: "large", price: 14,
-     quantity: 10, date : ISODate( "2022-01-12T05:08:13Z" ) },
-   { _id: 6, name: "Vegan", size: "small", price: 17,
-     quantity: 10, date : ISODate( "2021-01-13T05:08:13Z" ) },
-   {_id: 7, name: "Vegan", size: "medium", price: 18,
-     quantity: 10, date : ISODate( "2021-01-13T05:10:13Z" ) }
+
+{ \_id: 0, name: "Pepperoni", size: "small", price: 19,
+quantity: 10, date: ISODate( "2021-03-13T08:14:30Z" ) },
+{\_id: 1, name: "Pepperoni", size: "medium", price: 20,
+quantity: 20, date : ISODate( "2021-03-13T09:13:24Z" ) },
+{ \_id: 2, name: "Pepperoni", size: "large", price: 21,
+quantity: 30, date : ISODate( "2021-03-17T09:22:12Z" ) },
+{\_id: 3, name: "Cheese", size: "small", price: 12,
+quantity: 15, date : ISODate( "2021-03-13T11:21:39.736Z" ) },
+{ \_id: 4, name: "Cheese", size: "medium", price: 13,
+quantity:50, date : ISODate( "2022-01-12T21:23:13.331Z" ) },
+{\_id: 5, name: "Cheese", size: "large", price: 14,
+quantity: 10, date : ISODate( "2022-01-12T05:08:13Z" ) },
+{ \_id: 6, name: "Vegan", size: "small", price: 17,
+quantity: 10, date : ISODate( "2021-01-13T05:08:13Z" ) },
+{\_id: 7, name: "Vegan", size: "medium", price: 18,
+quantity: 10, date : ISODate( "2021-01-13T05:10:13Z" ) }
 ] )

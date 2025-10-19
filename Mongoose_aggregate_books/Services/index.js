@@ -1,6 +1,7 @@
+const books = require('./BooksService');
+const client = require('./ClientServices');
+
 module.exports = {
-  ClientServices: require('./ClientServices'),
-  books: require('./BooksService'),
-
-
-}
+  books,
+  client,
+};

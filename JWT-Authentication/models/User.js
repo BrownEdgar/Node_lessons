@@ -1,15 +1,16 @@
-const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { Schema, model } = require('mongoose');
+
 const Userschema = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
     required: true,
   },
-})
+});
 
 Userschema.static.login = async function (email, password) {
   const user = await this.findOne({ email });
@@ -19,7 +20,7 @@ Userschema.static.login = async function (email, password) {
       return user;
     }
   }
-  throw Error("Invalid Email")
-}
+  throw Error('Invalid Email');
+};
 
-module.exports = model('User', Userschema)
+module.exports = model('User', Userschema);

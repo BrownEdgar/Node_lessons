@@ -1,4 +1,4 @@
 module.exports = {
-	wine: require('./Wine'),
-	auth: require('./Auth'),
-}
+  wine: require('./Wine'),
+  auth: require('./Auth'),
+};

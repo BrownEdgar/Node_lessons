@@ -1,12 +1,13 @@
 ## բազային մեթոդները
+
 fs.writeFile()
 fs.readFile()
 fs.mkdir()
 fs.rmdir
-fs.readdir() 
-fs.appendFile() 
-fs.unlink() 
-fs.open() 
+fs.readdir()
+fs.appendFile()
+fs.unlink()
+fs.open()
 fs.rename()
 fs.access()
 fs.promises

@@ -1,9 +1,9 @@
-'use strict'
-
+/* eslint-disable no-undef */
 const questions = [
   {
     id: 1,
-    question: `Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))`,
+    question:
+      "Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))",
     answer: `
 function printStringsWithNumbers(array) {
   array.forEach(element => {
@@ -12,11 +12,12 @@ function printStringsWithNumbers(array) {
     }
   });
 }
-printStringsWithNumbers(strings)`
+printStringsWithNumbers(strings)`,
   },
   {
     id: 2,
-    question: `Ստեղծել ֆունկցիա, որը ստանալով 2 տարբեր բառեր, կտպի մի այնպիսի նոր բար, որը ստացվել է ամեն բառի հերթական տառը իրար կողք դնելով (Օր․՝  function getStrsConcat('Hello', 'World !!!') --> HWeolrllod !!!)`,
+    question:
+      "Ստեղծել ֆունկցիա, որը ստանալով 2 տարբեր բառեր, կտպի մի այնպիսի նոր բար, որը ստացվել է ամեն բառի հերթական տառը իրար կողք դնելով (Օր․՝  function getStrsConcat('Hello', 'World !!!') --> HWeolrllod !!!)",
     answer: `
 const str = "Hello";
 const str2 = "World !!!";
@@ -34,11 +35,12 @@ function getStrsConcat(str1, str2) {
   }
   console.log(newStr);
 }
-getStrsConcat(str, str2)`
+getStrsConcat(str, str2)`,
   },
   {
     id: 3,
-    question: `Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))`,
+    question:
+      "Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))",
     answer: `
 function printStringsWithNumbers(array) {
   array.forEach(element => {
@@ -47,11 +49,12 @@ function printStringsWithNumbers(array) {
     }
   });
 }
-printStringsWithNumbers(strings)`
+printStringsWithNumbers(strings)`,
   },
   {
     id: 4,
-    question: `Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))`,
+    question:
+      "Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))",
     answer: `
 function printStringsWithNumbers(array) {
   array.forEach(element => {
@@ -60,11 +63,12 @@ function printStringsWithNumbers(array) {
     }
   });
 }
-printStringsWithNumbers(strings)`
+printStringsWithNumbers(strings)`,
   },
   {
     id: 5,
-    question: `Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))`,
+    question:
+      "Ստեղծել ֆունկցիա, որը կտպի տառային զանգվածի այն տարերը, որոնց մեջ կա տիվ (Օր․ const strings = ['Javascript', 'C++', 'Python(1)', 'PHP', 'Java(2)', 'Ruby', 'C#(3)']; function printStringsWithNumbers(strings)-- > Python(1) Java(2) C#(3))",
     answer: `
 function printStringsWithNumbers(array) {
   array.forEach(element => {
@@ -73,9 +77,9 @@ function printStringsWithNumbers(array) {
     }
   });
 }
-printStringsWithNumbers(strings)`
+printStringsWithNumbers(strings)`,
   },
-]
+];
 
 const tableContainer = document.createDocumentFragment();
 const tableBody = document.querySelector('table tbody');
@@ -83,19 +87,48 @@ const tableBody = document.querySelector('table tbody');
 function replacertoTags(elem, array) {
   let newAnswer = elem.answer ? elem.answer : elem;
 
-  array.forEach(word => {
-    newAnswer = newAnswer.replaceAll(word,
-      `<span class=${'tag__' + word} style="${word === ')' ||
-        word === '(' || word === ']' || word === '[' || word === "||" ||
-        word === '&&' || word === '{' ||
-        word === '}' || word === ';' ? "color: dodgerblue" : ""}">${word}</span>`)
-  })
+  array.forEach((word) => {
+    newAnswer = newAnswer.replaceAll(
+      word,
+      `<span class=${`tag__${word}`} style="${
+        word === ')' ||
+        word === '(' ||
+        word === ']' ||
+        word === '[' ||
+        word === '||' ||
+        word === '&&' ||
+        word === '{' ||
+        word === '}' ||
+        word === ';'
+          ? 'color: dodgerblue'
+          : ''
+      }">${word}</span>`
+    );
+  });
 
   return newAnswer;
 }
 
-questions.forEach(elem => {
-  const newAnswer = replacertoTags(elem, ['const', 'let', 'function', 'console', 'log', '(', ')', 'if', 'else', '[', ']', '||', '&&', '?', '{', '}', ';']);
+questions.forEach((elem) => {
+  const newAnswer = replacertoTags(elem, [
+    'const',
+    'let',
+    'function',
+    'console',
+    'log',
+    '(',
+    ')',
+    'if',
+    'else',
+    '[',
+    ']',
+    '||',
+    '&&',
+    '?',
+    '{',
+    '}',
+    ';',
+  ]);
 
   const content = document.createElement('tr');
   content.innerHTML = `<tr>
@@ -130,10 +163,10 @@ questions.forEach(elem => {
           <i class="fa-solid fa-check"></i>
         </code>
       </td>
-    </tr>`
+    </tr>`;
 
   tableContainer.append(content);
-})
+});
 tableBody.append(tableContainer);
 
 // Buttons
@@ -146,73 +179,88 @@ const heartBtn = document.querySelectorAll('.fa-heart');
 const code = document.querySelector('.answer > code > pre');
 
 // Button for show code
-showBtn.forEach(button => {
-  let buttonParent = button.closest('code');
+showBtn.forEach((button) => {
+  const buttonParent = button.closest('code');
   const arrowRotate = buttonParent.querySelector('.download-rotate');
   const codeCircles = buttonParent.querySelectorAll('.code-circle');
 
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     button.style.display = 'none';
     arrowRotate.classList.add('animate');
 
     setTimeout(() => {
       button.closest('.answer').classList.remove('hidden');
       arrowRotate.classList.remove('animate');
-      codeCircles.forEach(circle => circle.classList.remove('hidden'));
+      codeCircles.forEach((circle) => circle.classList.remove('hidden'));
     }, 800);
-  })
-})
+  });
+});
 
 // Button for copy code
-copyBtn.forEach(button => {
-  let buttonParent = button.closest('code');
+copyBtn.forEach((button) => {
+  const buttonParent = button.closest('code');
 
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     navigator.clipboard.writeText(buttonParent.querySelector('pre').innerText);
     button.classList.add('copied');
 
     setTimeout(() => {
       button.classList.remove('copied');
     }, 1000);
-  })
-})
+  });
+});
 
 // Button for change code
-hammerBtn.forEach(button => {
-  let buttonParent = button.closest('code');
+hammerBtn.forEach((button) => {
+  const buttonParent = button.closest('code');
 
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     buttonParent.querySelector('.answer-text').classList.toggle('changing');
     buttonParent.querySelector('.answer-text').focus();
     buttonParent.classList.toggle('hidden');
   });
-})
+});
 
 // Button heart
-heartBtn.forEach(button => {
-  let buttonParent = button.closest('code');
+heartBtn.forEach((button) => {
+  const buttonParent = button.closest('code');
   const heart = buttonParent.querySelector('.fa-heart');
 
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     heart.classList.toggle('liked');
     if (heart.classList.contains('liked')) {
       heart.classList.replace('fa-regular', 'fa-solid');
     } else {
       heart.classList.replace('fa-solid', 'fa-regular');
     }
-  })
-})
+  });
+});
 
 // Button check
-checkBtn.forEach(button => {
-  let buttonParent = button.closest('code');
+checkBtn.forEach((button) => {
+  const buttonParent = button.closest('code');
 
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     buttonParent.querySelector('.answer-text').classList.remove('changing');
     buttonParent.classList.toggle('hidden');
 
     const upDateCode = buttonParent.querySelector('.answer-text').value;
-    const newAnswer = replacertoTags(upDateCode, ['const', 'let', 'function', 'console', 'log', '(', ')', 'if', 'else', '[', ']', '||', '&&', '?'])
-    buttonParent.querySelector('pre').innerHTML = '\n' + newAnswer;
-  })
-})
+    const newAnswer = replacertoTags(upDateCode, [
+      'const',
+      'let',
+      'function',
+      'console',
+      'log',
+      '(',
+      ')',
+      'if',
+      'else',
+      '[',
+      ']',
+      '||',
+      '&&',
+      '?',
+    ]);
+    buttonParent.querySelector('pre').innerHTML = `\n${newAnswer}`;
+  });
+});

@@ -192,11 +192,19 @@ x.forEach((elem) => console.log(elem));
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
-db.collection('users').findOneAndReplace({ age: { $lt: 40 } }, { newProperty: 'Observant Badgers', age: 20 }, { sort: { score: 1 } });
+db.collection('users').findOneAndReplace(
+  { age: { $lt: 40 } },
+  { newProperty: 'Observant Badgers', age: 20 },
+  { sort: { score: 1 } }
+);
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
-db.collection('users').findOneAndUpdate({ age: 41 }, { $set: { name: 'new name' }, $inc: { age: 5 } }, { sort: { age: 1 } });
+db.collection('users').findOneAndUpdate(
+  { age: 41 },
+  { $set: { name: 'new name' }, $inc: { age: 5 } },
+  { sort: { age: 1 } }
+);
 
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 
@@ -218,7 +226,10 @@ db.collection('users').updateOne(
 );
 //|||||||||||||||||||||||||||||||--------|||||||||||||||||||||||||||||||||||||
 //ջնջում է ՛passed՛ հատկությունը
-const result = await collection.updateOne({ _id: new ObjectId('6440eac0f13898dad6e68118') }, { $unset: { passed: true } });
+const result = await collection.updateOne(
+  { _id: new ObjectId('6440eac0f13898dad6e68118') },
+  { $unset: { passed: true } }
+);
 
 // ջնջում է  ՛age՛ հատկությունը
 db.Films.updateOne({ _id: 1 }, { $unset: { age: true } });
@@ -283,7 +294,11 @@ db.users.updateOne({ skills: ['js'] }, { $inc: { 'cars.$[].price': -200 } });
 
 // 📌 $arrayFilters --------------------------
 // զանգվածի բոլոր 100-ից մեծ էլեմենտների փոխարեն կտեղադրի 100
-db.students.updateMany({}, { $set: { 'numbers.$[element]': 100 } }, { arrayFilters: [{ element: { $gte: 100 } }] });
+db.students.updateMany(
+  {},
+  { $set: { 'numbers.$[element]': 100 } },
+  { arrayFilters: [{ element: { $gte: 100 } }] }
+);
 
 // 📌 $sort for array --------------------------
 // զանգվածի մեջ ավելացնում ենք նոր էլեմենտներ և հետո սորտավորում է այն դոկումենտում

@@ -1,12 +1,10 @@
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
-}
+require('dotenv').config();
+const flash = require('connect-flash');
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const flash = require('connect-flash');
-const session = require('express-session');
 
 const app = express();
 
@@ -17,9 +15,10 @@ require('./config/passport')(passport);
 const db = require('./config/keys').mongoURI;
 
 // Connect to MongoDB
-mongoose.connect(db)
+mongoose
+  .connect(db)
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 // EJS
 app.use(expressLayouts);
@@ -33,8 +32,8 @@ app.use(
   session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true
-		// для параметра установлено значение false, файл cookie не будет установлен для ответа с неинициализированным сеансом. Этот параметр изменяет поведение только в том случае, если существующий сеанс был загружен для запроса
+    saveUninitialized: true,
+    // для параметра установлено значение false, файл cookie не будет установлен для ответа с неинициализированным сеансом. Этот параметр изменяет поведение только в том случае, если существующий сеанс был загружен для запроса
   })
 );
 
@@ -46,7 +45,7 @@ app.use(passport.session());
 app.use(flash());
 
 // Global variables
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
@@ -54,8 +53,8 @@ app.use(function(req, res, next) {
 });
 
 // Routes
-app.use('/', require('./routes/index.js'));
-app.use('/users', require('./routes/users.js'));
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
 
 const PORT = process.env.PORT || 5000;
 

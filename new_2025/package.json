@@ -1,0 +1,38 @@
+{
+  "name": "node-lessons-2025",
+  "version": "2.0.0",
+  "description": "Modern Node.js + Express + MongoDB tutorials with best practices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Navigate to specific example folder and run npm test\"",
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write \"**/*.{js,json,md}\""
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "postgresql",
+    "redis",
+    "graphql",
+    "websockets",
+    "docker",
+    "typescript",
+    "jest",
+    "tutorials"
+  ],
+  "author": "Edgar Brown",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BrownEdgar/Node_lessons.git"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1"
+  }
+}

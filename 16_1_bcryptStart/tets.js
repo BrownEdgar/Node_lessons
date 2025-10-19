@@ -1,7 +1,9 @@
 const express = require('express');
+
 const app = express();
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
+
 app.use(express.json());
 
 const users = [];
@@ -39,7 +41,7 @@ app.post('/users', async (req, res) => {
     dob: Joi.date().greater('1-1-1974').default('19-09-1986'),
   });
   try {
-    let result = schema.validate(req.body);
+    const result = schema.validate(req.body);
 
     if (result.error) {
       throw result.error.details[0].message;
@@ -48,8 +50,8 @@ app.post('/users', async (req, res) => {
     const { password } = req.body;
     const hashPasssword = await bcrypt.hash(password, 10);
     console.log({ body: req.body });
-    let newUser = {
-      ...result.value, //req.body վար գրենք "default" արժեքները չեն պահպանվի
+    const newUser = {
+      ...result.value, // req.body վար գրենք "default" արժեքները չեն պահպանվի
       password: hashPasssword,
     };
     users.push(newUser);
@@ -63,16 +65,16 @@ app.post('/users/login', async (req, res) => {
   const { name, password } = req.body;
 
   console.log({ name, password });
-  let user = users.find((elem) => elem.name === name);
+  const user = users.find((elem) => elem.name === name);
   if (user === undefined) {
     res.status(404).send('User not Found!');
   } else {
     try {
-      let check = await bcrypt.compare(password, user.password);
+      const check = await bcrypt.compare(password, user.password);
       if (check) {
         res.send(`Welcome ${user.name} jan!`);
       } else {
-        res.send(`login faild`);
+        res.send('login faild');
       }
     } catch (error) {
       res.status(500).send();

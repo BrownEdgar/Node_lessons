@@ -1,8 +1,7 @@
-const express = require('express')
-const app = express();// darnum e mer servery
-const route = express.Router();
-const port = 3000;
+const express = require('express');
 
+const app = express();
+const port = 3000;
 
 // '/ab?cd' - abc и abcd.
 // '/ab+cd' - abcd, abbcd, abbbcd и т.д.
@@ -11,16 +10,15 @@ const port = 3000;
 // /a/ -  любой элемент с “a” в имени маршрута.
 // /.*fly$/ - fly verjavorutyun
 
-
-
-app.route('/book')
-  .get(function(req, res) {
+app
+  .route('/book')
+  .get((req, res) => {
     res.send('Get a random book');
   })
-  .post(function(req, res) {
+  .post((req, res) => {
     res.send('Add a book');
   })
-  .put(function(req, res) {
+  .put((req, res) => {
     res.send('Update the book');
   });
 
@@ -31,9 +29,9 @@ const requestTime = function (req, res, next) {
 
 app.use(requestTime);
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   const responseText = 'Hello World!';
-  responseText += 'Requested at: ' + req.requestTime + '';
+  responseText += `Requested at: ${req.requestTime}`;
   res.send(responseText);
 });
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));

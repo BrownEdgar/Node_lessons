@@ -1,12 +1,13 @@
-/////////////////////////////////////////////////////////////////////////////////
-//Mongoose - это ODM (* Object Document Mapper - объектно-документный отобразитель).
-//Սա նշանակում է, որ Mongoose-ը թույլ է տալիս սահմանել օբյեկտները խիստ տիպայնացված սխեմայով, որոնք համապատասխանում են MongoDB մոդելին:
+/// //////////////////////////////////////////////////////////////////////////////
+// Mongoose - это ODM (* Object Document Mapper - объектно-документный отобразитель).
+// Սա նշանակում է, որ Mongoose-ը թույլ է տալիս սահմանել օբյեկտները խիստ տիպայնացված սխեմայով, որոնք համապատասխանում են MongoDB մոդելին:
 // Հնարավոր տիպերն են․․․
-//String | Number | Date | Buffer | Boolean | Mixed | ObjectId + _id key | Array |
+// String | Number | Date | Buffer | Boolean | Mixed | ObjectId + _id key | Array |
 //  Number և Date տիպերի համար կարելի է սահմանաել min max արժեքներ
 
-/////////////////////////////////////////////////////////////////////////////////
+/// //////////////////////////////////////////////////////////////////////////////
 const express = require('express');
+
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -22,7 +23,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-//IMport Routes
+// IMport Routes
 // const postsRouter = require('./routes/posts');
 // const usersRouter = require('./routes/users');
 // const clients = require('./routes/testRoute');
@@ -54,10 +55,10 @@ mongoose.connect(
   }
 );
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.send('Home Page...');
 });
 
-app.listen(3000, function () {
+app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });

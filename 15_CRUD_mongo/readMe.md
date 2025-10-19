@@ -1,12 +1,12 @@
 ### mongoose.connect CONFIGS
 
 mongoose.connect(process.env.DB_CONNECTION, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify:false
- },
- (err) => console.log(err));
+useUnifiedTopology: true,
+useNewUrlParser: true,
+useCreateIndex: true,
+useFindAndModify:false
+},
+(err) => console.log(err));
 
 # useUnifiedTopology
 
@@ -36,60 +36,61 @@ autoIndex - по умолчанию mongoose будет автоматическ
 
 # Агрегация
 
-Агрегация – это группировка значений многих документов. Операции агрегирования позволяют манипулировать такими сгруппированными данными (например, подсчёт – COUNT(*))
+Агрегация – это группировка значений многих документов. Операции агрегирования позволяют манипулировать такими сгруппированными данными (например, подсчёт – COUNT(\*))
 В MongoDB для агрегации используется метод aggregate(). Данный метод имеет следующий синтаксис
 Допустим, что нам необходимо вычислить общую зарплату всех разработчиков в коллекции. Для этого мы можем использовать следующий запрос:
+
 > db.developers.aggregate( [ {$group :{ _id : "Developers", total_salary: { $sum : "$salary" }}} ] )
 
-{ "_id" : "Developers", "total_salary" : 10500 }
+{ "\_id" : "Developers", "total_salary" : 10500 }
 
 # $sum Суммирует указанные значения всех документов в коллекции
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
- total_salary : {$sum : “$salary”}}}
- ])
+{$group : {_id : “$title”,
+total_salary : {$sum : “$salary”}}}
+])
 
 $avg Рассчитывает среднее значение указанного поля поля для всех документов коллекции.
 db.developers.aggregate([
- {$group : {_id : “$title”,
+ {$group : {\_id : “$title”,
  avg_salary : {$avg : “$salary”}}}
  ])
 $min Получает минимальное значение указанного поля документа в коллекции
 db.developers.aggregate([
- {$group : {_id : “$title”,
+{$group : {_id : “$title”,
 
- min_salary : {$min : “$salary”}}}])
+min_salary : {$min : “$salary”}}}])
 
 ### $max Получает максимальное значение указанного поля документа в коллекции
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
+{$group : {_id : “$title”,
 max_salary : {$max : “$salary”}}}])
 
 ### $push Вставляет значение в массив в результирующем документе
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
- skills : {$push: “$skills”}}}])
+{$group : {_id : “$title”,
+skills : {$push: “$skills”}}}])
 
 ### $addToSet Вставляет значение в массив в результирующем документе, но не создаёт дубликаты
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
- skills : {$addToSet : “$skills”}}}])
+{$group : {_id : “$title”,
+skills : {$addToSet : “$skills”}}}])
 
 ### $first Получает первый документ из сгруппированных. Обычно используется вместе с сортировкой
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
- first_skill : {$first : “$skills”}}}])
+{$group : {_id : “$title”,
+first_skill : {$first : “$skills”}}}])
 
 ### $last Получает крайний документ из сгруппированных. Обычно используется вместе с сортировкой
 
 db.developers.aggregate([
- {$group : {_id : “$title”,
- last_skill : {$last : “$skills”}}}])
+{$group : {_id : “$title”,
+last_skill : {$last : “$skills”}}}])
 
 ### $project
 

@@ -1,11 +1,12 @@
-const { MongoClient, ObjectID } = require('mongodb');
 const assert = require('assert');
 
 const dotenv = require('dotenv');
+const { MongoClient, ObjectID } = require('mongodb');
+
 dotenv.config();
 // Connection URL 'mongodb://localhost:27017'
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-const DB_NAME = process.env.DB_NAME;
+const { MONGO_DB_URL } = process.env;
+const { DB_NAME } = process.env;
 
 // Create a new MongoClient ՏԱՐԲԵՐԱԿ 1
 
@@ -80,5 +81,5 @@ main()
   .catch(console.error)
   .finally(() => client.close());
 
-//LINKS
+// LINKS
 // => https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/
