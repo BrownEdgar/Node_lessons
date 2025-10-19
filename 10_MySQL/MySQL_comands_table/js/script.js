@@ -304,8 +304,13 @@ function renderData() {
     .map(
       (elem) => `
       <tr>
-        <td data-cell="id">${elem.id}</td>
-        <td data-cell="commads" class="commads">${elem.mysql_command}</td>
+        <td data-cell="id">${index + 1}</td>
+        <td data-cell="commads" class="commads">
+        <span class="keyword">${elem?.keyword || "N/A"}</span>
+        <span class="code">
+          ${elem.mysql_command}
+        </span>
+        </td>
         <td data-cell="desc" colspan="2" class="desc">${elem.description}</td>
         <td data-cell="example" class="example">
         ${elem.example ? `<code>${elem.example}</code>` : ''}

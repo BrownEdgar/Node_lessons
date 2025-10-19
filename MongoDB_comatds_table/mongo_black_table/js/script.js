@@ -1,3 +1,5 @@
+import { renderData } from './helpers.js';
+
 const table = document.querySelector('table');
 
 fetch('./data.json')

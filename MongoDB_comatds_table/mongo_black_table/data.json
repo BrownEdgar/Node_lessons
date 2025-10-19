@@ -46,7 +46,7 @@
     "id": 6,
     "keyword": "$ne",
     "command": "{$match: {paid: { $ne: <string> }}}",
-    "description": "lorem",
+    "description": "գտնում է բոլոր այն դոկումենտները, որոնց '$paid' դաշտը null չէ։",
     "example": "Model.aggregate([\n {$match: {paid: { $ne: null }}}\n]}"
   },
   {
@@ -60,21 +60,21 @@
     "id": 8,
     "keyword": "$group",
     "command": "Model.aggregate([ { $group: { _id:<objectId>} }   ])",
-    "description": "lorem",
+    "description": "Ամենակարևոր մեդոներից մեկը։Խմբավորում է ցանկացած բան առանց կրկնությունների։Օրինակ այստեղ գտնում է բազայում առկամ մարդկանց բոլոր հնարավոր տարիքները։",
     "example": "Model.aggregate([\n { $group: { _id: '$age'} }}\n]}"
   },
   {
     "id": 9,
     "keyword": "$group",
     "command": "Model.aggregate([ { $group: {_id: { age:$<age>, name:$<name>}} } ])",
-    "description": "lorem",
+    "description": "Խմբավորում է ըստ տարիքի, իսկ եթե տարիքը համընկնում է իսկ անունը չէ, այն առանձնացնում է առանձին դակումենտով։",
     "example": "Model.aggregate([\n { $group: {_id: { age:'$age', name:'$name'}} }\n]}"
   },
   {
     "id": 10,
     "keyword": "$group",
     "command": "([{$match: {type: 'a'}},{$group: {_id: '$type', total: {$sum: '$price'}}}])",
-    "description": "այս օրինակը կվերադարձնի 'a' Տիպ ունեցող 'Girq'-ի ընդհանուր գինը,(գները գրված են price հատկւոտյան մեջ),եթե հանենք '$match' ֆիլտրը ապա կվերադարձնի բոլոր տիպերի գները առանձին օբյեկտներով",
+    "description": "այս օրինակը կվերադարձնի 'a' Տիպ ունեցող 'Girq'-ի ընդհանուր գինը,(գները գրված են price հատկության մեջ),եթե հանենք '$match' ֆիլտրը ապա կվերադարձնի բոլոր տիպերի գները առանձին օբյեկտներով",
     "example": "Model.aggregate([\n {$match: {type: 'a'}},\n {$group: {_id: '$type', total: {$sum: '$price'}}}\n]}"
   },
   {
@@ -116,7 +116,7 @@
     "id": 16,
     "keyword": "$sum",
     "command": "([ { $project: { ..., total: \n{  total: {$sum: [<value1>, <value2>]} } }\n])",
-    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի $գումարով։",
+    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի գումարով։",
     "example": "Model.aggregate([ { $project: { ..., total: \n{ total: {$sum: ['$assignment', '$points']} } }\n]"
   },
   {
@@ -128,8 +128,8 @@
   },
   {
     "id": 18,
-    "keyword": "$unset",
-    "command": "db.dogs.updateMany({},\n{ $unset: { type: ''}})",
+    "keyword": "$match",
+    "command": "db.dogs.updateMany({},\n{ $match: {}}).forEach((elem) => {...})",
     "description": "Օրինակը գտնում է բոլորին, հետո ցիկլի միջոցով տպում է միայն նրան $email դաշտերը։",
     "example": "Model.aggregate([\n { $match: {} } \n]).forEach(elem => console.log(elem.email))"
   }

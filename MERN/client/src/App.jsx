@@ -1,0 +1,70 @@
+
+import Home from "./pages/Home";
+import Post from "./pages/Post";
+import Login from "./pages/Login";
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, Navigate } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import Layouts from './pages/Layouts';
+import Addpost from './pages/Addpost/Addpost';
+
+import "./App.css";
+
+const App = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const getUser = () => {
+      fetch("http://localhost:3001/auth/login/success", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) return response.json();
+          throw new Error("authentication has been failed!");
+        })
+        .then((resObject) => {
+          setUser(resObject.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<Layouts user={user} />}>
+        <Route index element={<Home />} />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/post/:id"
+          element={user ? <Post /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/addpost"
+          element={user ? <Addpost /> : <Navigate to="/login" />}
+        />
+      </Route>
+    )
+  )
+  return (
+
+    <div>
+      <RouterProvider router={router} />
+
+
+    </div>
+
+  );
+};
+
+export default App;
