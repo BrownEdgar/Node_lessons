@@ -4,7 +4,8 @@ function textPrettier(text = '', field = false) {
       return `<span class="value">&lt;value&gt;</span>`
     })
   }
-  return text.replaceAll(/\$(\w+.)+/g, function (key) {
+  // подсвечивает SQL-ключевые слова (2+ заглавные латинские буквы)
+  return text.replaceAll(/\b([A-Z]{2,})\b/g, function (key) {
     return `<span>${key}</span>`
   })
 }
@@ -16,7 +17,7 @@ export function renderData(data, targetNode) {
       const prittyDesc = textPrettier(elem.description)
       const prittyExample = textPrettier(elem.example)
       const linkHtml = elem.link
-        ? `<p class="doc-link"><a href="${elem.link}" target="_blank" rel="noreferrer">MongoDB docs →</a></p>`
+        ? `<p class="doc-link"><a href="${elem.link}" target="_blank" rel="noreferrer">PostgreSQL docs →</a></p>`
         : ''
 
       return `

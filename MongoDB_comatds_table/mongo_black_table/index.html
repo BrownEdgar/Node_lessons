@@ -1,27 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hy">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/style.css">
   <script src="./js/script.js" type="module"></script>
-  <title>Document</title>
+  <title>MongoDB — Aggregation &amp; Query</title>
 </head>
 
 <body>
   <main>
     <div class="wrapper">
-      <h1><span>MongoDB</span> Commands List </h1>
-      <table>
-        <caption>MOST POPULAR MongoDB METHODS</caption>
-        <tr>
-          <th data-cell="id">#</th>
-          <th data-cell="commads">mongo/mongoose Commands</th>
-          <th data-cell="desc" colspan="2">Description</th>
-          <th data-cell="example">Example</th>
-        </tr>
-      </table>
+      <header class="page-header">
+        <h1><span>MongoDB</span> Commands List</h1>
+        <div class="segmented-control" role="tablist" aria-label="Ընտրել աղյուսակ">
+          <button type="button" class="segment is-active" role="tab" aria-selected="true" data-section="aggregation">
+            Aggregation
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="expressions">
+            Expressions
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="comparisonQuery">
+            Comparison Query
+          </button>
+        </div>
+      </header>
+      <p class="section-docs">
+        <a id="section-docs-link" href="https://www.mongodb.com/docs/manual/reference/mql/aggregation-stages/" target="_blank"
+          rel="noreferrer">Պաշտոնական փաստաթուղթ (aggregation stages)</a>
+      </p>
+      <div class="table-panel" id="table-panel" aria-live="polite">
+        <table>
+          <caption id="table-caption">MongoDB Aggregation Stages — հիմնական pipeline փուլեր</caption>
+          <thead>
+            <tr>
+              <th data-cell="id">#</th>
+              <th data-cell="commads">mongo/mongoose Commands</th>
+              <th data-cell="desc" colspan="2">Description</th>
+              <th data-cell="example">Example</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 </body>

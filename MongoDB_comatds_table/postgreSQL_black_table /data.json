@@ -1,0 +1,709 @@
+{
+  "meta": {
+    "queriesDocs": "https://www.postgresql.org/docs/current/sql-select.html",
+    "ddlDocs": "https://www.postgresql.org/docs/current/ddl.html",
+    "functionsDocs": "https://www.postgresql.org/docs/current/functions.html"
+  },
+  "captions": {
+    "queries": "SELECT & Queries — основные запросы к данным",
+    "ddl": "DDL Commands — создание и изменение схемы",
+    "functions": "Functions & Aggregates — функции и агрегаты",
+    "migrations": "Migrations — версионирование схемы БД",
+    "dbmanage": "DB Management — управление базами данных и ролями",
+    "psql": "psql Meta-Commands — команды интерактивной консоли",
+    "advanced": "Advanced PostgreSQL — типы, функции, триггеры, оконные функции, RLS, секционирование"
+  },
+  "queries": [
+    {
+      "id": 1,
+      "keyword": "SELECT",
+      "command": "SELECT <column1>, <column2> FROM <table>;",
+      "description": "Базовый запрос для получения данных из таблицы. SELECT * возвращает все колонки, но в продакшне лучше явно перечислять нужные — это уменьшает объём передаваемых данных и защищает от проблем при изменении схемы. Порядок выполнения клауз: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT.",
+      "example": "SELECT id, name, email\nFROM users;\n\n-- все колонки (только для отладки)\nSELECT * FROM users;",
+      "link": "https://www.postgresql.org/docs/current/sql-select.html"
+    },
+    {
+      "id": 2,
+      "keyword": "WHERE",
+      "command": "SELECT * FROM <table> WHERE <condition>;",
+      "description": "WHERE фильтрует строки по условию до группировки. Поддерживает операторы сравнения (=, !=, <, >, <=, >=), логические AND, OR, NOT, а также BETWEEN, IN, LIKE, ILIKE (регистронезависимый), IS NULL, IS NOT NULL. WHERE выполняется до GROUP BY — то есть фильтрует исходные строки, а не агрегированные результаты.",
+      "example": "SELECT * FROM users\nWHERE age > 18 AND active = true;\n\nSELECT * FROM products\nWHERE name ILIKE '%phone%';"
+    },
+    {
+      "id": 3,
+      "keyword": "ORDER BY",
+      "command": "SELECT * FROM <table> ORDER BY <column> ASC|DESC;",
+      "description": "ORDER BY сортирует результат по одной или нескольким колонкам. ASC — по возрастанию (по умолчанию), DESC — по убыванию. Порядок колонок в ORDER BY задаёт приоритет: сначала сортировка по первой колонке, при совпадении — по второй. Всегда используйте ORDER BY вместе с LIMIT/OFFSET — иначе порядок строк не гарантирован.",
+      "example": "SELECT name, salary\nFROM employees\nORDER BY salary DESC, name ASC;"
+    },
+    {
+      "id": 4,
+      "keyword": "LIMIT | OFFSET",
+      "command": "SELECT * FROM <table> LIMIT <n> OFFSET <skip>;",
+      "description": "LIMIT ограничивает количество возвращаемых строк, OFFSET пропускает первые N строк — вместе реализуют пагинацию. Для страницы 3 при размере страницы 10: LIMIT 10 OFFSET 20. Важно: всегда использовать вместе с ORDER BY, иначе результат непредсказуем. На больших объёмах данных OFFSET работает медленно — рассмотрите keyset pagination.",
+      "example": "SELECT * FROM products\nORDER BY created_at DESC\nLIMIT 10 OFFSET 20;"
+    },
+    {
+      "id": 5,
+      "keyword": "INNER JOIN",
+      "command": "SELECT ... FROM <table1>\nINNER JOIN <table2> ON <table1.id> = <table2.fk>;",
+      "description": "INNER JOIN возвращает только строки, для которых есть совпадение в обеих таблицах по условию ON. Если строка из левой таблицы не имеет соответствия в правой — она не войдёт в результат. Это самый часто используемый тип JOIN. Можно объединять более двух таблиц, добавляя дополнительные JOIN-клаузы.",
+      "example": "SELECT u.name, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id\nWHERE o.total > 100;",
+      "link": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "id": 6,
+      "keyword": "LEFT JOIN",
+      "command": "SELECT ... FROM <table1>\nLEFT JOIN <table2> ON <condition>;",
+      "description": "LEFT JOIN (LEFT OUTER JOIN) возвращает все строки из левой таблицы, даже если в правой нет совпадения — в этом случае колонки правой таблицы будут NULL. Используйте когда нужно «все записи из левой таблицы плюс связанные данные если есть». Для проверки отсутствия связи добавьте WHERE правая_таблица.id IS NULL.",
+      "example": "SELECT u.name, o.id AS order_id\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id;\n\n-- только пользователи без заказов\nSELECT u.name FROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nWHERE o.id IS NULL;"
+    },
+    {
+      "id": 7,
+      "keyword": "GROUP BY",
+      "command": "SELECT <col>, COUNT(*) FROM <table>\nGROUP BY <col>;",
+      "description": "GROUP BY группирует строки с одинаковым значением и позволяет применять агрегатные функции (COUNT, SUM, AVG, MAX, MIN) к каждой группе отдельно. В SELECT можно использовать только те колонки, которые указаны в GROUP BY, либо обёрнутые в агрегатную функцию. Группировка по нескольким колонкам создаёт подгруппы.",
+      "example": "SELECT country, COUNT(*) AS users_count\nFROM users\nGROUP BY country\nORDER BY users_count DESC;"
+    },
+    {
+      "id": 8,
+      "keyword": "HAVING",
+      "command": "SELECT <col>, COUNT(*) FROM <table>\nGROUP BY <col> HAVING COUNT(*) > <n>;",
+      "description": "HAVING фильтрует результаты после GROUP BY — в отличие от WHERE, который фильтрует строки до группировки. HAVING может использовать агрегатные функции в условии (COUNT(*) > 5), WHERE — нет. Правило: WHERE для фильтрации строк, HAVING для фильтрации групп.",
+      "example": "SELECT department, AVG(salary) AS avg_sal\nFROM employees\nGROUP BY department\nHAVING AVG(salary) > 50000\nORDER BY avg_sal DESC;"
+    },
+    {
+      "id": 9,
+      "keyword": "Subquery",
+      "command": "SELECT * FROM <table>\nWHERE <col> IN (SELECT <col> FROM <other>);",
+      "description": "Подзапрос (subquery) — вложенный SELECT внутри другого запроса. Может быть в WHERE (фильтрация), FROM (производная таблица), SELECT (скалярный подзапрос). Коррелированный подзапрос ссылается на колонки внешнего запроса и выполняется для каждой строки. На практике часто лучше заменяется на JOIN или CTE для производительности.",
+      "example": "SELECT name FROM users\nWHERE id IN (\n  SELECT user_id FROM orders\n  WHERE total > 1000\n);\n\n-- то же через JOIN (быстрее)\nSELECT DISTINCT u.name FROM users u\nJOIN orders o ON u.id = o.user_id\nWHERE o.total > 1000;"
+    },
+    {
+      "id": 10,
+      "keyword": "CTE | WITH",
+      "command": "WITH <cte_name> AS (\n  SELECT ...\n)\nSELECT * FROM <cte_name>;",
+      "description": "Common Table Expression (CTE) — именованный подзапрос, объявляемый через WITH перед основным SELECT. Делает код читаемым, позволяет переиспользовать подзапрос в одном запросе. RECURSIVE CTE — рекурсивные запросы для обхода деревьев (категории, оргструктура). Несколько CTE разделяются запятой.",
+      "example": "WITH active_users AS (\n  SELECT * FROM users WHERE active = true\n),\ntop_orders AS (\n  SELECT user_id, SUM(total) AS total\n  FROM orders GROUP BY user_id\n  HAVING SUM(total) > 500\n)\nSELECT au.name, t.total\nFROM active_users au\nJOIN top_orders t ON au.id = t.user_id;",
+      "link": "https://www.postgresql.org/docs/current/queries-with.html"
+    },
+    {
+      "id": 11,
+      "keyword": "DISTINCT",
+      "command": "SELECT DISTINCT <column> FROM <table>;",
+      "description": "DISTINCT убирает дублирующиеся строки из результата — работает по всем перечисленным в SELECT колонкам вместе. Требует сортировки всего результата — осторожно на больших таблицах. Частое появление DISTINCT в запросе — признак декартова произведения или неверного JOIN. Для агрегации уникальных значений: COUNT(DISTINCT column).",
+      "example": "SELECT DISTINCT country FROM users\nORDER BY country;\n\n-- уникальные email-домены\nSELECT DISTINCT\n  SPLIT_PART(email, '@', 2) AS domain\nFROM users;"
+    },
+    {
+      "id": 12,
+      "keyword": "UNION | UNION ALL",
+      "command": "SELECT ... UNION ALL SELECT ...;",
+      "description": "UNION объединяет результаты двух SELECT в один набор строк. UNION автоматически удаляет дубликаты (требует сортировки всего результата — медленнее). UNION ALL оставляет все строки включая дублирующиеся — работает быстрее, предпочтителен когда дубликаты не нужно удалять. Оба запроса должны иметь одинаковое количество колонок и совместимые типы.",
+      "example": "SELECT id, name FROM customers\nUNION ALL\nSELECT id, name FROM archived_customers\nORDER BY name;"
+    }
+  ],
+  "ddl": [
+    {
+      "id": 1,
+      "keyword": "CREATE TABLE",
+      "command": "CREATE TABLE <table_name> (\n  <col> <type> <constraints>\n);",
+      "description": "CREATE TABLE создаёт таблицу с заданными колонками и ограничениями. Каждая колонка имеет имя, тип данных (INTEGER, BIGINT, VARCHAR(n), TEXT, BOOLEAN, NUMERIC, TIMESTAMP, UUID, JSONB и др.) и опциональные ограничения. Используйте SERIAL или GENERATED ALWAYS AS IDENTITY для автоинкрементного первичного ключа.",
+      "example": "CREATE TABLE users (\n  id          SERIAL PRIMARY KEY,\n  name        VARCHAR(100) NOT NULL,\n  email       VARCHAR(255) UNIQUE NOT NULL,\n  age         INTEGER CHECK (age >= 0),\n  active      BOOLEAN DEFAULT true,\n  created_at  TIMESTAMP DEFAULT NOW()\n);",
+      "link": "https://www.postgresql.org/docs/current/sql-createtable.html"
+    },
+    {
+      "id": 2,
+      "keyword": "PRIMARY KEY | FOREIGN KEY",
+      "command": "REFERENCES <table>(<col>)\nON DELETE CASCADE",
+      "description": "PRIMARY KEY уникально идентифицирует каждую строку (неявно NOT NULL + UNIQUE). FOREIGN KEY создаёт связь между таблицами — значение должно существовать в referenced таблице. ON DELETE CASCADE автоматически удаляет дочерние строки при удалении родительской. ON DELETE SET NULL — ставит NULL. ON DELETE RESTRICT — запрещает удаление если есть зависимые строки.",
+      "example": "CREATE TABLE orders (\n  id       SERIAL PRIMARY KEY,\n  user_id  INTEGER NOT NULL\n             REFERENCES users(id)\n             ON DELETE CASCADE,\n  total    NUMERIC(10,2) NOT NULL CHECK (total >= 0),\n  status   VARCHAR(20) DEFAULT 'pending'\n);",
+      "link": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "id": 3,
+      "keyword": "ALTER TABLE",
+      "command": "ALTER TABLE <table> ADD COLUMN <col> <type>;",
+      "description": "ALTER TABLE изменяет структуру существующей таблицы без пересоздания. ADD COLUMN — добавляет колонку, DROP COLUMN — удаляет, RENAME COLUMN — переименовывает, ALTER COLUMN TYPE — меняет тип, SET DEFAULT / DROP DEFAULT — управляет значением по умолчанию. На больших таблицах в продакшне некоторые операции блокируют записи — планируйте осторожно.",
+      "example": "ALTER TABLE users\n  ADD COLUMN phone VARCHAR(20);\n\nALTER TABLE users\n  DROP COLUMN phone;\n\nALTER TABLE users\n  RENAME COLUMN name TO full_name;\n\nALTER TABLE users\n  ALTER COLUMN age SET DEFAULT 0;",
+      "link": "https://www.postgresql.org/docs/current/sql-altertable.html"
+    },
+    {
+      "id": 4,
+      "keyword": "CREATE INDEX",
+      "command": "CREATE INDEX <idx_name>\nON <table>(<column>);",
+      "description": "Индекс ускоряет поиск по колонке (B-tree по умолчанию — для сравнений и сортировок). Типы: Hash (равенство), GIN (массивы, JSONB, full-text search), GiST (геопространственные данные), BRIN (большие таблицы с монотонными значениями). CREATE INDEX CONCURRENTLY создаёт индекс без блокировки таблицы — используйте в продакшне.",
+      "example": "-- обычный индекс\nCREATE INDEX idx_users_email ON users(email);\n\n-- уникальный\nCREATE UNIQUE INDEX idx_users_phone ON users(phone);\n\n-- без блокировки таблицы (продакшн)\nCREATE INDEX CONCURRENTLY idx_orders_user\n  ON orders(user_id);",
+      "link": "https://www.postgresql.org/docs/current/sql-createindex.html"
+    },
+    {
+      "id": 5,
+      "keyword": "DROP TABLE",
+      "command": "DROP TABLE IF EXISTS <table> CASCADE;",
+      "description": "DROP TABLE безвозвратно удаляет таблицу и все её данные. IF EXISTS предотвращает ошибку если таблица не существует. CASCADE также удаляет все зависимые объекты: представления (VIEW), внешние ключи других таблиц. Без CASCADE — выдаст ошибку если есть зависимости. Операция необратима без резервной копии — проверяйте дважды.",
+      "example": "DROP TABLE IF EXISTS temp_logs CASCADE;\n\n-- удалить несколько\nDROP TABLE sessions, cache_entries;"
+    },
+    {
+      "id": 6,
+      "keyword": "TRUNCATE",
+      "command": "TRUNCATE TABLE <table> RESTART IDENTITY;",
+      "description": "TRUNCATE быстро удаляет все строки из таблицы — в отличие от DELETE без WHERE не логирует каждую удалённую строку и работает значительно быстрее. RESTART IDENTITY сбрасывает счётчики SERIAL/sequence до начала. CASCADE удаляет строки в дочерних таблицах. TRUNCATE блокирует таблицу, но не может быть отменена в рамках активного курсора.",
+      "example": "TRUNCATE TABLE sessions\n  RESTART IDENTITY;\n\n-- несколько таблиц\nTRUNCATE TABLE logs, events\n  RESTART IDENTITY CASCADE;"
+    },
+    {
+      "id": 7,
+      "keyword": "ON CONFLICT",
+      "command": "INSERT INTO <table> (...) VALUES (...)\nON CONFLICT (<col>)\nDO UPDATE SET <col> = EXCLUDED.<col>;",
+      "description": "ON CONFLICT реализует upsert (insert or update) — если INSERT нарушает ограничение уникальности, вместо ошибки выполняется заданное действие. DO NOTHING — просто игнорирует конфликт. DO UPDATE SET — обновляет указанные колонки. EXCLUDED — специальная виртуальная таблица PostgreSQL: содержит данные, которые PostgreSQL пытался вставить, но не смог из-за конфликта. То есть EXCLUDED.name — это то значение name, которое вы передали в VALUES и которое «проиграло» конфликт. Удобно для идемпотентных операций.",
+      "example": "INSERT INTO users (email, name)\nVALUES ('test@mail.com', 'Ivan')\nON CONFLICT (email)\nDO UPDATE SET\n  name = EXCLUDED.name,\n  updated_at = NOW();\n\n-- игнорировать дубликат\nINSERT INTO tags (name)\nVALUES ('nodejs')\nON CONFLICT DO NOTHING;",
+      "link": "https://www.postgresql.org/docs/current/sql-insert.html"
+    },
+    {
+      "id": 8,
+      "keyword": "RETURNING",
+      "command": "INSERT INTO <table> (...)\nVALUES (...) RETURNING *;",
+      "description": "RETURNING возвращает данные изменённых строк после INSERT, UPDATE или DELETE — не нужно делать отдельный SELECT. Очень удобно для получения автогенерированного id после вставки, или проверки что именно было изменено/удалено. Можно указать конкретные колонки: RETURNING id, created_at. Поддерживается в Node.js через pg драйвер.",
+      "example": "INSERT INTO orders (user_id, total)\nVALUES (1, 299.99)\nRETURNING id, created_at;\n\nUPDATE users SET active = false\nWHERE last_login < NOW() - INTERVAL '1 year'\nRETURNING id, email;\n\nDELETE FROM sessions\nWHERE expires_at < NOW()\nRETURNING id;"
+    },
+    {
+      "id": 9,
+      "keyword": "CHECK | CONSTRAINT",
+      "command": "ALTER TABLE <table>\nADD CONSTRAINT <name> CHECK (<condition>);",
+      "description": "CHECK ограничение гарантирует что значение в колонке соответствует заданному условию на уровне базы данных — надёжнее чем валидация только в приложении. Можно задать при создании таблицы или добавить через ALTER TABLE. При нарушении INSERT/UPDATE вернёт ошибку. Ограничения можно именовать для понятных сообщений об ошибках.",
+      "example": "ALTER TABLE products\nADD CONSTRAINT check_price\nCHECK (price > 0);\n\nCREATE TABLE employees (\n  id     SERIAL PRIMARY KEY,\n  age    INTEGER CHECK (age BETWEEN 18 AND 100),\n  role   VARCHAR(20)\n           CHECK (role IN ('admin','user','guest'))\n);"
+    },
+    {
+      "id": 10,
+      "keyword": "CREATE DATABASE",
+      "command": "CREATE DATABASE <db_name>\n  OWNER <user> ENCODING 'UTF8';",
+      "description": "CREATE DATABASE создаёт новую базу данных. OWNER указывает владельца, ENCODING задаёт кодировку (UTF8 — стандарт). В psql для переключения используется \\c dbname. DROP DATABASE удаляет базу — нельзя удалить базу к которой подключён. В Node.js строка подключения: postgresql://user:password@localhost:5432/dbname.",
+      "example": "CREATE DATABASE myapp\n  OWNER myuser\n  ENCODING 'UTF8';\n\n-- в psql:\n\\c myapp\n\n-- подключение в Node.js (pg):\n-- const pool = new Pool({\n--   connectionString: process.env.DATABASE_URL\n-- })"
+    }
+  ],
+  "functions": [
+    {
+      "id": 1,
+      "keyword": "COUNT",
+      "command": "SELECT COUNT(*) FROM <table>;",
+      "description": "COUNT(*) считает все строки включая NULL. COUNT(column) считает строки где значение не NULL. COUNT(DISTINCT column) считает уникальные ненулевые значения. Является агрегатной функцией — возвращает одно значение для группы строк. В сочетании с GROUP BY считает записи в каждой группе отдельно.",
+      "example": "SELECT\n  COUNT(*) AS total,\n  COUNT(email) AS with_email,\n  COUNT(DISTINCT country) AS countries\nFROM users;",
+      "link": "https://www.postgresql.org/docs/current/functions-aggregate.html"
+    },
+    {
+      "id": 2,
+      "keyword": "SUM | AVG",
+      "command": "SELECT SUM(<col>), AVG(<col>)\nFROM <table>;",
+      "description": "SUM суммирует числовые значения в группе, игнорируя NULL. AVG вычисляет среднее арифметическое, тоже игнорируя NULL. Для точных финансовых расчётов используйте тип NUMERIC вместо FLOAT — избегаете ошибок округления с плавающей точкой. ROUND(AVG(...), 2) — округление до 2 знаков.",
+      "example": "SELECT\n  department,\n  SUM(salary) AS total_payroll,\n  ROUND(AVG(salary), 2) AS avg_salary\nFROM employees\nGROUP BY department\nORDER BY total_payroll DESC;"
+    },
+    {
+      "id": 3,
+      "keyword": "MAX | MIN",
+      "command": "SELECT MAX(<col>), MIN(<col>)\nFROM <table>;",
+      "description": "MAX возвращает максимальное значение, MIN — минимальное. Работают с числами, датами и строками (лексикографически). В сочетании с GROUP BY показывают экстремальные значения внутри каждой группы. Не путайте с оконными функциями MAX() OVER() — они не схлопывают строки, а добавляют колонку к каждой строке.",
+      "example": "SELECT\n  MAX(created_at) AS last_order,\n  MIN(total) AS cheapest,\n  MAX(total) AS most_expensive\nFROM orders\nWHERE user_id = 42;"
+    },
+    {
+      "id": 4,
+      "keyword": "COALESCE",
+      "command": "SELECT COALESCE(<col>, <default>)\nFROM <table>;",
+      "description": "COALESCE возвращает первый ненулевой аргумент из списка — проверяет слева направо. Принимает любое количество аргументов. Идеально для подстановки значений по умолчанию вместо NULL. Используется в SELECT, WHERE, и других частях запроса. Эквивалент $ifNull в MongoDB.",
+      "example": "SELECT\n  COALESCE(nickname, full_name, 'Аноним') AS display_name,\n  COALESCE(phone, 'не указан') AS phone,\n  COALESCE(discount, 0) AS discount\nFROM users;",
+      "link": "https://www.postgresql.org/docs/current/functions-conditional.html"
+    },
+    {
+      "id": 5,
+      "keyword": "NULLIF",
+      "command": "SELECT NULLIF(<expr1>, <expr2>)\nFROM <table>;",
+      "description": "NULLIF возвращает NULL если оба аргумента равны, иначе возвращает первый аргумент. Главный сценарий — предотвращение деления на ноль: total / NULLIF(count, 0) вернёт NULL вместо ошибки. Удобная пара к COALESCE: COALESCE(a / NULLIF(b, 0), 0) — безопасное деление с fallback.",
+      "example": "SELECT\n  total / NULLIF(quantity, 0) AS unit_price,\n  COALESCE(\n    revenue / NULLIF(visits, 0),\n    0\n  ) AS revenue_per_visit\nFROM stats;"
+    },
+    {
+      "id": 6,
+      "keyword": "CASE WHEN",
+      "command": "CASE\n  WHEN <cond> THEN <val>\n  ELSE <default>\nEND",
+      "description": "CASE WHEN — условное выражение SQL, аналог if/else. Простая форма: CASE col WHEN val THEN result. Поисковая форма: CASE WHEN condition THEN result ELSE default END. Можно использовать в SELECT, ORDER BY, WHERE, GROUP BY. Поддерживает несколько WHEN. Эквивалент $switch/$cond в MongoDB.",
+      "example": "SELECT name,\n  CASE\n    WHEN score >= 90 THEN 'A'\n    WHEN score >= 70 THEN 'B'\n    WHEN score >= 50 THEN 'C'\n    ELSE 'F'\n  END AS grade\nFROM students\nORDER BY score DESC;"
+    },
+    {
+      "id": 7,
+      "keyword": "CONCAT | ||",
+      "command": "SELECT CONCAT(<str1>, <str2>)\nFROM <table>;",
+      "description": "CONCAT объединяет строки — игнорирует NULL значения (NULL воспринимается как пустая строка). Оператор || тоже конкатенирует строки, но возвращает NULL если один из операндов NULL — оборачивайте в COALESCE. CONCAT_WS(separator, str1, str2, ...) удобен для разделителей и тоже игнорирует NULL.",
+      "example": "SELECT\n  CONCAT(first_name, ' ', last_name) AS full_name,\n  CONCAT_WS(', ', city, country) AS location,\n  first_name || ' ' || COALESCE(last_name, '') AS safe_name\nFROM users;"
+    },
+    {
+      "id": 8,
+      "keyword": "LOWER | UPPER | LENGTH",
+      "command": "SELECT LOWER(<col>), UPPER(<col>),\n  LENGTH(<col>) FROM <table>;",
+      "description": "LOWER и UPPER приводят строку к нижнему/верхнему регистру — полезно для нормализации данных и регистронезависимого поиска (или используйте ILIKE). LENGTH возвращает количество символов (CHARACTER_LENGTH). Также есть: TRIM, LTRIM, RTRIM, SUBSTRING, REPLACE, SPLIT_PART, REGEXP_REPLACE, POSITION.",
+      "example": "SELECT\n  LOWER(email) AS email_norm,\n  UPPER(country_code) AS code,\n  LENGTH(description) AS desc_len,\n  TRIM(name) AS trimmed_name\nFROM products\nWHERE LOWER(name) LIKE '%phone%';"
+    },
+    {
+      "id": 9,
+      "keyword": "NOW | CURRENT_DATE",
+      "command": "SELECT NOW(), CURRENT_DATE,\n  CURRENT_TIMESTAMP;",
+      "description": "NOW() возвращает текущую дату и время с часовым поясом (тип TIMESTAMPTZ). CURRENT_DATE — только дата (DATE). CURRENT_TIMESTAMP — синоним NOW(). Для арифметики с датами используйте INTERVAL: NOW() - INTERVAL '7 days'. AT TIME ZONE конвертирует часовые пояса.",
+      "example": "SELECT * FROM orders\nWHERE created_at >= NOW() - INTERVAL '30 days';\n\nSELECT\n  CURRENT_DATE AS today,\n  NOW() AS right_now,\n  NOW() AT TIME ZONE 'Europe/Moscow' AS moscow_time;"
+    },
+    {
+      "id": 10,
+      "keyword": "DATE_TRUNC",
+      "command": "SELECT DATE_TRUNC('<precision>', <timestamp>)\nFROM <table>;",
+      "description": "DATE_TRUNC округляет дату/время до указанной точности: 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second'. Очень удобно для группировки данных по периодам — например, выручка по месяцам. Возвращает TIMESTAMPTZ — используйте ::DATE для приведения только к дате.",
+      "example": "SELECT\n  DATE_TRUNC('month', created_at) AS month,\n  COUNT(*) AS orders_count,\n  SUM(total) AS revenue\nFROM orders\nGROUP BY DATE_TRUNC('month', created_at)\nORDER BY month;",
+      "link": "https://www.postgresql.org/docs/current/functions-datetime.html"
+    },
+    {
+      "id": 11,
+      "keyword": "EXTRACT",
+      "command": "SELECT EXTRACT(<field> FROM <timestamp>)\nFROM <table>;",
+      "description": "EXTRACT извлекает отдельное поле из даты/времени: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, DOW (день недели 0=воскресенье), DOY (день года), EPOCH (секунды с 1970-01-01). Возвращает NUMERIC. Альтернативный синтаксис: date_part('month', ts). Используется для группировки по частям даты.",
+      "example": "SELECT\n  EXTRACT(YEAR FROM created_at) AS year,\n  EXTRACT(MONTH FROM created_at) AS month,\n  EXTRACT(DOW FROM created_at) AS weekday,\n  COUNT(*) AS cnt\nFROM orders\nGROUP BY year, month, weekday\nORDER BY year, month;"
+    },
+    {
+      "id": 12,
+      "keyword": "CAST | ::",
+      "command": "SELECT CAST(<value> AS <type>)\nFROM <table>;",
+      "description": "CAST явно преобразует значение из одного типа в другой. PostgreSQL-специфичный синтаксис :: краткий и удобный: '42'::INTEGER, NOW()::DATE, price::NUMERIC(10,2). При невозможности преобразования бросает исключение. Используйте CASE WHEN или REGEXP_MATCH для безопасного конвертирования.",
+      "example": "SELECT\n  '2026-01-01'::DATE AS date,\n  '42'::INTEGER AS num,\n  price::NUMERIC(10,2) AS price,\n  CAST(active AS TEXT) AS active_str,\n  NOW()::DATE AS today\nFROM products;",
+      "link": "https://www.postgresql.org/docs/current/sql-expressions.html#SQL-SYNTAX-TYPE-CASTS"
+    }
+  ],
+  "dbmanage": [
+    {
+      "id": 1,
+      "keyword": "CREATE DATABASE",
+      "command": "CREATE DATABASE <db_name>\n  OWNER <user>\n  ENCODING 'UTF8'\n  LC_COLLATE 'en_US.UTF-8'\n  LC_CTYPE 'en_US.UTF-8';",
+      "description": "Создаёт новую базу данных. OWNER — владелец базы (по умолчанию текущий пользователь). ENCODING задаёт кодировку (UTF8 — стандарт, не меняйте без причины). LC_COLLATE и LC_CTYPE задают локаль для сортировки строк и классификации символов. TEMPLATE указывает шаблон (по умолчанию template1). Нельзя создать БД если уже подключён к ней же — запускайте из другой БД (например postgres).",
+      "example": "-- минимально\nCREATE DATABASE myapp;\n\n-- полный вариант\nCREATE DATABASE myapp\n  OWNER myuser\n  ENCODING 'UTF8'\n  LC_COLLATE 'en_US.UTF-8'\n  LC_CTYPE 'en_US.UTF-8';\n\n-- в psql переключиться:\n\\c myapp\n\n-- или при запуске:\npsql -U myuser -d myapp",
+      "link": "https://www.postgresql.org/docs/current/sql-createdatabase.html"
+    },
+    {
+      "id": 2,
+      "keyword": "DROP DATABASE",
+      "command": "DROP DATABASE IF EXISTS <db_name>\n  WITH (FORCE);",
+      "description": "Безвозвратно удаляет базу данных и все её данные. IF EXISTS предотвращает ошибку если БД не существует. WITH (FORCE) — принудительно разрывает активные соединения перед удалением (PostgreSQL 13+). Без FORCE — выдаст ошибку если есть активные соединения. Нельзя удалить БД к которой сам подключён — подключитесь к postgres или другой БД первым. Операция необратима.",
+      "example": "-- безопасно (не падает если нет)\nDROP DATABASE IF EXISTS myapp;\n\n-- принудительно (разрывает соединения)\nDROP DATABASE IF EXISTS myapp WITH (FORCE);\n\n-- из psql: сначала подключиться к другой БД\n\\c postgres\nDROP DATABASE myapp;",
+      "link": "https://www.postgresql.org/docs/current/sql-dropdatabase.html"
+    },
+    {
+      "id": 3,
+      "keyword": "CREATE ROLE / USER",
+      "command": "CREATE ROLE <name> WITH\n  LOGIN PASSWORD '<pwd>'\n  CREATEDB CREATEROLE;",
+      "description": "CREATE ROLE создаёт роль (аналог пользователя). LOGIN — разрешает подключение, без него роль только для группировки прав. CREATE USER — псевдоним CREATE ROLE WITH LOGIN. Атрибуты: SUPERUSER, CREATEDB, CREATEROLE, REPLICATION, BYPASSRLS (обход Row Level Security). Пароль: PASSWORD или ENCRYPTED PASSWORD (одно и то же в современных PG). Срок действия: VALID UNTIL 'timestamp'.",
+      "example": "-- пользователь только с логином\nCREATE ROLE appuser WITH LOGIN PASSWORD 'secret123';\n\n-- с правом создавать БД\nCREATE ROLE devuser WITH LOGIN PASSWORD 'dev123' CREATEDB;\n\n-- суперпользователь\nCREATE ROLE admin WITH LOGIN PASSWORD 'admin123' SUPERUSER;\n\n-- группа без логина (роль для GRANT)\nCREATE ROLE readonly;",
+      "link": "https://www.postgresql.org/docs/current/sql-createrole.html"
+    },
+    {
+      "id": 4,
+      "keyword": "GRANT | REVOKE",
+      "command": "GRANT <privilege> ON <object>\n  TO <role>;\nREVOKE <privilege> ON <object>\n  FROM <role>;",
+      "description": "GRANT выдаёт права доступа к объектам БД. Привилегии таблицы: SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, ALL. Привилегии БД: CONNECT, CREATE, TEMPORARY. GRANT ... ON ALL TABLES IN SCHEMA public — выдаёт права на все таблицы схемы. REVOKE — забирает права. WITH GRANT OPTION — получатель может сам раздавать эти права другим.",
+      "example": "-- читать таблицу\nGRANT SELECT ON users TO appuser;\n\n-- все права на все таблицы схемы\nGRANT ALL PRIVILEGES ON ALL TABLES\n  IN SCHEMA public TO devuser;\n\n-- подключаться к БД\nGRANT CONNECT ON DATABASE myapp TO appuser;\n\n-- использовать схему\nGRANT USAGE ON SCHEMA public TO appuser;\n\n-- забрать право\nREVOKE DELETE ON orders FROM appuser;",
+      "link": "https://www.postgresql.org/docs/current/sql-grant.html"
+    },
+    {
+      "id": 5,
+      "keyword": "\\l | \\c | \\dt | \\d",
+      "command": "\\l         -- список БД\n\\c <db>    -- подключиться\n\\dt        -- таблицы схемы\n\\d <table> -- структура таблицы",
+      "description": "Мета-команды psql (начинаются с \\) — не SQL, работают только в psql. \\l или \\list — список всех баз данных с владельцем и кодировкой. \\c dbname — переключиться на БД. \\dt — список таблиц в текущей схеме. \\d tablename — структура таблицы (колонки, типы, индексы, FK). \\du — список ролей. \\dn — список схем. \\df — список функций. \\i file.sql — выполнить SQL-файл.",
+      "example": "\\l                     -- все БД\n\\c myapp               -- подключиться к myapp\n\\dt                    -- таблицы в public\n\\dt schema.*           -- таблицы в конкретной схеме\n\\d users               -- структура таблицы users\n\\d+ users              -- детальная структура + размер\n\\du                    -- роли и атрибуты\n\\dn                    -- схемы\n\\df                    -- функции\n\\timing on             -- показывать время запросов\n\\x                     -- расширенный вывод (вертикальный)\n\\q                     -- выйти из psql"
+    },
+    {
+      "id": 6,
+      "keyword": "CREATE SCHEMA",
+      "command": "CREATE SCHEMA <schema_name>\n  AUTHORIZATION <owner>;",
+      "description": "Схема (schema) — пространство имён внутри БД для организации таблиц, функций и других объектов. По умолчанию используется схема public. Позволяет разделять объекты по модулям (auth, billing, analytics) или изолировать данные разных клиентов (multi-tenancy). search_path определяет порядок поиска схем. Можно обращаться: schema.table.",
+      "example": "-- создать схему\nCREATE SCHEMA billing;\nCREATE SCHEMA auth AUTHORIZATION appuser;\n\n-- создать таблицу в схеме\nCREATE TABLE billing.invoices (\n  id SERIAL PRIMARY KEY,\n  amount NUMERIC(10,2)\n);\n\n-- выбрать с указанием схемы\nSELECT * FROM billing.invoices;\n\n-- задать путь поиска схем\nSET search_path TO billing, public;\n\n-- удалить схему\nDROP SCHEMA billing CASCADE;",
+      "link": "https://www.postgresql.org/docs/current/sql-createschema.html"
+    },
+    {
+      "id": 7,
+      "keyword": "TRANSACTION",
+      "command": "BEGIN;\n  <SQL statements>;\nCOMMIT; -- или ROLLBACK;",
+      "description": "Транзакция группирует несколько операций в одну атомарную единицу — либо все выполнятся (COMMIT), либо все откатятся (ROLLBACK). PostgreSQL по умолчанию работает в режиме autocommit — каждый запрос транзакция сама по себе. BEGIN (или START TRANSACTION) начинает явную транзакцию. SAVEPOINT создаёт точку сохранения для частичного отката. Уровни изоляции: READ COMMITTED (дефолт), REPEATABLE READ, SERIALIZABLE.",
+      "example": "BEGIN;\n  UPDATE accounts\n    SET balance = balance - 500\n    WHERE id = 1;\n  UPDATE accounts\n    SET balance = balance + 500\n    WHERE id = 2;\nCOMMIT;\n\n-- с откатом при ошибке:\nBEGIN;\n  DELETE FROM orders WHERE user_id = 99;\n  -- что-то пошло не так:\nROLLBACK;\n\n-- с savepoint:\nBEGIN;\n  INSERT INTO logs VALUES (...);\n  SAVEPOINT sp1;\n  UPDATE users SET active = false WHERE ...\n  ROLLBACK TO sp1; -- откатить только UPDATE\nCOMMIT;",
+      "link": "https://www.postgresql.org/docs/current/sql-begin.html"
+    },
+    {
+      "id": 8,
+      "keyword": "CREATE VIEW",
+      "command": "CREATE VIEW <view_name> AS\n  SELECT ...;",
+      "description": "VIEW (представление) — именованный сохранённый SELECT-запрос, выглядит и используется как таблица. Упрощает сложные запросы, скрывает детали схемы от клиентов, ограничивает доступ к колонкам. Обычный VIEW не хранит данные — выполняет запрос при каждом обращении. MATERIALIZED VIEW хранит снимок результата на диске — быстрее для тяжёлых запросов, обновляется через REFRESH.",
+      "example": "-- обычный view\nCREATE VIEW active_users AS\n  SELECT id, name, email\n  FROM users\n  WHERE active = true;\n\nSELECT * FROM active_users;\n\n-- материализованный (хранит данные)\nCREATE MATERIALIZED VIEW monthly_stats AS\n  SELECT DATE_TRUNC('month', created_at) AS month,\n         COUNT(*) AS orders\n  FROM orders\n  GROUP BY 1;\n\n-- обновить снимок\nREFRESH MATERIALIZED VIEW monthly_stats;\n\n-- удалить view\nDROP VIEW active_users;\nDROP MATERIALIZED VIEW monthly_stats;",
+      "link": "https://www.postgresql.org/docs/current/sql-createview.html"
+    },
+    {
+      "id": 9,
+      "keyword": "pg_dump | pg_restore",
+      "command": "pg_dump -U <user> -d <db> -f dump.sql\npg_restore -U <user> -d <db> dump.sql",
+      "description": "pg_dump создаёт резервную копию базы данных в виде SQL-скрипта или бинарного архива. Флаг -F c — сжатый бинарный формат (быстрее, поддерживает параллельный restore). -F p — plain SQL (читаемый). pg_restore восстанавливает из бинарного формата. -j N — параллельное восстановление в N потоков. pg_dumpall дампит все базы включая роли и настройки. Для больших БД используйте -Fc с -j для скорости.",
+      "example": "# дамп в SQL (читаемый)\npg_dump -U postgres -d myapp -f backup.sql\n\n# дамп в бинарный формат (сжатый)\npg_dump -U postgres -d myapp -Fc -f backup.dump\n\n# восстановить из бинарного\npg_restore -U postgres -d myapp_restored backup.dump\n\n# параллельное восстановление (4 потока)\npg_restore -U postgres -d myapp -j 4 backup.dump\n\n# дамп только схемы (без данных)\npg_dump -U postgres -d myapp --schema-only -f schema.sql\n\n# дамп только данных\npg_dump -U postgres -d myapp --data-only -f data.sql",
+      "link": "https://www.postgresql.org/docs/current/app-pgdump.html"
+    },
+    {
+      "id": 10,
+      "keyword": "EXPLAIN ANALYZE",
+      "command": "EXPLAIN ANALYZE\n  SELECT ...;",
+      "description": "EXPLAIN показывает план выполнения запроса (какие индексы используются, сортировки, соединения) без реального выполнения. EXPLAIN ANALYZE — выполняет запрос и показывает реальное время. Ключевые метрики: cost (оценка стоимости), actual time (реальное время в мс), rows (количество строк), Seq Scan (полный перебор) vs Index Scan (по индексу). Для WRITE-запросов оборачивайте в транзакцию и делайте ROLLBACK.",
+      "example": "-- план без выполнения\nEXPLAIN SELECT * FROM users WHERE email = 'test@mail.com';\n\n-- реальное выполнение + метрики\nEXPLAIN ANALYZE\n  SELECT u.name, COUNT(o.id)\n  FROM users u\n  LEFT JOIN orders o ON u.id = o.user_id\n  GROUP BY u.id;\n\n-- с буфером памяти и форматом JSON\nEXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)\n  SELECT * FROM orders\n  WHERE created_at > NOW() - INTERVAL '7 days';\n\n-- безопасно для UPDATE:\nBEGIN;\nEXPLAIN ANALYZE UPDATE users SET active = false WHERE ...;\nROLLBACK;",
+      "link": "https://www.postgresql.org/docs/current/sql-explain.html"
+    },
+    {
+      "id": 11,
+      "keyword": "VACUUM | ANALYZE",
+      "command": "VACUUM ANALYZE <table>;\nVACUUM FULL <table>;",
+      "description": "PostgreSQL использует MVCC (Multi-Version Concurrency Control) — при UPDATE/DELETE старые версии строк остаются в таблице как «мёртвые кортежи». VACUUM очищает мёртвые кортежи и освобождает место для повторного использования. VACUUM FULL — полная реорганизация (блокирует таблицу, возвращает место ОС). ANALYZE обновляет статистику для планировщика запросов. AUTOVACUUM работает автоматически в фоне — обычно достаточно.",
+      "example": "-- очистить мёртвые строки (без блокировки)\nVACUUM users;\n\n-- очистить + обновить статистику\nVACUUM ANALYZE users;\n\n-- полная реорганизация (блокирует таблицу!)\nVACUUM FULL users;\n\n-- обновить статистику планировщика\nANALYZE users;\n\n-- посмотреть статус vacuum:\nSELECT relname, n_dead_tup, last_vacuum, last_autovacuum\nFROM pg_stat_user_tables\nORDER BY n_dead_tup DESC;",
+      "link": "https://www.postgresql.org/docs/current/sql-vacuum.html"
+    },
+    {
+      "id": 12,
+      "keyword": "pg_stat_* views",
+      "command": "SELECT * FROM pg_stat_activity;\nSELECT * FROM pg_stat_user_tables;",
+      "description": "Системные представления pg_stat_* предоставляют статистику в реальном времени без внешних инструментов. pg_stat_activity — активные соединения и текущие запросы. pg_stat_user_tables — статистика по таблицам (сканирования, dead tuples, vacuum). pg_stat_user_indexes — использование индексов (неиспользуемые индексы — кандидаты на удаление). pg_locks — текущие блокировки. Незаменимо для диагностики и оптимизации.",
+      "example": "-- активные запросы (кто что делает)\nSELECT pid, usename, state, query_start,\n       LEFT(query, 80) AS query\nFROM pg_stat_activity\nWHERE state != 'idle'\nORDER BY query_start;\n\n-- убить зависший запрос\nSELECT pg_terminate_backend(pid)\nFROM pg_stat_activity\nWHERE pid = <pid>;\n\n-- неиспользуемые индексы\nSELECT indexrelname, idx_scan\nFROM pg_stat_user_indexes\nWHERE idx_scan = 0;\n\n-- размер таблиц\nSELECT relname,\n  pg_size_pretty(pg_total_relation_size(relid))\nFROM pg_stat_user_tables\nORDER BY pg_total_relation_size(relid) DESC;",
+      "link": "https://www.postgresql.org/docs/current/monitoring-stats.html"
+    }
+  ],
+  "migrations": [
+    {
+      "id": 1,
+      "keyword": "UP | DOWN",
+      "command": "module.exports = {\n  up: async (queryInterface, Sequelize) => { ... },\n  down: async (queryInterface, Sequelize) => { ... }\n}",
+      "description": "Каждая миграция состоит из двух методов: UP — применяет изменение схемы (добавить таблицу, колонку, индекс), DOWN — точно обращает это изменение обратно. Sequelize отслеживает выполненные миграции в таблице SequelizeMeta. Всегда пишите DOWN корректно — иначе rollback сломает схему.",
+      "example": "// migrations/20260517_add_users.js\nmodule.exports = {\n  async up(queryInterface, Sequelize) {\n    await queryInterface.addColumn('users', 'phone', {\n      type: Sequelize.STRING(20),\n      allowNull: true,\n    })\n  },\n  async down(queryInterface) {\n    await queryInterface.removeColumn('users', 'phone')\n  },\n}"
+    },
+    {
+      "id": 2,
+      "keyword": "migration:generate",
+      "command": "npx sequelize-cli migration:generate\n  --name <migration_name>",
+      "description": "Команда создаёт пустой файл миграции в папке migrations/ с временной меткой в имени (20260517120000-add-phone-to-users.js). Временная метка определяет порядок выполнения. Имя должно описывать суть изменения — это документация истории схемы. Без CLI: создать файл вручную с той же структурой.",
+      "example": "npx sequelize-cli migration:generate \\\n  --name add-phone-to-users\n\n# Создаст файл:\n# migrations/20260517120000-add-phone-to-users.js"
+    },
+    {
+      "id": 3,
+      "keyword": "db:migrate",
+      "command": "npx sequelize-cli db:migrate",
+      "description": "Применяет все непримененные миграции в порядке временных меток. Sequelize сравнивает файлы в migrations/ с записями в SequelizeMeta и запускает только новые. Для применения конкретной: --to 20260517_name. Всегда запускайте в CI/CD перед стартом приложения — схема должна быть актуальной.",
+      "example": "# применить все новые\nnpx sequelize-cli db:migrate\n\n# применить до конкретной\nnpx sequelize-cli db:migrate \\\n  --to 20260517120000-add-phone-to-users.js\n\n# посмотреть статус\nnpx sequelize-cli db:migrate:status"
+    },
+    {
+      "id": 4,
+      "keyword": "db:migrate:undo",
+      "command": "npx sequelize-cli db:migrate:undo",
+      "description": "Откатывает последнюю применённую миграцию, вызывая метод down(). db:migrate:undo:all откатывает все миграции до начального состояния. Rollback в production — крайняя мера: убедитесь что down() безопасен для данных (удаление колонки = потеря данных). Лучше написать новую «forward» миграцию.",
+      "example": "# откатить последнюю\nnpx sequelize-cli db:migrate:undo\n\n# откатить до конкретной\nnpx sequelize-cli db:migrate:undo:all \\\n  --to 20260510000000-create-users.js\n\n# откатить всё\nnpx sequelize-cli db:migrate:undo:all"
+    },
+    {
+      "id": 5,
+      "keyword": "createTable",
+      "command": "queryInterface.createTable('<table>', {\n  <col>: { type: DataTypes.<TYPE> }\n})",
+      "description": "Создаёт таблицу с заданными колонками. Объект колонок: ключ — имя, значение — { type, allowNull, defaultValue, references }. id обычно: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }. В down() используйте queryInterface.dropTable(). timestamps: true добавит createdAt и updatedAt автоматически.",
+      "example": "async up(queryInterface, Sequelize) {\n  await queryInterface.createTable('orders', {\n    id: {\n      type: Sequelize.INTEGER,\n      primaryKey: true,\n      autoIncrement: true,\n    },\n    user_id: {\n      type: Sequelize.INTEGER,\n      references: { model: 'users', key: 'id' },\n      onDelete: 'CASCADE',\n    },\n    total: { type: Sequelize.DECIMAL(10, 2) },\n    created_at: { type: Sequelize.DATE },\n  })\n},\nasync down(queryInterface) {\n  await queryInterface.dropTable('orders')\n}"
+    },
+    {
+      "id": 6,
+      "keyword": "addColumn",
+      "command": "queryInterface.addColumn(\n  '<table>', '<column>',\n  { type: DataTypes.<TYPE> }\n)",
+      "description": "Добавляет новую колонку — эквивалент ALTER TABLE ADD COLUMN. Если добавляете NOT NULL колонку в таблицу с данными — PostgreSQL выдаст ошибку. Решение: добавить с DEFAULT, сделать backfill UPDATE, потом убрать DEFAULT. В down() используйте removeColumn(). Всегда тестируйте миграцию на копии продакшн данных.",
+      "example": "async up(queryInterface, Sequelize) {\n  await queryInterface.addColumn(\n    'users',\n    'avatar_url',\n    {\n      type: Sequelize.STRING(500),\n      allowNull: true,\n      defaultValue: null,\n    }\n  )\n},\nasync down(queryInterface) {\n  await queryInterface.removeColumn('users', 'avatar_url')\n}"
+    },
+    {
+      "id": 7,
+      "keyword": "removeColumn",
+      "command": "queryInterface.removeColumn('<table>', '<column>')",
+      "description": "Удаляет колонку — ALTER TABLE DROP COLUMN. Данные в колонке теряются безвозвратно. Правило безопасного удаления: сначала убрать из кода приложения и задеплоить (чтобы код не читал эту колонку), затем запустить миграцию. В down() восстановите колонку через addColumn с тем же типом (данные не восстановить).",
+      "example": "async up(queryInterface) {\n  await queryInterface.removeColumn(\n    'users',\n    'legacy_token'\n  )\n},\nasync down(queryInterface, Sequelize) {\n  // данные не восстановить, только структура\n  await queryInterface.addColumn(\n    'users', 'legacy_token',\n    { type: Sequelize.STRING, allowNull: true }\n  )\n}"
+    },
+    {
+      "id": 8,
+      "keyword": "addIndex",
+      "command": "queryInterface.addIndex('<table>', ['<col>'],\n  { name: '<idx_name>', unique: false })",
+      "description": "Добавляет индекс на колонку или набор колонок. Опции: unique: true — уникальный индекс, name — кастомное имя (по умолчанию генерируется автоматически). В down() используйте queryInterface.removeIndex(table, name). Для больших таблиц в продакшне используйте raw SQL с CONCURRENTLY — Sequelize не поддерживает его напрямую.",
+      "example": "async up(queryInterface) {\n  await queryInterface.addIndex('users', ['email'], {\n    name: 'idx_users_email',\n    unique: true,\n  })\n  await queryInterface.addIndex(\n    'orders', ['user_id', 'created_at'],\n    { name: 'idx_orders_user_date' }\n  )\n},\nasync down(queryInterface) {\n  await queryInterface.removeIndex('users', 'idx_users_email')\n  await queryInterface.removeIndex('orders', 'idx_orders_user_date')\n}"
+    },
+    {
+      "id": 9,
+      "keyword": "transaction",
+      "command": "return queryInterface.sequelize.transaction(\n  async (t) => { ... { transaction: t } }\n)",
+      "description": "Оборачивание миграции в транзакцию гарантирует атомарность — если один шаг упадёт, все изменения откатятся автоматически. Критично для сложных миграций с несколькими операциями. Передавайте { transaction: t } в каждый вызов queryInterface. Исключение: CREATE INDEX CONCURRENTLY нельзя запускать в транзакции.",
+      "example": "async up(queryInterface, Sequelize) {\n  return queryInterface.sequelize.transaction(\n    async (t) => {\n      await queryInterface.addColumn(\n        'users', 'role',\n        { type: Sequelize.STRING },\n        { transaction: t }\n      )\n      await queryInterface.addIndex(\n        'users', ['role'],\n        { transaction: t }\n      )\n    }\n  )\n}"
+    },
+    {
+      "id": 10,
+      "keyword": "sequelize.query",
+      "command": "await queryInterface.sequelize.query(`<SQL>`)",
+      "description": "Когда возможностей queryInterface недостаточно — выполните raw SQL напрямую. Используется для: CREATE INDEX CONCURRENTLY, CREATE EXTENSION, ALTER TYPE (ENUM), триггеров, функций, RLS (Row Level Security). Можно передать { transaction } для включения в транзакцию. Всегда пишите обратное действие в down().",
+      "example": "async up(queryInterface) {\n  // CONCURRENTLY нельзя в транзакции\n  await queryInterface.sequelize.query(`\n    CREATE INDEX CONCURRENTLY idx_orders_status\n    ON orders(status)\n    WHERE status != 'completed'\n  `)\n},\nasync down(queryInterface) {\n  await queryInterface.sequelize.query(`\n    DROP INDEX CONCURRENTLY IF EXISTS idx_orders_status\n  `)\n}"
+    },
+    {
+      "id": 11,
+      "keyword": "prisma migrate dev",
+      "command": "npx prisma migrate dev\n  --name <migration_name>",
+      "description": "Prisma сравнивает schema.prisma с текущей БД, генерирует SQL и применяет его. Создаёт папку prisma/migrations/ с версионированными SQL файлами. Только для development — в production используйте migrate deploy. Автоматически запускает prisma generate после миграции. Если схема дрейфует — предложит сбросить БД.",
+      "example": "# изменить schema.prisma, затем:\nnpx prisma migrate dev --name add-phone-to-users\n\n# Создаст файл:\n# prisma/migrations/20260517_add_phone_to_users/migration.sql\n\n# Посмотреть статус:\nnpx prisma migrate status",
+      "link": "https://www.prisma.io/docs/orm/prisma-migrate"
+    },
+    {
+      "id": 12,
+      "keyword": "prisma migrate deploy",
+      "command": "npx prisma migrate deploy",
+      "description": "Применяет все ожидающие миграции в production/staging. Не создаёт новых файлов и не запрашивает ввода — идеален для CI/CD pipeline. Состояние хранится в таблице _prisma_migrations. Если миграция уже применена — пропускает. При drift (схема не совпадает) — выдаёт ошибку. Запускайте перед стартом сервера.",
+      "example": "# в Dockerfile или CI/CD:\nnx prisma migrate deploy\n\n# пример GitHub Actions шага:\n# - name: Run migrations\n#   run: npx prisma migrate deploy\n#   env:\n#     DATABASE_URL: ${{ secrets.DATABASE_URL }}",
+      "link": "https://www.prisma.io/docs/orm/prisma-migrate/workflows/deploying-migrations"
+    }
+  ],
+  "psql": [
+    {
+      "id": 1,
+      "keyword": "\\l / \\list",
+      "command": "\\l\n\\l+\n\\list\n\\list+",
+      "description": "Список всех баз данных на сервере. Показывает: имя, владельца, кодировку (Encoding), LC_COLLATE, LC_CTYPE, привилегии доступа. \\l+ дополнительно выводит размер каждой БД и описание (если задано через COMMENT ON DATABASE). Аналог SQL: SELECT datname FROM pg_database;",
+      "example": "\\l        -- список всех БД\n\\l+       -- + размер каждой БД",
+      "link": "https://www.postgresql.org/docs/current/app-psql.html"
+    },
+    {
+      "id": 2,
+      "keyword": "\\c / \\connect",
+      "command": "\\c <dbname>\n\\c <dbname> <user>\n\\c <dbname> <user> <host> <port>",
+      "description": "Подключается к другой базе данных (или другому пользователю/хосту/порту) без выхода из psql. При переключении выводит «You are now connected to database …». Если не указывать аргументы — подключается к текущей БД заново. Полезно для смены роли или хоста внутри одной сессии.",
+      "example": "\\c myapp           -- переключиться на БД\n\\c myapp appuser   -- + сменить пользователя"
+    },
+    {
+      "id": 3,
+      "keyword": "\\dt / \\dt+",
+      "command": "\\dt\n\\dt+\n\\dt <pattern>\n\\dt schema.*",
+      "description": "Список таблиц в текущей схеме (по умолчанию public). \\dt+ добавляет размер таблицы и описание. pattern — glob-маска: \\dt users* найдёт все таблицы начинающиеся на users. Для другой схемы: \\dt billing.* — таблицы схемы billing. Системные таблицы pg_* в список не входят.",
+      "example": "\\dt          -- таблицы в public\n\\dt+         -- + размер таблиц\n\\dt user*    -- таблицы по маске\n\\dt billing.* -- таблицы схемы billing"
+    },
+    {
+      "id": 4,
+      "keyword": "\\d / \\d+",
+      "command": "\\d <table>\n\\d+ <table>\n\\d <index>\n\\d <view>",
+      "description": "Описание объекта БД: таблицы, индекса, представления, последовательности. Для таблицы выводит: список колонок (имя, тип, nullable, default), индексы, внешние ключи, ограничения CHECK. \\d+ добавляет размер на диске, OID, правила (RULE), триггеры и описание объекта. Работает для любого объекта: \\d users — таблица, \\d idx_users_email — индекс.",
+      "example": "\\d users     -- колонки, типы, индексы, FK\n\\d+ users    -- + размер, триггеры\n\\d orders_pkey  -- описание индекса"
+    },
+    {
+      "id": 5,
+      "keyword": "\\di / \\dv / \\ds",
+      "command": "\\di         -- индексы\n\\di+        -- индексы + размер\n\\dv         -- представления (VIEW)\n\\dv+        -- представления + детали\n\\ds         -- последовательности (SEQUENCE)",
+      "description": "\\di — список всех индексов в текущей схеме: имя, тип (btree/gin/gist/hash), таблица, колонки, уникальность. \\di+ добавляет размер индекса на диске — удобно для поиска «тяжёлых» индексов. \\dv — список VIEW и MATERIALIZED VIEW. \\ds — список последовательностей (SERIAL/IDENTITY под капотом создают sequence).",
+      "example": "\\di     -- все индексы\n\\di+    -- + размер индексов\n\\dv     -- все VIEW\n\\ds     -- все SEQUENCE"
+    },
+    {
+      "id": 6,
+      "keyword": "\\du / \\dg",
+      "command": "\\du\n\\du+\n\\dg\n\\dg+",
+      "description": "\\du и \\dg — синонимы, показывают список ролей (пользователей) PostgreSQL. Выводят: имя роли, атрибуты (Superuser, Create DB, Create role, Replication, Bypass RLS), список групп в которых состоит роль. \\du+ добавляет описание роли. Полезно для аудита прав доступа.",
+      "example": "\\du     -- роли: имя, атрибуты, группы\n\\du+    -- + описание роли"
+    },
+    {
+      "id": 7,
+      "keyword": "\\dn / \\dn+",
+      "command": "\\dn\n\\dn+",
+      "description": "Список схем (namespace) в текущей БД. Показывает имя схемы и владельца. \\dn+ добавляет привилегии доступа к схеме. По умолчанию в каждой БД есть схемы: public (для пользовательских объектов) и pg_catalog (системные объекты). Схема information_schema — стандартные SQL-представления.",
+      "example": "\\dn     -- схемы: имя, владелец\n\\dn+    -- + привилегии доступа"
+    },
+    {
+      "id": 8,
+      "keyword": "\\df / \\df+",
+      "command": "\\df\n\\df+\n\\df <pattern>\n\\dfaS          -- агрегатные функции системные",
+      "description": "Список пользовательских функций (хранимых процедур). Показывает: схему, имя, типы аргументов, возвращаемый тип. \\df+ выводит исходный код функции (Source code), язык (plpgsql, sql, c) и опции. pattern — маска имени: \\df get_* найдёт все функции начинающиеся на get_. Для системных функций: \\dfS.",
+      "example": "\\df           -- все функции\n\\df get_*     -- функции по маске\n\\df+ get_user -- + исходный код функции"
+    },
+    {
+      "id": 9,
+      "keyword": "\\dp / \\z",
+      "command": "\\dp\n\\dp <table>\n\\z <table>",
+      "description": "Показывает привилегии доступа к объектам (таблицы, последовательности, функции). \\dp и \\z — синонимы. Формат вывода: grantee=privilege/grantor. Символы: r=SELECT, w=UPDATE, a=INSERT, d=DELETE, D=TRUNCATE, x=REFERENCES, t=TRIGGER. Полезно для аудита — кто что может делать с таблицей.",
+      "example": "\\dp users\n-- appuser=r/postgres  → r = SELECT\n-- postgres=arwdDxt    → все права"
+    },
+    {
+      "id": 10,
+      "keyword": "\\e / \\ef / \\ev",
+      "command": "\\e              -- открыть редактор\n\\e <file>       -- открыть файл в редакторе\n\\ef <func>      -- редактировать функцию\n\\ev <view>      -- редактировать VIEW",
+      "description": "\\e открывает системный редактор (по умолчанию vi/nano — задаётся переменной EDITOR) с последним запросом для редактирования. После сохранения и выхода запрос выполняется автоматически. \\ef имя_функции — открывает код функции для редактирования и сохранения обратно в БД. \\ev имя_view — редактировать тело представления.",
+      "example": "\\e              -- открыть последний запрос в редакторе\n\\ef get_user    -- редактировать функцию\n\\ev active_users -- редактировать VIEW"
+    },
+    {
+      "id": 11,
+      "keyword": "\\i / \\ir",
+      "command": "\\i <file.sql>\n\\ir <file.sql>",
+      "description": "\\i выполняет SQL-скрипт из указанного файла — путь абсолютный или относительный от директории запуска psql. \\ir — то же самое, но путь относительно файла текущего скрипта (Input Relative) — удобно внутри скриптов которые подключают другие скрипты. Незаменимо для seed-данных, миграций вручную, и тестирования схемы.",
+      "example": "\\i ./schema.sql     -- выполнить SQL-файл\n\\i ./seed/users.sql -- seed данных"
+    },
+    {
+      "id": 12,
+      "keyword": "\\o / \\H / \\pset",
+      "command": "\\o <file>      -- вывод в файл\n\\H             -- HTML-режим\n\\pset format   -- формат вывода\n\\pset border 2 -- рамка таблицы",
+      "description": "Управление форматом вывода в psql. \\o файл — перенаправляет весь последующий вывод в файл (\\o без аргумента — обратно в терминал). \\H — включает/выключает HTML-вывод таблиц. \\pset format — задаёт формат: aligned (по умолчанию), unaligned, csv, json, latex. \\pset border 0/1/2 — толщина рамки таблицы.",
+      "example": "\\o report.txt       -- вывод в файл\n\\o                  -- обратно в терминал\n\\pset format csv    -- CSV-режим\n\\pset format json   -- JSON-режим"
+    },
+    {
+      "id": 13,
+      "keyword": "\\x / \\x auto",
+      "command": "\\x\n\\x on\n\\x off\n\\x auto",
+      "description": "Переключает расширенный (expanded) режим вывода — вместо горизонтальной таблицы каждая строка выводится вертикально: поле: значение. Незаменим когда таблица имеет много колонок и не помещается на экране. \\x auto — автоматически выбирает режим в зависимости от ширины терминала: если таблица не помещается — переключается в вертикальный режим.",
+      "example": "\\x       -- вертикальный вывод on/off\n\\x auto  -- авто по ширине терминала"
+    },
+    {
+      "id": 14,
+      "keyword": "\\timing",
+      "command": "\\timing\n\\timing on\n\\timing off",
+      "description": "Включает отображение времени выполнения каждого запроса в миллисекундах. Выводится строка «Time: X.XXX ms» после каждого SQL-запроса. Удобно для быстрого сравнения производительности запросов и оценки эффекта от добавления индекса. Не заменяет EXPLAIN ANALYZE, но даёт быстрое ощущение скорости.",
+      "example": "\\timing on\nSELECT COUNT(*) FROM orders;\n-- Time: 3.142 ms"
+    },
+    {
+      "id": 15,
+      "keyword": "\\set / \\unset / \\echo",
+      "command": "\\set <var> <value>\n\\unset <var>\n\\echo <text>\n\\set AUTOCOMMIT off",
+      "description": "\\set задаёт переменную сессии psql — переменные используются в запросах через :varname. \\unset удаляет переменную. \\echo выводит текст в stdout — полезно для отладки скриптов. Специальные переменные: AUTOCOMMIT (on/off), ON_ERROR_STOP (остановить скрипт при ошибке), PROMPT1/PROMPT2 (настройка приглашения), HISTFILE (файл истории команд).",
+      "example": "\\set uid 42\nSELECT * FROM users WHERE id = :uid;\n\n\\set ON_ERROR_STOP on\n\\echo 'start...' \\ \\i migration.sql"
+    },
+    {
+      "id": 16,
+      "keyword": "\\copy",
+      "command": "\\copy <table> FROM '<file>' CSV HEADER;\n\\copy <table> TO '<file>' CSV HEADER;\n\\copy (SELECT ...) TO '<file>' CSV HEADER;",
+      "description": "\\copy (с обратным слешем — клиентская команда psql) импортирует/экспортирует данные CSV на стороне клиента. Отличие от серверного COPY: \\copy читает файл на машине клиента и не требует прав суперпользователя. CSV HEADER — первая строка файла = названия колонок. DELIMITER ',' — разделитель. NULL AS '' — как представлен NULL.",
+      "example": "\\copy users FROM './users.csv' CSV HEADER;\n\\copy orders TO './backup.csv' CSV HEADER;",
+      "link": "https://www.postgresql.org/docs/current/app-psql.html#APP-PSQL-META-COMMANDS-COPY"
+    },
+    {
+      "id": 17,
+      "keyword": "\\? / \\h",
+      "command": "\\?          -- все мета-команды psql\n\\? options  -- опции запуска\n\\? variables -- переменные psql\n\\h          -- список SQL-команд\n\\h <command> -- справка по команде",
+      "description": "\\? — полная справка по всем мета-командам psql (то что начинается с \\). \\h — список всех SQL-команд с кратким описанием. \\h SELECT — полная справка по синтаксису конкретной команды прямо в терминале, без браузера. Незаменимо когда работаете на сервере без интернета или хотите быстро проверить синтаксис.",
+      "example": "\\?           -- справка по всем \\commands\n\\h SELECT    -- синтаксис команды SELECT\n\\h CREATE INDEX"
+    },
+    {
+      "id": 18,
+      "keyword": "\\q / \\! / \\cd",
+      "command": "\\q              -- выйти из psql\n\\! <command>    -- выполнить shell-команду\n\\! ls\n\\cd <dir>       -- сменить директорию",
+      "description": "\\q — выйти из интерактивного сеанса psql (аналог Ctrl+D). \\! выполняет произвольную команду системной оболочки не выходя из psql — например \\! ls покажет файлы текущей директории, \\! cat backup.sql — содержимое файла. \\cd меняет текущую рабочую директорию (влияет на относительные пути в \\i и \\copy).",
+      "example": "\\q           -- выйти из psql\n\\! ls *.sql  -- shell-команда без выхода\n\\cd /backups -- сменить директорию"
+    }
+  ],
+  "advanced": [
+    {
+      "id": 1,
+      "keyword": "CREATE TYPE — ENUM",
+      "command": "CREATE TYPE <type_name> AS ENUM (\n  '<value1>',\n  '<value2>',\n  '<value3>'\n);\n\n-- добавить значение:\nALTER TYPE <type_name> ADD VALUE '<new_value>';",
+      "description": "ENUM создаёт перечислимый тип с фиксированным набором строковых значений. Хранится эффективнее VARCHAR (4 байта вместо строки), поддерживает сортировку в порядке объявления, проверяется на уровне СУБД. Нельзя удалить значение без пересоздания типа — ALTER TYPE ADD VALUE только добавляет. Перед DROP TYPE нужно убедиться что ни одна таблица не использует этот тип (или сделать DROP CASCADE). Альтернатива: CHECK(col IN (...)) — проще, но не переиспользуется между таблицами.",
+      "example": "CREATE TYPE order_status AS ENUM (\n  'pending',\n  'paid',\n  'shipped',\n  'delivered',\n  'cancelled'\n);\n\nCREATE TABLE orders (\n  id     SERIAL PRIMARY KEY,\n  status order_status NOT NULL DEFAULT 'pending'\n);\n\n-- добавить новый статус\nALTER TYPE order_status ADD VALUE 'refunded' AFTER 'delivered';\n\n-- посмотреть значения ENUM\nSELECT enumlabel FROM pg_enum\nJOIN pg_type ON pg_type.oid = pg_enum.enumtypid\nWHERE pg_type.typname = 'order_status';",
+      "link": "https://www.postgresql.org/docs/current/sql-createtype.html"
+    },
+    {
+      "id": 2,
+      "keyword": "CREATE TYPE — Composite",
+      "command": "CREATE TYPE <type_name> AS (\n  <field1> <data_type>,\n  <field2> <data_type>,\n  <field3> <data_type>\n);\n\n-- обращение к полю:\nSELECT (col).<field> FROM <table>;",
+      "description": "Составной тип (composite type) позволяет объединить несколько полей в одну структуру — как struct или record. Используется в: колонках таблиц (хранить адрес одним полем), возвращаемых типах функций (вернуть несколько значений из одной функции), параметрах хранимых процедур. Обращение к полю: (column).field — скобки обязательны когда имя колонки неоднозначно. Можно вкладывать составные типы друг в друга. При изменении типа (ALTER TYPE ADD/DROP/ALTER ATTRIBUTE) все таблицы обновляются автоматически.",
+      "example": "-- создать составной тип «адрес»\nCREATE TYPE address AS (\n  street     TEXT,\n  city       VARCHAR(100),\n  country    CHAR(2),\n  zip        VARCHAR(10)\n);\n\n-- использовать в таблице\nCREATE TABLE clients (\n  id        SERIAL PRIMARY KEY,\n  name      TEXT NOT NULL,\n  home_addr address,\n  work_addr address\n);\n\n-- вставка составного значения\nINSERT INTO clients (name, home_addr)\nVALUES (\n  'Ivan Petrov',\n  ROW('Lenina 5', 'Moscow', 'RU', '101000')\n);\n\n-- чтение полей\nSELECT name,\n  (home_addr).city  AS city,\n  (home_addr).zip   AS zip\nFROM clients;\n\n-- функция возвращающая составной тип\nCREATE FUNCTION get_address(client_id INT)\nRETURNS address LANGUAGE sql AS $$\n  SELECT home_addr FROM clients WHERE id = client_id\n$$;",
+      "link": "https://www.postgresql.org/docs/current/sql-createtype.html"
+    },
+    {
+      "id": 3,
+      "keyword": "CREATE DOMAIN",
+      "command": "CREATE DOMAIN <domain_name> AS <base_type>\n  DEFAULT <default_value>\n  NOT NULL\n  CHECK (<condition>);\n\n-- изменить ограничение:\nALTER DOMAIN <name> ADD CONSTRAINT <c> CHECK (...);",
+      "description": "DOMAIN создаёт новый тип на основе существующего с дополнительными ограничениями CHECK, NOT NULL и DEFAULT. Гарантирует бизнес-правила на уровне типа — ограничение срабатывает при вставке в любую таблицу использующую этот домен. Изменение ограничения домена (ALTER DOMAIN ADD/DROP CONSTRAINT) автоматически применяется ко всем таблицам. Идеален для: положительных чисел, email-формата, ненулевых строк, процентов от 0 до 100. Проще чем повторять CHECK в каждой таблице.",
+      "example": "-- домен для положительного числа\nCREATE DOMAIN positive_numeric AS NUMERIC(12,2)\n  NOT NULL\n  DEFAULT 0\n  CHECK (VALUE > 0);\n\n-- домен для непустой строки\nCREATE DOMAIN non_empty_text AS TEXT\n  NOT NULL\n  CHECK (LENGTH(TRIM(VALUE)) > 0);\n\n-- домен для процентов\nCREATE DOMAIN percent AS NUMERIC(5,2)\n  CHECK (VALUE BETWEEN 0 AND 100);\n\n-- использование в таблице\nCREATE TABLE products (\n  id        SERIAL PRIMARY KEY,\n  name      non_empty_text,\n  price     positive_numeric,\n  discount  percent DEFAULT 0\n);\n\n-- добавить ограничение ко всем таблицам с этим доменом:\nALTER DOMAIN positive_numeric\n  ADD CONSTRAINT max_value CHECK (VALUE <= 9999999);\n\n-- удалить домен (нужно убрать из всех таблиц первым):\nDROP DOMAIN IF EXISTS percent;",
+      "link": "https://www.postgresql.org/docs/current/sql-createdomain.html"
+    },
+    {
+      "id": 4,
+      "keyword": "CREATE FUNCTION",
+      "command": "CREATE [OR REPLACE] FUNCTION <name>(<param> <type>)\nRETURNS <return_type>\nLANGUAGE plpgsql AS $$\nDECLARE\n  <var> <type>;\nBEGIN\n  -- тело функции\n  RETURN <value>;\nEND;\n$$;",
+      "description": "Хранимая функция (stored function) выполняется на стороне сервера БД — экономит round-trip, логика инкапсулирована в БД. Языки: plpgsql (основной, Pascal-подобный синтаксис), sql (чистый SQL), plpython3u, plv8 (JavaScript). DECLARE — блок переменных (необязателен). RETURNS TABLE(...) позволяет вернуть набор строк — вызывается через SELECT * FROM my_func(). OR REPLACE заменяет существующую без DROP. RETURNS VOID — процедурный стиль без возврата. Переменные OLD и NEW в триггер-функциях ссылаются на строку до/после изменения.",
+      "example": "-- простая функция\nCREATE OR REPLACE FUNCTION add_tax(price NUMERIC, rate NUMERIC DEFAULT 0.2)\nRETURNS NUMERIC LANGUAGE plpgsql AS $$\nBEGIN\n  RETURN ROUND(price * (1 + rate), 2);\nEND;\n$$;\n\nSELECT add_tax(100, 0.1); -- 110.00\n\n-- функция возвращающая таблицу\nCREATE OR REPLACE FUNCTION active_employees(dept TEXT)\nRETURNS TABLE(id INT, name TEXT, salary NUMERIC)\nLANGUAGE sql AS $$\n  SELECT id, first_name || ' ' || last_name, salary\n  FROM employees\n  WHERE department = dept AND status = 'active'\n  ORDER BY salary DESC;\n$$;\n\nSELECT * FROM active_employees('Engineering');\n\n-- удалить функцию:\nDROP FUNCTION IF EXISTS add_tax(NUMERIC, NUMERIC);",
+      "link": "https://www.postgresql.org/docs/current/sql-createfunction.html"
+    },
+    {
+      "id": 5,
+      "keyword": "CREATE PROCEDURE",
+      "command": "CREATE [OR REPLACE] PROCEDURE <name>(<param> <type>)\nLANGUAGE plpgsql AS $$\nBEGIN\n  -- тело процедуры\n  COMMIT;  -- можно управлять транзакцией!\nEND;\n$$;\n\n-- вызов:\nCALL <name>(<args>);",
+      "description": "Процедура (PostgreSQL 11+) отличается от функции: не возвращает значение, вызывается через CALL (не SELECT), может содержать COMMIT и ROLLBACK внутри тела — это ключевое преимущество для длинных ETL-операций и миграций данных где нужно фиксировать промежуточные результаты. Функции выполняются внутри транзакции вызывающего — их нельзя зафиксировать отдельно. Используйте функции для вычислений и возврата данных, процедуры — для операций с управлением транзакциями (batch insert, архивирование, очистка данных).",
+      "example": "-- процедура архивации старых заказов\nCREATE OR REPLACE PROCEDURE archive_old_orders(cutoff_date DATE)\nLANGUAGE plpgsql AS $$\nDECLARE\n  batch_size INT := 1000;\n  rows_moved INT;\nBEGIN\n  LOOP\n    INSERT INTO orders_archive\n    SELECT * FROM orders\n    WHERE created_at < cutoff_date\n    LIMIT batch_size;\n\n    GET DIAGNOSTICS rows_moved = ROW_COUNT;\n\n    DELETE FROM orders\n    WHERE id IN (\n      SELECT id FROM orders\n      WHERE created_at < cutoff_date\n      LIMIT batch_size\n    );\n\n    COMMIT; -- фиксируем каждую порцию\n    EXIT WHEN rows_moved < batch_size;\n  END LOOP;\nEND;\n$$;\n\nCALL archive_old_orders('2024-01-01');",
+      "link": "https://www.postgresql.org/docs/current/sql-createprocedure.html"
+    },
+    {
+      "id": 6,
+      "keyword": "CREATE TRIGGER",
+      "command": "-- 1. Сначала создать trigger-функцию:\nCREATE FUNCTION <fn_name>()\nRETURNS TRIGGER LANGUAGE plpgsql AS $$\nBEGIN\n  -- NEW — новая строка, OLD — старая\n  RETURN NEW; -- или NULL для отмены\nEND;\n$$;\n\n-- 2. Затем создать триггер:\nCREATE TRIGGER <name>\n  BEFORE|AFTER INSERT|UPDATE|DELETE\n  ON <table> FOR EACH ROW\n  EXECUTE FUNCTION <fn_name>();",
+      "description": "Триггер автоматически вызывает функцию при INSERT/UPDATE/DELETE/TRUNCATE на таблице. BEFORE-триггер выполняется до операции: может изменить строку (через NEW) или отменить операцию (RETURN NULL). AFTER-триггер — после операции: для аудита, уведомлений, синхронизации. FOR EACH ROW — вызывается для каждой изменённой строки (NEW и OLD доступны). FOR EACH STATEMENT — один раз на всю операцию (NEW/OLD недоступны). WHEN (условие) — запускать триггер только если условие истинно. Важно: триггер-функция должна возвращать тип TRIGGER (не конкретный тип данных).",
+      "example": "-- trigger-функция: автообновление updated_at\nCREATE OR REPLACE FUNCTION set_updated_at()\nRETURNS TRIGGER LANGUAGE plpgsql AS $$\nBEGIN\n  NEW.updated_at := NOW();\n  RETURN NEW;\nEND;\n$$;\n\nCREATE TRIGGER trg_users_updated_at\n  BEFORE UPDATE ON users\n  FOR EACH ROW\n  EXECUTE FUNCTION set_updated_at();\n\n-- trigger-функция: аудит изменений зарплаты\nCREATE OR REPLACE FUNCTION audit_salary_change()\nRETURNS TRIGGER LANGUAGE plpgsql AS $$\nBEGIN\n  IF OLD.salary <> NEW.salary THEN\n    INSERT INTO salary_audit (employee_id, old_salary, new_salary, changed_at)\n    VALUES (OLD.id, OLD.salary, NEW.salary, NOW());\n  END IF;\n  RETURN NEW;\nEND;\n$$;\n\nCREATE TRIGGER trg_salary_audit\n  AFTER UPDATE OF salary ON employees\n  FOR EACH ROW\n  EXECUTE FUNCTION audit_salary_change();\n\n-- посмотреть триггеры таблицы:\nSELECT trigger_name, event_manipulation, action_timing\nFROM information_schema.triggers\nWHERE event_object_table = 'employees';\n\n-- удалить триггер:\nDROP TRIGGER IF EXISTS trg_salary_audit ON employees;",
+      "link": "https://www.postgresql.org/docs/current/sql-createtrigger.html"
+    },
+    {
+      "id": 7,
+      "keyword": "Window Functions | OVER",
+      "command": "<func>() OVER (\n  PARTITION BY <col>\n  ORDER BY <col> ASC|DESC\n  ROWS|RANGE BETWEEN\n    UNBOUNDED PRECEDING AND CURRENT ROW\n)",
+      "description": "Оконные функции (window functions) вычисляют значение для каждой строки относительно «окна» — набора связанных строк, заданного через OVER(). В отличие от GROUP BY не схлопывают строки — каждая строка остаётся в результате. PARTITION BY — делит строки на группы (аналог GROUP BY но без агрегации). ORDER BY внутри OVER — задаёт порядок в окне. Категории функций: ранжирование (ROW_NUMBER, RANK, DENSE_RANK, NTILE), смещение (LAG, LEAD, FIRST_VALUE, LAST_VALUE, NTH_VALUE), агрегатные с OVER (SUM, AVG, COUNT, MAX, MIN — накопительные). Вычисляются после WHERE/GROUP BY/HAVING.",
+      "example": "-- ROW_NUMBER: уникальный номер строки\nSELECT name, department, salary,\n  ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rank_in_dept\nFROM employees;\n\n-- RANK vs DENSE_RANK (обработка одинаковых значений)\nSELECT name, salary,\n  RANK()         OVER (ORDER BY salary DESC) AS rank,       -- 1,2,2,4\n  DENSE_RANK()   OVER (ORDER BY salary DESC) AS dense_rank  -- 1,2,2,3\nFROM employees;\n\n-- LAG/LEAD: соседние строки\nSELECT month, revenue,\n  LAG(revenue)  OVER (ORDER BY month) AS prev_month,\n  LEAD(revenue) OVER (ORDER BY month) AS next_month,\n  revenue - LAG(revenue) OVER (ORDER BY month) AS delta\nFROM monthly_stats;\n\n-- SUM накопительным итогом\nSELECT created_at::DATE AS day, amount,\n  SUM(amount) OVER (ORDER BY created_at) AS running_total\nFROM payments;\n\n-- TOP-3 в каждом отделе\nSELECT * FROM (\n  SELECT name, department, salary,\n    ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rn\n  FROM employees\n) t WHERE rn <= 3;",
+      "link": "https://www.postgresql.org/docs/current/tutorial-window.html"
+    },
+    {
+      "id": 8,
+      "keyword": "JSONB Operators",
+      "command": "col -> 'key'           -- JSONB-элемент\ncol ->> 'key'          -- TEXT-значение\ncol #> '{a,b}'         -- вложенный путь → JSONB\ncol #>> '{a,b}'        -- вложенный путь → TEXT\ncol @> '{\"key\":\"val\"}' -- содержит?\ncol ? 'key'            -- ключ существует?\njsonb_set(col, '{k}', '\"v\"')",
+      "description": "PostgreSQL имеет мощный встроенный набор операторов для работы с JSONB (бинарный JSON — быстрее text JSON). -> возвращает дочерний JSONB-элемент (объект, массив или значение). ->> возвращает текстовое значение — для сравнений и вывода. #> и #>> — доступ по пути массива ключей. @> — «содержит» (jsonb_left @> jsonb_right) — индексируется GIN-индексом, позволяет быстрый поиск по вложенным полям. ? — проверка наличия ключа. jsonb_set() изменяет вложенные значения без замены всего объекта. jsonb_agg() собирает строки в JSON-массив. jsonb_object_agg() строит объект из пар ключ-значение.",
+      "example": "-- данные\nCREATE TABLE events (\n  id   SERIAL PRIMARY KEY,\n  data JSONB\n);\nINSERT INTO events (data) VALUES\n  ('{\"type\":\"click\",\"user\":{\"id\":1,\"name\":\"Ivan\"},\"tags\":[\"web\",\"mobile\"]}');\n\n-- получить значения\nSELECT data -> 'type'            -- \"click\" (JSONB)\n     , data ->> 'type'           -- click   (TEXT)\n     , data -> 'user' ->> 'name' -- Ivan\n     , data #>> '{user,name}'    -- Ivan (через путь)\nFROM events;\n\n-- поиск по содержимому (GIN-индекс!)\nSELECT * FROM events\nWHERE data @> '{\"type\":\"click\"}';\n\n-- проверить ключ\nSELECT * FROM events WHERE data ? 'tags';\n\n-- изменить вложенное поле\nUPDATE events\nSET data = jsonb_set(data, '{user,name}', '\"Petr\"')\nWHERE id = 1;\n\n-- GIN-индекс для @> поиска\nCREATE INDEX idx_events_data ON events USING GIN (data);\n\n-- собрать объект из запроса\nSELECT jsonb_agg(data) FROM events WHERE data @> '{\"type\":\"click\"}';",
+      "link": "https://www.postgresql.org/docs/current/functions-json.html"
+    },
+    {
+      "id": 9,
+      "keyword": "ARRAY | ANY | ALL",
+      "command": "col @> ARRAY[<v>]   -- содержит все\ncol && ARRAY[<v>]   -- пересекаются\n<v> = ANY(col)      -- v в массиве\nunnest(col)         -- раскрыть в строки\narray_agg(<col>)    -- собрать в массив",
+      "description": "PostgreSQL поддерживает одно- и многомерные массивы любых типов как колонки таблиц. @> — массив содержит все элементы правого операнда. && — пересечение: есть хотя бы один общий элемент. = ANY(array) — проверка вхождения значения в массив (аналог IN но работает с переменными). unnest() раскрывает массив в набор строк — удобно для JOIN с массивом. array_agg() — агрегатная функция: собирает значения в массив. Другие функции: array_length(arr, dim), array_append/prepend, array_remove, array_position, array_to_string. GIN-индекс для быстрого @> и && поиска.",
+      "example": "CREATE TABLE posts (\n  id    SERIAL PRIMARY KEY,\n  title TEXT,\n  tags  TEXT[]\n);\nINSERT INTO posts (title, tags) VALUES\n  ('Node.js tips', ARRAY['nodejs','javascript','backend']),\n  ('SQL basics',   '{\"sql\",\"postgresql\",\"database\"}');\n\n-- поиск по тегу\nSELECT * FROM posts WHERE 'nodejs' = ANY(tags);\n\n-- посты с обоими тегами\nSELECT * FROM posts WHERE tags @> ARRAY['sql','postgresql'];\n\n-- посты с хотя бы одним из тегов\nSELECT * FROM posts WHERE tags && ARRAY['nodejs','sql'];\n\n-- раскрыть массив в строки\nSELECT id, unnest(tags) AS tag FROM posts;\n\n-- собрать теги в массив\nSELECT array_agg(DISTINCT tag ORDER BY tag)\nFROM posts, unnest(tags) AS t(tag);\n\n-- GIN-индекс\nCREATE INDEX idx_posts_tags ON posts USING GIN (tags);",
+      "link": "https://www.postgresql.org/docs/current/arrays.html"
+    },
+    {
+      "id": 10,
+      "keyword": "Full Text Search | FTS",
+      "command": "to_tsvector('<lang>', <text>)\n  @@ to_tsquery('<lang>', '<query>')\n\nts_rank(vector, query)  -- релевантность\nts_headline(text, query) -- подсветка",
+      "description": "PostgreSQL имеет встроенный полнотекстовый поиск (FTS) без внешних инструментов. to_tsvector() преобразует текст в вектор лексем — нормализованные слова без стоп-слов, с весами по позиции. to_tsquery() создаёт запрос: AND (&), OR (|), NOT (!), followed by (<->). Оператор @@ — совпадение вектора с запросом. plainto_tsquery() — удобная версия: принимает обычную фразу, автоматически добавляет &. websearch_to_tsquery() — поддерживает синтаксис Google-поиска. ts_rank() возвращает числовой рейтинг релевантности (0..1). ts_headline() подсвечивает совпадения в исходном тексте. Для производительности: хранить tsvector в отдельной колонке + GIN-индекс.",
+      "example": "-- базовый поиск\nSELECT title FROM articles\nWHERE to_tsvector('russian', content)\n   @@ to_tsquery('russian', 'postgresql & триггер');\n\n-- plainto_tsquery (удобнее)\nSELECT title FROM articles\nWHERE to_tsvector('english', content)\n   @@ plainto_tsquery('english', 'trigger function');\n\n-- с релевантностью\nSELECT title,\n  ts_rank(\n    to_tsvector('english', content),\n    to_tsquery('english', 'index & performance')\n  ) AS rank\nFROM articles\nWHERE to_tsvector('english', content)\n   @@ to_tsquery('english', 'index & performance')\nORDER BY rank DESC;\n\n-- подсветка совпадений\nSELECT ts_headline('english', content,\n  to_tsquery('index'))\nFROM articles LIMIT 5;\n\n-- производительный вариант: сохранить вектор\nALTER TABLE articles ADD COLUMN search_vec TSVECTOR;\nUPDATE articles\n  SET search_vec = to_tsvector('english', title || ' ' || content);\nCREATE INDEX idx_articles_fts ON articles USING GIN (search_vec);\n\nSELECT title FROM articles\nWHERE search_vec @@ to_tsquery('index & performance');",
+      "link": "https://www.postgresql.org/docs/current/textsearch.html"
+    },
+    {
+      "id": 11,
+      "keyword": "LATERAL JOIN",
+      "command": "SELECT ...\nFROM <table1> t1\nJOIN LATERAL (\n  SELECT ... FROM <table2> t2\n  WHERE t2.<fk> = t1.<pk>   -- ссылка на t1!\n  ORDER BY ...\n  LIMIT <n>\n) AS sub ON TRUE",
+      "description": "LATERAL позволяет подзапросу справа ссылаться на колонки таблицы слева — это коррелированный подзапрос в FROM. Без LATERAL подзапрос в FROM не может использовать данные из других таблиц в том же FROM. Основной сценарий: «для каждой строки из A взять последние N записей из B» — например 3 последних заказа каждого пользователя. Эффективнее коррелированных подзапросов в SELECT когда нужно вернуть несколько колонок. LEFT JOIN LATERAL ... ON TRUE — сохранить строки из A даже если подзапрос пуст. Также используется с функциями возвращающими таблицу (jsonb_each, unnest).",
+      "example": "-- 3 последних заказа каждого пользователя\nSELECT u.name, o.id, o.total, o.created_at\nFROM users u\nJOIN LATERAL (\n  SELECT id, total, created_at\n  FROM orders\n  WHERE user_id = u.id\n  ORDER BY created_at DESC\n  LIMIT 3\n) AS o ON TRUE;\n\n-- с LEFT JOIN (показать пользователей без заказов тоже)\nSELECT u.name, o.total\nFROM users u\nLEFT JOIN LATERAL (\n  SELECT total FROM orders\n  WHERE user_id = u.id\n  ORDER BY created_at DESC\n  LIMIT 1\n) AS o ON TRUE;\n\n-- раскрыть JSONB-массив через LATERAL\nSELECT u.name, tag\nFROM users u,\nLATERAL jsonb_array_elements_text(u.interests) AS t(tag)\nWHERE u.active = true;",
+      "link": "https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-LATERAL"
+    },
+    {
+      "id": 12,
+      "keyword": "ROW LEVEL SECURITY",
+      "command": "-- включить RLS:\nALTER TABLE <table> ENABLE ROW LEVEL SECURITY;\n\n-- создать политику:\nCREATE POLICY <name> ON <table>\n  [FOR SELECT|INSERT|UPDATE|DELETE]\n  [TO <role>]\n  USING (<row_filter_condition>)\n  [WITH CHECK (<insert_update_condition>)];",
+      "description": "Row Level Security (RLS) ограничивает доступ к строкам таблицы на уровне СУБД — каждый пользователь видит только разрешённые строки, прозрачно для приложения. ENABLE ROW LEVEL SECURITY включает механизм на таблице. Без созданных политик (по умолчанию) — никто не видит строк (deny all). USING — условие для SELECT/UPDATE/DELETE (какие строки видны). WITH CHECK — условие для INSERT/UPDATE (какие строки можно записать). Передача контекста: SET LOCAL app.current_user_id = '42' → current_setting('app.current_user_id'). Суперпользователь и владелец таблицы обходят RLS — используйте FORCE ROW LEVEL SECURITY для принудительного применения.",
+      "example": "-- пользователь видит только свои записи\nALTER TABLE orders ENABLE ROW LEVEL SECURITY;\n\n-- политика: SELECT только своих заказов\nCREATE POLICY orders_self_select\n  ON orders FOR SELECT\n  USING (user_id = current_setting('app.user_id')::INT);\n\n-- политика: INSERT только с правильным user_id\nCREATE POLICY orders_self_insert\n  ON orders FOR INSERT\n  WITH CHECK (user_id = current_setting('app.user_id')::INT);\n\n-- в приложении перед запросом:\nSET LOCAL app.user_id = '42';\nSELECT * FROM orders; -- вернёт только заказы user_id=42\n\n-- суперпользователь обходит RLS — принудительно:\nALTER TABLE orders FORCE ROW LEVEL SECURITY;\n\n-- admin видит всё\nCREATE POLICY orders_admin\n  ON orders TO admin_role\n  USING (true);\n\n-- посмотреть политики:\nSELECT * FROM pg_policies WHERE tablename = 'orders';\n\nDROP POLICY orders_self_select ON orders;",
+      "link": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html"
+    },
+    {
+      "id": 13,
+      "keyword": "LISTEN / NOTIFY",
+      "command": "-- подписаться:\nLISTEN <channel_name>;\n\n-- отправить уведомление:\nNOTIFY <channel_name>, '<payload>';\n\n-- или через функцию (из триггера):\nSELECT pg_notify('<channel>', '<json_payload>');",
+      "description": "LISTEN/NOTIFY — встроенная асинхронная pub/sub система PostgreSQL. NOTIFY отправляет сообщение всем клиентам подписанным через LISTEN на этот канал. Payload — строка до 8000 байт (обычно JSON). Уведомление доставляется только активным соединениям — клиенты оффлайн не получат пропущенные сообщения. Часто используется из AFTER-триггеров для уведомления Node.js-приложения о новых записях без polling (CPU-эффективно). В Node.js: pg-listen или отдельный client.query('LISTEN channel') + client.on('notification', handler). Важно: pg_notify работает в рамках транзакции — уведомление отправляется только при COMMIT.",
+      "example": "-- в psql: подписаться\nLISTEN new_orders;\n\n-- триггер уведомляет о новом заказе\nCREATE OR REPLACE FUNCTION notify_new_order()\nRETURNS TRIGGER LANGUAGE plpgsql AS $$\nBEGIN\n  PERFORM pg_notify(\n    'new_orders',\n    json_build_object(\n      'id',       NEW.id,\n      'user_id',  NEW.user_id,\n      'total',    NEW.total\n    )::TEXT\n  );\n  RETURN NEW;\nEND;\n$$;\n\nCREATE TRIGGER trg_notify_order\n  AFTER INSERT ON orders\n  FOR EACH ROW EXECUTE FUNCTION notify_new_order();\n\n-- Node.js (pg-listen):\n-- const subscriber = createSubscriber({ connectionString })\n-- await subscriber.connect()\n-- subscriber.listenTo('new_orders')\n-- subscriber.notifications.on('new_orders', (payload) => {\n--   console.log('New order:', payload)\n-- })\n\n-- ручная отправка:\nNOTIFY new_orders, '{\"id\":42,\"total\":999}';",
+      "link": "https://www.postgresql.org/docs/current/sql-listen.html"
+    },
+    {
+      "id": 14,
+      "keyword": "Table PARTITION BY",
+      "command": "-- родительская таблица:\nCREATE TABLE <table> (...)\n  PARTITION BY RANGE|LIST|HASH (<col>);\n\n-- создать партицию:\nCREATE TABLE <table_part>\n  PARTITION OF <table>\n  FOR VALUES FROM ('<start>') TO ('<end>');\n\n-- DEFAULT-партиция:\nCREATE TABLE <table_default>\n  PARTITION OF <table> DEFAULT;",
+      "description": "Секционирование (table partitioning) делит большую таблицу на физически отдельные части — партиции — прозрачно для запросов. Типы: RANGE (диапазон: дата, число — типично для логов/событий по месяцам/годам), LIST (набор значений: страна, регион, статус), HASH (хэш колонки — равномерное распределение). Partition pruning: PostgreSQL автоматически обращается только к нужным партициям при наличии условия на ключ секционирования — ускорение в разы. Каждая партиция — отдельная таблица: своя статистика, свои индексы, можно TRUNCATE или DETACH PARTITION (отсоединить без удаления данных). DEFAULT-партиция принимает строки не попавшие ни в одну партицию.",
+      "example": "-- секционирование по году (RANGE)\nCREATE TABLE logs (\n  id         BIGSERIAL,\n  event      TEXT NOT NULL,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n) PARTITION BY RANGE (created_at);\n\nCREATE TABLE logs_2024\n  PARTITION OF logs\n  FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');\n\nCREATE TABLE logs_2025\n  PARTITION OF logs\n  FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');\n\nCREATE TABLE logs_default\n  PARTITION OF logs DEFAULT;\n\n-- индекс создаётся на каждой партиции отдельно:\nCREATE INDEX ON logs_2024 (created_at);\nCREATE INDEX ON logs_2025 (created_at);\n\n-- partition pruning: сканирует только logs_2025\nSELECT COUNT(*) FROM logs\nWHERE created_at BETWEEN '2025-01-01' AND '2025-12-31';\n\n-- посмотреть партиции таблицы:\nSELECT inhrelid::regclass AS partition_name\nFROM pg_inherits\nWHERE inhparent = 'logs'::regclass;\n\n-- отсоединить старую партицию (без удаления):\nALTER TABLE logs DETACH PARTITION logs_2024;",
+      "link": "https://www.postgresql.org/docs/current/ddl-partitioning.html"
+    },
+    {
+      "id": 15,
+      "keyword": "COPY — bulk import/export",
+      "command": "-- импорт (серверная сторона):\nCOPY <table> FROM '<path>' CSV HEADER;\n\n-- экспорт:\nCOPY <table> TO '<path>' CSV HEADER;\n\n-- экспорт запроса:\nCOPY (SELECT ...) TO '<path>' CSV HEADER;\n\n-- клиентская копия (psql):\n\\copy <table> FROM './file.csv' CSV HEADER;",
+      "description": "COPY — самый быстрый способ массовой загрузки/выгрузки данных в PostgreSQL (на порядок быстрее multi-row INSERT). Серверный COPY (без обратного слеша) читает/пишет файл на стороне сервера — требует прав суперпользователя и абсолютного пути. Форматы: CSV (самый частый), TEXT (разделитель — табуляция по умолчанию), BINARY (максимальная скорость, не читается человеком). Параметры: DELIMITER ',' — разделитель, QUOTE '\"' — кавычки, NULL AS '' — представление NULL, ENCODING 'UTF8'. Клиентский \\copy в psql читает файл на машине клиента и не требует суперпользователя. В Node.js: pg-copy-streams для потоковой записи.",
+      "example": "-- импорт из CSV (серверный файл)\nCOPY users (name, email, created_at)\nFROM '/tmp/users_import.csv'\nCSV HEADER\nDELIMITER ','\nNULL AS '';\n\n-- экспорт всей таблицы\nCOPY orders TO '/tmp/orders_backup.csv' CSV HEADER;\n\n-- экспорт результата запроса\nCOPY (\n  SELECT u.email, COUNT(o.id) AS orders_count\n  FROM users u\n  LEFT JOIN orders o ON u.id = o.user_id\n  GROUP BY u.email\n) TO '/tmp/user_stats.csv' CSV HEADER;\n\n-- клиентский вариант в psql (файл на вашем компьютере)\n\\copy users FROM './data/users.csv' CSV HEADER\n\\copy orders TO './backup/orders.csv' CSV HEADER\n\n-- Node.js + pg-copy-streams:\n-- const stream = client.query(copyFrom('COPY users FROM STDIN CSV HEADER'))\n-- fs.createReadStream('users.csv').pipe(stream)",
+      "link": "https://www.postgresql.org/docs/current/sql-copy.html"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+# =====================================================
+# DOCKER COMPOSE — Kafka + Zookeeper + MongoDB
+# =====================================================
+# Этот файл запускает всю необходимую инфраструктуру:
+#
+#   1. Zookeeper — координатор кластера Kafka.
+#      Kafka использует Zookeeper для хранения метаданных
+#      (список брокеров, список топиков, offsets и т.д.)
+#
+#   2. Kafka (broker) — сервер обмена сообщениями.
+#      Хранит и раздаёт сообщения между producer и consumer.
+#
+#   3. MongoDB — база данных для сохранения сообщений.
+#      Consumer читает сообщения из Kafka и сохраняет сюда.
+#
+# Запуск: docker-compose up -d
+# Остановка: docker-compose down
+# =====================================================
+
+version: '3.8'
+
+services:
+
+  # ===================================================
+  # ZOOKEEPER — Координатор Kafka
+  # ===================================================
+  # Kafka исторически требует Zookeeper для работы.
+  # Zookeeper хранит конфигурацию кластера и
+  # помогает брокерам координироваться.
+  # (В новых версиях Kafka можно работать без Zookeeper —
+  # режим KRaft, но для учебного проекта используем классику)
+  # ===================================================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: kafka-demo-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181   # Порт для подключения клиентов (Kafka)
+      ZOOKEEPER_TICK_TIME: 2000     # Минимальная единица времени (мс) для синхронизации
+    ports:
+      - "2181:2181"
+    networks:
+      - kafka-network
+
+  # ===================================================
+  # KAFKA — Брокер сообщений
+  # ===================================================
+  # Broker — это сервер Kafka. Именно он принимает
+  # сообщения от producer и отдаёт их consumer.
+  # В production обычно несколько брокеров (кластер).
+  # ===================================================
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-demo-broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"   # Внешний порт для нашего Node.js приложения
+    environment:
+      KAFKA_BROKER_ID: 1                     # Уникальный ID брокера в кластере
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Адрес Zookeeper
+
+      # Listeners — адреса, на которых Kafka слушает подключения
+      # PLAINTEXT_INTERNAL — для связи внутри Docker-сети
+      # PLAINTEXT_EXTERNAL — для подключения с хоста (наш Node.js)
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT_EXTERNAL://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+
+      # Количество partition по умолчанию для новых топиков.
+      # ВАЖНО: Устанавливаем 3, чтобы демонстрировать
+      # распределение сообщений по partition.
+      KAFKA_NUM_PARTITIONS: 3
+
+      # Фактор репликации — сколько копий данных хранить.
+      # 1 — без репликации (для разработки достаточно).
+      # В production: минимум 2-3 для отказоустойчивости.
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+
+      # Минимальное количество синхронных реплик (ISR).
+      # При 1 брокере устанавливаем 1.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+      # Сколько времени Kafka хранит сообщения (7 дней)
+      KAFKA_LOG_RETENTION_HOURS: 168
+
+      # Автоматически создавать топики при первом обращении
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - kafka-network
+
+  # ===================================================
+  # MONGODB — База данных
+  # ===================================================
+  # Consumer сохраняет прочитанные сообщения в MongoDB.
+  # Мы храним content, key, partition, offset и timestamp.
+  # ===================================================
+  mongodb:
+    image: mongo:7.0
+    container_name: kafka-demo-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      # Сохраняем данные на хосте, чтобы они не терялись
+      # при перезапуске контейнера
+      - mongodb-data:/data/db
+    networks:
+      - kafka-network
+
+# ===================================================
+# СЕТИ И VOLUMES
+# ===================================================
+networks:
+  kafka-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+    driver: local

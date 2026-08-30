@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+
+  <!-- ================================================ -->
+  <!-- ШАПКА -->
+  <!-- ================================================ -->
+  <header class="app-header">
+    <h1>🚀 Apache Kafka — Учебный Демо</h1>
+    <p class="subtitle">Producer → Kafka Topic → Consumer → MongoDB</p>
+  </header>
+
+  <main class="container">
+
+    <!-- ================================================ -->
+    <!-- БЛОК 1: ОБЪЯСНЕНИЕ АРХИТЕКТУРЫ -->
+    <!-- ================================================ -->
+    <section class="info-block">
+      <h2>📐 Как это работает?</h2>
+      <div class="flow-diagram">
+        <div class="flow-step producer-step">
+          <span class="step-icon">📤</span>
+          <strong>Producer</strong>
+          <small>Отправляет сообщение в Kafka</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step kafka-step">
+          <span class="step-icon">📦</span>
+          <strong>Kafka Topic</strong>
+          <small>Хранит сообщения по partition</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step consumer-step">
+          <span class="step-icon">📥</span>
+          <strong>Consumer</strong>
+          <small>Читает и сохраняет в MongoDB</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step db-step">
+          <span class="step-icon">🗄️</span>
+          <strong>MongoDB</strong>
+          <small>База данных сообщений</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================ -->
+    <!-- БЛОК 2: ФОРМА ОТПРАВКИ СООБЩЕНИЙ (PRODUCER UI) -->
+    <!-- ================================================ -->
+    <section class="send-block">
+      <h2>📤 Отправить сообщение в Kafka</h2>
+
+      <!-- Объяснение partition и key для пользователя -->
+      <div class="hint-box">
+        <p>
+          <strong>💡 Как работает key и partition?</strong><br>
+          Kafka делит topic на несколько <strong>partition</strong> (разделов).<br>
+          <strong>Key</strong> определяет, в какой partition попадёт сообщение:<br>
+          <code>hash(key) % кол-во_partition = номер_partition</code><br>
+          Сообщения с одинаковым key → <em>всегда в один partition</em> → порядок гарантирован.
+        </p>
+      </div>
+
+      <!-- Форма: POST /send -->
+      <form action="/send" method="POST" class="send-form">
+
+        <div class="form-group">
+          <label for="message">Сообщение:</label>
+          <input
+            type="text"
+            id="message"
+            name="message"
+            placeholder="Например: Заказ #123 оформлен"
+            required
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="key">
+            Ключ (key) <span class="hint">— влияет на выбор partition</span>
+          </label>
+          <input
+            type="text"
+            id="key"
+            name="key"
+            placeholder="Например: user-1, user-2, user-3"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Примеры key для демонстрации partition -->
+        <div class="key-examples">
+          <p>Попробуй разные ключи для демонстрации partition:</p>
+          <div class="key-buttons">
+            <button type="button" class="key-preset" data-key="user-1">user-1</button>
+            <button type="button" class="key-preset" data-key="user-2">user-2</button>
+            <button type="button" class="key-preset" data-key="user-3">user-3</button>
+            <button type="button" class="key-preset" data-key="order-42">order-42</button>
+            <button type="button" class="key-preset" data-key="default">default</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-send">📤 Отправить в Kafka</button>
+      </form>
+
+      <!-- Пример curl для API -->
+      <div class="api-example">
+        <p><strong>🔌 Или через API (curl):</strong></p>
+        <pre><code>curl -X POST http://localhost:3000/api/send \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello Kafka!", "key": "user-1"}'</code></pre>
+      </div>
+    </section>
+
+    <!-- ================================================ -->
+    <!-- БЛОК 3: СТАТИСТИКА ПО PARTITION -->
+    <!-- ================================================ -->
+    <% if (messages.length > 0) { %>
+    <section class="partition-stats">
+      <h2>📊 Распределение по Partition</h2>
+      <p class="section-hint">
+        Topic имеет <strong>3 partition</strong>. Ниже видно, как key влияет на распределение.
+      </p>
+
+      <%
+        // Группируем сообщения по partition для отображения статистики
+        const partitionGroups = {};
+        messages.forEach(msg => {
+          const p = msg.partition;
+          if (!partitionGroups[p]) partitionGroups[p] = { count: 0, keys: new Set() };
+          partitionGroups[p].count++;
+          partitionGroups[p].keys.add(msg.key);
+        });
+      %>
+
+      <div class="partition-grid">
+        <% for (let p = 0; p < 3; p++) { %>
+          <div class="partition-card partition-<%= p %>">
+            <div class="partition-header">
+              <span class="partition-icon">📦</span>
+              <strong>Partition <%= p %></strong>
+            </div>
+            <% if (partitionGroups[p]) { %>
+              <p class="partition-count"><%= partitionGroups[p].count %> сообщений</p>
+              <p class="partition-keys">
+                Keys: <em><%= [...partitionGroups[p].keys].join(', ') %></em>
+              </p>
+            <% } else { %>
+              <p class="partition-empty">Пусто</p>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- ================================================ -->
+    <!-- БЛОК 4: СПИСОК ПОЛУЧЕННЫХ СООБЩЕНИЙ -->
+    <!-- ================================================ -->
+    <section class="messages-block">
+      <h2>📨 Сообщения из MongoDB <span class="count-badge"><%= messages.length %></span></h2>
+      <p class="section-hint">
+        Эти сообщения прочитал <strong>Consumer</strong> из Kafka и сохранил в MongoDB.
+        Каждое сообщение содержит <strong>partition</strong> и <strong>offset</strong>.
+      </p>
+
+      <% if (messages.length === 0) { %>
+        <div class="empty-state">
+          <p>📭 Сообщений пока нет. Отправь первое сообщение выше!</p>
+          <p class="empty-hint">Убедись, что Kafka запущена: <code>docker-compose up -d</code></p>
+        </div>
+      <% } else { %>
+
+        <!-- Заголовки таблицы -->
+        <div class="messages-table">
+          <div class="table-header">
+            <span>Время</span>
+            <span>Key</span>
+            <span>Сообщение</span>
+            <span>Partition</span>
+            <span>Offset</span>
+          </div>
+
+          <% messages.forEach(msg => { %>
+            <div class="table-row partition-row-<%= msg.partition %>">
+
+              <!-- Время -->
+              <span class="cell-time">
+                <%= new Date(msg.timestamp).toLocaleTimeString('ru-RU') %>
+              </span>
+
+              <!-- Key — влияет на выбор partition -->
+              <span class="cell-key">
+                <span class="key-badge"><%= msg.key %></span>
+              </span>
+
+              <!-- Само сообщение -->
+              <span class="cell-message"><%= msg.content %></span>
+
+              <!-- Partition — в каком разделе хранится -->
+              <span class="cell-partition">
+                <span class="partition-badge p<%= msg.partition %>">
+                  P<%= msg.partition %>
+                </span>
+              </span>
+
+              <!-- Offset — порядковый номер в partition -->
+              <span class="cell-offset">
+                <span class="offset-badge">#<%= msg.offset %></span>
+              </span>
+
+            </div>
+          <% }); %>
+        </div>
+
+      <% } %>
+    </section>
+
+    <!-- ================================================ -->
+    <!-- БЛОК 5: DELIVERY SEMANTICS — Объяснение -->
+    <!-- ================================================ -->
+    <section class="semantics-block">
+      <h2>⚙️ Delivery Semantics — Семантика доставки</h2>
+      <p class="section-hint">Один из важнейших концептов Kafka. Как часто сообщение обрабатывается?</p>
+
+      <div class="semantics-grid">
+
+        <div class="semantic-card at-most-once">
+          <h3>🎲 At-Most-Once</h3>
+          <p><strong>Максимум один раз</strong></p>
+          <ul>
+            <li>Offset фиксируется <em>до</em> обработки</li>
+            <li>При падении — сообщение теряется</li>
+            <li>✅ Высокая скорость</li>
+            <li>❌ Возможна потеря данных</li>
+          </ul>
+          <div class="semantic-example">
+            <code>autoCommit: true</code>
+          </div>
+          <p class="use-case">📌 Логи, метрики (потеря допустима)</p>
+        </div>
+
+        <div class="semantic-card at-least-once">
+          <h3>✅ At-Least-Once</h3>
+          <p><strong>Минимум один раз</strong> (используется здесь)</p>
+          <ul>
+            <li>Offset фиксируется <em>после</em> обработки</li>
+            <li>При падении — возможен дубликат</li>
+            <li>✅ Надёжность, нет потерь</li>
+            <li>⚠️ Возможны дубликаты</li>
+          </ul>
+          <div class="semantic-example">
+            <code>autoCommit: false</code><br>
+            <code>commitOffsets() после обработки</code>
+          </div>
+          <p class="use-case">📌 Email-уведомления, заказы</p>
+        </div>
+
+        <div class="semantic-card exactly-once">
+          <h3>💎 Exactly-Once</h3>
+          <p><strong>Ровно один раз</strong></p>
+          <ul>
+            <li>Транзакционный producer + consumer</li>
+            <li>Сложная настройка</li>
+            <li>✅ Нет потерь и дубликатов</li>
+            <li>❌ Производительность ниже</li>
+          </ul>
+          <div class="semantic-example">
+            <code>idempotent: true</code><br>
+            <code>transactionalId: 'my-app'</code>
+          </div>
+          <p class="use-case">📌 Финансовые транзакции</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>🎓 Kafka учебный проект | Node.js + KafkaJS + MongoDB + EJS</p>
+  </footer>
+
+  <script>
+    // Кнопки быстрого выбора key для демонстрации partition
+    document.querySelectorAll('.key-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('key').value = btn.dataset.key;
+        // Подсветим выбранную кнопку
+        document.querySelectorAll('.key-preset').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Автообновление страницы каждые 3 секунды для отображения новых сообщений
+    // (в продакшене лучше использовать WebSocket или SSE)
+    let autoRefresh = false;
+    const refreshToggle = document.createElement('button');
+    refreshToggle.textContent = '🔄 Автообновление: выкл';
+    refreshToggle.className = 'btn-refresh';
+    document.querySelector('.messages-block h2').appendChild(refreshToggle);
+
+    refreshToggle.addEventListener('click', () => {
+      autoRefresh = !autoRefresh;
+      refreshToggle.textContent = autoRefresh
+        ? '🔄 Автообновление: вкл'
+        : '🔄 Автообновление: выкл';
+      refreshToggle.classList.toggle('active', autoRefresh);
+    });
+
+    setInterval(() => {
+      if (autoRefresh) location.reload();
+    }, 3000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/script.js" type="module"></script>
+  <title>PostgreSQL — Commands List</title>
+</head>
+
+<body>
+  <main>
+    <div class="wrapper">
+      <header class="page-header">
+        <h1><span>PostgreSQL</span> Commands List</h1>
+        <div class="segmented-control" role="tablist" aria-label="Выбрать раздел">
+          <button type="button" class="segment is-active" role="tab" aria-selected="true" data-section="queries">
+            SELECT & Queries
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="ddl">
+            DDL Commands
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="functions">
+            Functions
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="migrations">
+            Migrations
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="dbmanage">
+            DB Management
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="psql">
+            psql \commands
+          </button>
+          <button type="button" class="segment" role="tab" aria-selected="false" data-section="advanced">
+            Advanced
+          </button>
+        </div>
+      </header>
+
+      <section class="pg-intro">
+        <div class="pg-intro__about">
+          <h2>Что такое PostgreSQL?</h2>
+          <p>
+            <strong>PostgreSQL</strong> — объектно-реляционная система управления базами данных (СУБД) с открытым
+            исходным кодом.
+            Разрабатывается с 1986 года, релиз 1.0 — в 1996. Сегодня один из самых популярных и мощных движков СУБД в
+            мире.
+            Поддерживает полный стандарт SQL с расширениями: ACID-транзакции, сложные типы данных (JSON, JSONB, ARRAY,
+            UUID, ENUM),
+            оконные функции, CTE, хранимые процедуры, полнотекстовый поиск и геопространственные данные (PostGIS).
+          </p>
+          <ul class="pg-intro__diff">
+            <li><strong>vs MongoDB</strong> — строгая реляционная схема, SQL-запросы, JOIN между таблицами, гарантии
+              ACID на уровне транзакций; MongoDB — документная NoSQL БД без фиксированной схемы</li>
+            <li><strong>vs MySQL</strong> — лучшая поддержка стандарта SQL, нативные типы JSONB / ARRAY, оконные
+              функции, CTE, расширяемая архитектура (можно добавлять типы и функции); MySQL — проще в настройке,
+              исторически быстрее на простых read-операциях</li>
+            <li><strong>vs SQLite</strong> — многопользовательский сервер, масштабируется под большие объёмы данных,
+              предназначен для production; SQLite — встраиваемый движок в один файл, отлично для локального dev и
+              мобильных приложений</li>
+            <li><strong>vs Redis</strong> — PostgreSQL хранит данные на диске с поддержкой сложных запросов; Redis —
+              in-memory хранилище для кэша и очередей с очень быстрым доступом по ключу</li>
+          </ul>
+        </div>
+        <div class="pg-intro__install">
+          <h2>Установка и подключение</h2>
+          <code class="install-block"><span class="cmt"># macOS (Homebrew)</span>
+brew install postgresql@16/18
+brew services start postgresql@16/18
+
+<span class="cmt"># Ubuntu / Debian</span>
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+
+<span class="cmt"># Docker (рекомендуется для dev)</span>
+docker run --name pg \
+  -e POSTGRES_PASSWORD=secret \
+  -p 5432:5432 \
+  -d postgres:16
+
+<span class="cmt"># Windows — скачать установщик:</span>
+<span class="cmt"># https://www.postgresql.org/download/windows/</span>
+
+<span class="cmt">────────────────────────────────</span>
+<span class="cmt"># Node.js — подключение</span>
+npm install pg
+npm install sequelize pg pg-hstore   <span class="cmt"># Sequelize ORM</span>
+npm install prisma @prisma/client     <span class="cmt"># Prisma ORM</span>
+
+<span class="cmt"># psql — интерактивная консоль</span>
+psql -U postgres -d mydb</code>
+        </div>
+      </section>
+
+      <section class="psql-intro is-hidden">
+        <h2>psql \commands — мета-команды интерактивной консоли</h2>
+        <p>
+          Мета-команды psql начинаются с обратного слеша <code>\</code> и не являются SQL — они обрабатываются самим
+          клиентом psql.
+          Работают только в интерактивном режиме или внутри SQL-скриптов выполняемых через
+          <code>psql -f file.sql</code>.
+          Позволяют инспектировать схему БД, управлять выводом, выполнять внешние файлы и оболочечные команды.
+        </p>
+        <div class="psql-intro__grid">
+          <div class="psql-tag psql-tag--info"><code>\l</code> — базы данных</div>
+          <div class="psql-tag psql-tag--info"><code>\dt</code> — таблицы</div>
+          <div class="psql-tag psql-tag--info"><code>\d table</code> — структура</div>
+          <div class="psql-tag psql-tag--info"><code>\du</code> — роли</div>
+          <div class="psql-tag psql-tag--info"><code>\di</code> — индексы</div>
+          <div class="psql-tag psql-tag--info"><code>\dn</code> — схемы</div>
+          <div class="psql-tag psql-tag--warn"><code>\timing</code> — замер времени</div>
+          <div class="psql-tag psql-tag--warn"><code>\x</code> — вертикальный вывод</div>
+          <div class="psql-tag psql-tag--warn"><code>\copy</code> — CSV импорт/экспорт</div>
+          <div class="psql-tag psql-tag--muted"><code>\?</code> — справка мета-команд</div>
+          <div class="psql-tag psql-tag--muted"><code>\h CMD</code> — справка SQL</div>
+          <div class="psql-tag psql-tag--muted"><code>\q</code> — выйти</div>
+        </div>
+      </section>
+
+      <section class="advanced-intro is-hidden">
+        <h2>Advanced PostgreSQL — возможности продвинутого уровня</h2>
+        <p>
+          Раздел охватывает мощные возможности PostgreSQL выходящие за рамки базового SQL:
+          пользовательские типы (<code>CREATE TYPE</code>: ENUM, составные, домены),
+          хранимые функции и процедуры на языке PL/pgSQL,
+          триггеры для автоматизации логики на уровне БД,
+          оконные функции для аналитики без GROUP BY,
+          а также JSONB-операторы, массивы, полнотекстовый поиск, LATERAL JOIN,
+          Row Level Security, pub/sub через LISTEN/NOTIFY, секционирование таблиц и массовый импорт через COPY.
+        </p>
+        <div class="psql-intro__grid">
+          <div class="psql-tag psql-tag--info"><code>CREATE TYPE</code> — ENUM, составные, домены</div>
+          <div class="psql-tag psql-tag--info"><code>CREATE FUNCTION</code> — PL/pgSQL функции</div>
+          <div class="psql-tag psql-tag--info"><code>CREATE TRIGGER</code> — автоматизация логики</div>
+          <div class="psql-tag psql-tag--info"><code>OVER()</code> — оконные функции</div>
+          <div class="psql-tag psql-tag--warn"><code>JSONB</code> — операторы ->, ->>, @></div>
+          <div class="psql-tag psql-tag--warn"><code>ARRAY</code> — ANY, ALL, unnest, GIN</div>
+          <div class="psql-tag psql-tag--warn"><code>FTS</code> — to_tsvector, to_tsquery</div>
+          <div class="psql-tag psql-tag--warn"><code>LATERAL</code> — TOP-N на строку</div>
+          <div class="psql-tag psql-tag--muted"><code>RLS</code> — Row Level Security</div>
+          <div class="psql-tag psql-tag--muted"><code>LISTEN/NOTIFY</code> — pub/sub</div>
+          <div class="psql-tag psql-tag--muted"><code>PARTITION BY</code> — секционирование</div>
+          <div class="psql-tag psql-tag--muted"><code>COPY</code> — массовый импорт/экспорт</div>
+        </div>
+      </section>
+
+      <section class="dbmanage-intro is-hidden">
+        <h2>DB Management — управление базами данных</h2>
+        <p>
+          Раздел охватывает операции уровня сервера PostgreSQL: создание и удаление баз данных, управление ролями и
+          правами доступа,
+          организацию схем, транзакции, представления (VIEW / MATERIALIZED VIEW), резервное копирование через
+          <code>pg_dump</code>,
+          анализ производительности через <code>EXPLAIN ANALYZE</code>, обслуживание таблиц через <code>VACUUM</code>,
+          и мониторинг через системные представления <code>pg_stat_*</code>.
+        </p>
+        <p>
+          Эти команды — фундамент работы DBA и backend-разработчика в production. Хорошее понимание этого слоя позволяет
+          диагностировать проблемы производительности, безопасно управлять доступом и поддерживать работоспособность
+          базы под нагрузкой.
+        </p>
+      </section>
+
+      <section class="migrations-intro is-hidden">
+        <h2>Что такое миграции (Migrations)?</h2>
+        <p>
+          <strong>Миграция</strong> — это версионированное изменение схемы базы данных, оформленное в виде файла с
+          кодом.
+          Каждая миграция имеет два метода: <strong>UP</strong> — применяет изменение (добавить таблицу, колонку,
+          индекс),
+          и <strong>DOWN</strong> — откатывает его обратно.
+          Инструменты вроде Sequelize, Prisma, Knex автоматически отслеживают список применённых миграций
+          в специальной служебной таблице в самой БД (<code>SequelizeMeta</code>, <code>_prisma_migrations</code>).
+        </p>
+        <p>
+          Зачем это нужно: синхронизация схемы БД между всей командой, staging и production окружениями.
+          Без миграций каждый разработчик вручную правит схему — это ведёт к рассинхрону.
+          Миграции — это «git для схемы базы данных».
+        </p>
+        <div class="migrations-intro__flow">
+          <div class="flow-step"><span class="flow-num">1</span> Написать миграцию (UP + DOWN)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><span class="flow-num">2</span> Закоммитить файл в git</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><span class="flow-num">3</span> Запустить на сервере (<code>db:migrate</code>)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><span class="flow-num">4</span> Rollback если нужно (<code>undo</code>)</div>
+        </div>
+      </section>
+
+      <p class="section-docs">
+        <a id="section-docs-link" href="https://www.postgresql.org/docs/current/sql-select.html" target="_blank"
+          rel="noreferrer">Официальная документация PostgreSQL (SELECT)</a>
+      </p>
+      <div class="table-panel" id="table-panel" aria-live="polite">
+        <table>
+          <caption id="table-caption">SELECT & Queries — основные запросы к данным</caption>
+          <thead>
+            <tr>
+              <th data-cell="id">#</th>
+              <th data-cell="commads">PostgreSQL / psql</th>
+              <th data-cell="desc" colspan="2">Описание</th>
+              <th data-cell="example">Пример</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

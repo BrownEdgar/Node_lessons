@@ -1,136 +1,433 @@
-[
-  {
-    "id": 1,
-    "keyword": "$group",
-    "command": "Model.aggregate([ {} ])",
-    "description": "<span>aggregate</span> մեթոդի հիմնական կառուցվածքն է:կոնստրուկտոր, որն օգտագործվում է ագրեգացիոն <span>pipeline</span>-երի(array of objects) կառուցման համար:Հիմնական մեթոդներն են։<br/> $match | $group | $project | $sort | $count | $limit | $skip | $out",
-    "example": "Model.aggregate([\n { $match: { status: 'urgent' } }\n]}"
+{
+  "meta": {
+    "aggregationDocs": "https://www.mongodb.com/docs/manual/reference/mql/aggregation-stages/",
+    "expressionsDocs": "https://www.mongodb.com/docs/manual/reference/mql/expressions/",
+    "comparisonDocs": "https://www.mongodb.com/docs/manual/reference/mql/query-predicates/comparison/"
   },
-  {
-    "id": 2,
-    "keyword": "$match",
-    "command": "{ $match: { name: <name> } },\n { $sort: { age: 1 } }",
-    "description": "Օրինակը գտնում է բոլոր 'Ivan' անունով մարդկանց և հաջորթիվ սրոտավորում է ըստ տարիքի:('1'-ըստ աՃման,'-1'-ըստ նվազման)",
-    "example": "Model.aggregate([\n { $match:{ name: 'Ivan' },\n { $sort: { age: 1 }}\n]}"
+  "captions": {
+    "aggregation": "MongoDB Aggregation Stages — հիմնական pipeline փուլեր",
+    "expressions": "MongoDB Expressions — արտահայտություններ ագրեգացիայում",
+    "comparisonQuery": "Comparison Query Predicate Operators — համեմատման ֆիլտրեր"
   },
-  {
-    "id": 43,
-    "keyword": "$count",
-    "command": "{ $match: {  score: {$gt: 80} } },\n { $count: <string> }",
-    "description": "Օրինակը գտնում է բոլոր $80-ից բարձր '$score' ունեցող դոկումենտները՝ վերադարձնելով նրանց քանակը:",
-    "example": "Model.aggregate([\n { $match: {  score: {$gt: 80} } }\n { $count: 'count' }\n]}",
-    "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/?utm_source=compass&utm_medium=product#-count--aggregation-"
-  },
-  {
-    "id": 3,
-    "keyword": "$limit | $sort",
-    "command": "{$match: {name: 'Ivan'}}, {$sort: {age: -1}}, {$limit: 1}",
-    "description": "Օրինակը գտնում է բոլոր 'Ivan' անունով մարդկանց և հաջորթիվ սրոտավորում է ըստ տարիքի:Հետո վերադարձնում 1 մարդու։ Արդյունքում կստանանք ամենատարեց մարդուն:",
-    "example": "Model.aggregate([\n {$match: {name: 'Ivan'}}, \n {$sort: {age: -1}}, \n {$limit: 1}\n]}"
-  },
-  {
-    "id": 4,
-    "keyword": "$match",
-    "command": " { $match: { 'address.city': <city_name> } }",
-    "description": "Օրինակը պետք է գալիս եթե ունենք ներդրված օբյեկտներ։ $address.city գրառումը(չակերտները պարտադիր են) գտնում է address օբյեկտում '$city' դաշտի համապատասխան արժեքը",
-    "example": "Model.aggregate([\n { $match: { 'address.city': 'Yerevan' } }\n]}"
-  },
-  {
-    "id": 5,
-    "keyword": "$gt | $and",
-    "command": "{ $match: { $and: [ {'gender': <string> }, {'age': {$gt:<number> } }]}}",
-    "description": "Գտնում է բոլոր 26-ից բարձր տարիք ունեցող տղաներին:Զանգվածի մեջ գրված 2 պաըմեններն էլ միաժամանակ պետք է ճշմարիտ լինեն։",
-    "example": "Model.aggregate([\n { $match: { $and: [\n {'gender': 'male' }, {'age': { $gt: 26 } }\n]}}\n]}"
-  },
-  {
-    "id": 6,
-    "keyword": "$ne",
-    "command": "{$match: {paid: { $ne: <string> }}}",
-    "description": "գտնում է բոլոր այն դոկումենտները, որոնց '$paid' դաշտը null չէ։",
-    "example": "Model.aggregate([\n {$match: {paid: { $ne: null }}}\n]}"
-  },
-  {
-    "id": 7,
-    "keyword": "$group",
-    "command": "{ $match: {hobby: {#size:<number>} }}}",
-    "description": "այս օրինակը կվերադարձնի միայն այն 'User'-ին որոնց մոտ 'hobby․length'-ը  3 կլինի``Նույն արդյունքը կլինի եթե․՝ User.find({hobby: {#size:3}}) կանչենք",
-    "example": "Model.aggregate([\n { $match: {hobby: {#size:3} }}\n]}"
-  },
-  {
-    "id": 8,
-    "keyword": "$group",
-    "command": "Model.aggregate([ { $group: { _id:<objectId>} }   ])",
-    "description": "Ամենակարևոր մեդոներից մեկը։Խմբավորում է ցանկացած բան առանց կրկնությունների։Օրինակ այստեղ գտնում է բազայում առկամ մարդկանց բոլոր հնարավոր տարիքները։",
-    "example": "Model.aggregate([\n { $group: { _id: '$age'} }}\n]}"
-  },
-  {
-    "id": 9,
-    "keyword": "$group",
-    "command": "Model.aggregate([ { $group: {_id: { age:$<age>, name:$<name>}} } ])",
-    "description": "Խմբավորում է ըստ տարիքի, իսկ եթե տարիքը համընկնում է իսկ անունը չէ, այն առանձնացնում է առանձին դակումենտով։",
-    "example": "Model.aggregate([\n { $group: {_id: { age:'$age', name:'$name'}} }\n]}"
-  },
-  {
-    "id": 10,
-    "keyword": "$group",
-    "command": "([{$match: {type: 'a'}},{$group: {_id: '$type', total: {$sum: '$price'}}}])",
-    "description": "այս օրինակը կվերադարձնի 'a' Տիպ ունեցող 'Girq'-ի ընդհանուր գինը,(գները գրված են price հատկության մեջ),եթե հանենք '$match' ֆիլտրը ապա կվերադարձնի բոլոր տիպերի գները առանձին օբյեկտներով",
-    "example": "Model.aggregate([\n {$match: {type: 'a'}},\n {$group: {_id: '$type', total: {$sum: '$price'}}}\n]}"
-  },
-  {
-    "id": 11,
-    "keyword": "$project",
-    "command": "([ { $project: { <specification> } } ])",
-    "description": "Թույլ է տալսիս 'document'-ից ընտրել այն հատկությունները, որոնք մենք նախընտրում ենք(<field>: <$1 or true> | _id: <$0 or false>)",
-    "example": "Model.aggregate([\n { $project: { name:1, _id: 0 }}\n]}"
-  },
-  {
-    "id": 12,
-    "keyword": "$multiply",
-    "command": "([ { $project: { ..., total: \n{ $multiply: [ '$price', '$quantity' ] } } }\n])",
-    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի արտադրյալն է լինում ",
-    "example": "Model.aggregate([\n { $project: { date: 1 item: 1, total: { $multiply: [ '$price', '$quantity' ] } } }]"
-  },
-  {
-    "id": 13,
-    "keyword": "$fill",
-    "command": "Model.aggregate([\n { $fill: output: {name: { value: <value> }}}\n]}",
-    "description": "Բոլոր աւն դոկումենտները, որոնք չունենան '$name' դաշտ, նրանց համար կնշանակվի default 'unknown' արժեքը։",
-    "example": "Model.aggregate([\n { $fill: output: {\n\t name: { value: 'unknown' }\n\t}}\n ]}"
-  },
-  {
-    "id": 14,
-    "keyword": "mongoDB | $push",
-    "command": "db.students.insertOne( { _id: 1, scores: [ 44, 78, 38, 80 ] } )",
-    "description": "Այս օրինակը թույլ կտա '$scores' զանգվածի մեջ ավելացնել նոր էլեմենտ",
-    "example": "db.students.updateOne({ _id: 1},\n{ $push: { scores: 89}}\n)"
-  },
-  {
-    "id": 15,
-    "keyword": "mongoDB | $push",
-    "command": "db.students.insertOne( { _id: 1, scores: [ 44, 78, 38, 80 ] } )",
-    "description": "Այս օրինակը թույլ կտա '$scores' զանգվածի մեջ ավելացնել նոր էլեմենտ",
-    "example": "db.students.updateOne({ _id: 1},\n{ $push: { scores: 89}}\n)"
-  },
-  {
-    "id": 16,
-    "keyword": "$sum",
-    "command": "([ { $project: { ..., total: \n{  total: {$sum: [<value1>, <value2>]} } }\n])",
-    "description": "Ելքային 'document'-ում ավելացնում է նոր դաշտ 'total' անունով, որը նույն 'document'-ի նշված դաշտերի գումարով։",
-    "example": "Model.aggregate([ { $project: { ..., total: \n{ total: {$sum: ['$assignment', '$points']} } }\n]"
-  },
-  {
-    "id": 17,
-    "keyword": "$unset",
-    "command": "db.dogs.updateMany({},\n{ $unset: { type: ''}})",
-    "description": "Ջնջում է նշված դաշտը տրված $type բառի փոխարեն: $aggregate մոթոդում օգտագործելիս այն չի ջնջում դաշտը, ուղղակի վերադարձնում է առանց այդ դաշտի",
-    "example": "db.dogs.updateMany(\n{},\n{ $unset: { age: ''}\n})"
-  },
-  {
-    "id": 18,
-    "keyword": "$match",
-    "command": "db.dogs.updateMany({},\n{ $match: {}}).forEach((elem) => {...})",
-    "description": "Օրինակը գտնում է բոլորին, հետո ցիկլի միջոցով տպում է միայն նրան $email դաշտերը։",
-    "example": "Model.aggregate([\n { $match: {} } \n]).forEach(elem => console.log(elem.email))"
-  }
-]
+  "aggregation": [
+    {
+      "id": 1,
+      "keyword": "aggregate | pipeline",
+      "command": "Model.aggregate([ {} ])",
+      "description": "aggregate մեթոդը Mongoose-ում և MongoDB դրայվերներում հիմնական մուտքն է ագրեգացիոն pipeline-ի համար․ այն ընդունում է փուլերի զանգված, որտեղ յուրաքանչյուր օբյեկտ կատարում է մեկ փուլ ($match, $group, $project և այլն)։Սովորաբար սկսում ենք $match-ով՝ նվազեցնելով փաստաթղթերի քանակը, ապա խմբավորում կամ պրոյեկցիա ենք կիրառում։Այս կառուցվածքը թույլ է տալիս սերվերում կատարել բարդ վերլուծություններ՝ առանց բոլոր փաստաթղթերը հավելվածի մեջ բեռնելու։",
+      "example": "Model.aggregate([\n { $match: { status: 'urgent' } }\n])"
+    },
+    {
+      "id": 2,
+      "keyword": "$match",
+      "command": "{ $match: { name: <name> } },\n { $sort: { age: 1 } }",
+      "description": "$match փուլը ֆիլտրում է մուտքային փաստաթղթերը՝ թողնելով միայն այն դոկումենտները, որոնք բավարարում են տրված պայմանին, ինչպես find-ի ֆիլտրը։Հաջորդ $sort-ը դասավորում է մնացած փաստաթղթերը ըստ դաշտի․ 1-ը աճման, -1-ը նվազման կարգով։Պipeline-ի սկզբում $match-ի օգտագործումը կարևոր է ինդեքսների արդյունավետ օգտագործման համար։",
+      "example": "Model.aggregate([\n { $match: { name: 'Ivan' } },\n { $sort: { age: 1 } }\n])"
+    },
+    {
+      "id": 3,
+      "keyword": "$count",
+      "command": "{ $match: { score: { $gt: 80 } } },\n { $count: <string> }",
+      "description": "$count փուլը հաշվում է նախորդ փուլից եկող փաստաթղթերի քանակը և վերադարձնում է մեկ փաստաթուղթ՝ նշված անունով դաշտով (օր․ total)։Սովորաբար այն դրվում է $match-ից կամ այլ ֆիլտրից հետո, որպեսզի ստանանք միայն թիվը՝ առանց բոլոր փաստաթղթերը հանելու արդյունքում։Օգտակար է վահանակների, հաշվետվությունների և արագ ագրեգատների համար։",
+      "example": "Model.aggregate([\n { $match: { score: { $gt: 80 } } },\n { $count: 'passed' }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/"
+    },
+    {
+      "id": 4,
+      "keyword": "$limit | $sort",
+      "command": "{$match: {name: 'Ivan'}}, {$sort: {age: -1}}, {$limit: 1}",
+      "description": "Այս համակցությունը նախ ֆիլտրում է Ivan անունով փաստաթղթերը, հետո $sort-ով դասավորում է տարիքը նվազման կարգով, և $limit․1-ով թողնում է միայն առաջինը՝ ամենամեծ տարիք ունեցողը։Սա տիպիկ օրինակ է «գտնել վերին N» pattern-ի, որը ագրեգացիայում ավելի հստակ է, քան բազմաթիվ find+sort+limit զանգեր։",
+      "example": "Model.aggregate([\n { $match: { name: 'Ivan' } },\n { $sort: { age: -1 } },\n { $limit: 1 }\n])"
+    },
+    {
+      "id": 5,
+      "keyword": "$match",
+      "command": " { $match: { 'address.city': <city_name> } }",
+      "description": "Ներդրված օբյեկտների դաշտերին դիմելիս MongoDB-ում օգտագործում ենք կետային նոտացիա՝ address.city, և ագրեգացիայի $match-ում այն պետք է լինի չակերտավոր string, եթե անունը հատուկ նիշեր է պարունակում։Փուլը վերադարձնում է միայն այն փաստաթղթերը, որոնց address.city դաշտը համընկնում է տրված արժեքին։",
+      "example": "Model.aggregate([\n { $match: { 'address.city': 'Yerevan' } }\n])"
+    },
+    {
+      "id": 6,
+      "keyword": "$gt | $and",
+      "command": "{ $match: { $and: [ { gender: <string> }, { age: { $gt: <number> } } ] } }",
+      "description": "$and-ը տրամաբանական օպերատոր է, որը պահանջում է, որ բոլոր ներդրված պայմանները միաժամանակ ճիշտ լինեն։Օրինակ՝ միաժամանակ սեռը male և տարիքը 26-ից մեծ։$gt-ը համեմատման օպերատոր է «մեծ, քան»։Պipeline-ում $match-ի ներսում այս կառուցվածքը թույլ է տալիս կոմպոզիտ ֆիլտրեր կառուցել։",
+      "example": "Model.aggregate([\n { $match: { $and: [\n { gender: 'male' }, { age: { $gt: 26 } }\n ] } }\n])"
+    },
+    {
+      "id": 7,
+      "keyword": "$ne",
+      "command": "{$match: { paid: { $ne: <value> } }}",
+      "description": "$ne-ն նշանակում է «հավասար չէ»։Օրինակ՝ paid․$ne․null-ը ընտրում է փաստաթղթերը, որտեղ paid դաշտը null չէ (կարող է լինել boolean, թիվ կամ string)։Ուշադրություն դարձրեք BSON տիպերի և բացակայող դաշտերի վարքին՝ null-ի և բացակայության տարբերությունը կախված է սխեմայից։",
+      "example": "Model.aggregate([\n { $match: { paid: { $ne: null } } }\n])"
+    },
+    {
+      "id": 8,
+      "keyword": "$size",
+      "command": "{ $match: { hobby: { $size: <number> } } }",
+      "description": "$size-ը զանգվածի երկարությունը համեմատում է տրված ամբողջ թվի հետ։Օրինակ՝ hobby․$size․3-ը թողնում է միայն այն օգտատերերին, որոնց hobby զանգվածում ճիշտ երեք էլեմենտ կա։Նույն ֆիլտրը կարելի է գրել find-ում։Ագրեգացիայում սա հաճախ կիրառվում է նախնական նեղացման համար։",
+      "example": "Model.aggregate([\n { $match: { hobby: { $size: 3 } } }\n])"
+    },
+    {
+      "id": 9,
+      "keyword": "$group",
+      "command": "Model.aggregate([ { $group: { _id: '$age' } } ])",
+      "description": "$group-ը խմբավորում է փաստաթղթերը ըստ _id արտահայտության (սովորաբար դաշտի արժեքի) և թույլ է տալիս հաշվել $sum, $avg, $push և այլ ագրեգատներ։Օրինակ _id․$age-ով ստանում եք յուրաքանչյուր տարիքի համար առանձին խումբ։Խմբից հետո հաճախ հարկ է լինում $sort կամ $project կիրառել արդյունքը ձևակերպելու համար։",
+      "example": "Model.aggregate([\n { $group: { _id: '$age' } }\n])"
+    },
+    {
+      "id": 10,
+      "keyword": "$group",
+      "command": "Model.aggregate([ { $group: { _id: { age: '$age', name: '$name' } } } ])",
+      "description": "Երբ _id-ն օբյեկտ է, MongoDB-ը խմբավորում է կոմպոզիտ բանալով․ նույն տարիքը, բայց տարբեր անունը կդառնա տարբեր խմբեր։Սա օգտակար է, երբ պետք է բազմակriterion խմբավորում։Հիշեք, որ խմբից հետո անվան դաշտերը հասանելի են _id-ի ներսում, եթե չեք ապամոնտաժել $project-ով։",
+      "example": "Model.aggregate([\n { $group: { _id: { age: '$age', name: '$name' } } }\n])"
+    },
+    {
+      "id": 11,
+      "keyword": "$group",
+      "command": "([{$match: {type: 'a'}},{$group: {_id: '$type', total: {$sum: '$price'}}}])",
+      "description": "Այս pipeline-ը նախ ֆիլտրում է type․a ապրանքները, ապա $group-ով հաշվում է price դաշտերի գումարը յուրաքանչյուր type-ի համար (այստեղ մնում է միայն a)։$sum-ը թվային ագրեգատ է, որը դատարկ կամ բացակայող արժեքները սովորաբար անտեսում է։Եթե $match-ը հանենք, կստանանք բոլոր տիպերի գումարները առանձին փաստաթղթերով։",
+      "example": "Model.aggregate([\n { $match: { type: 'a' } },\n { $group: { _id: '$type', total: { $sum: '$price' } } }\n])"
+    },
+    {
+      "id": 12,
+      "keyword": "$project",
+      "command": "([ { $project: { <specification> } } ])",
+      "description": "$project փուլը ձևավորում է ելքային փաստաթղթի ձևը․ 1 կամ true-ը ներառում է դաշտը, 0 կամ false-ը բացառում է _id-ն (եթե ցանկանում եք թաքցնել)։Կարելի է նաև ստեղծել նոր դաշտեր արտահայտություններով։Սովորաբար $project-ը դրվում է խմբավորման կամ lookup-ից հետո՝ արդյունքը մաքրելու համար։",
+      "example": "Model.aggregate([\n { $project: { name: 1, _id: 0 } }\n])"
+    },
+    {
+      "id": 13,
+      "keyword": "$multiply",
+      "command": "([ { $project: { total: { $multiply: [ '$price', '$quantity' ] } } } ])",
+      "description": "$multiply-ը թվաբանական արտահայտություն է, որը բազմապատկում է զանգվածում տրված արժեքները։Օրինակ price-ը բազմապատկելով quantity-ով ստանում ենք line total։$project-ի մեջ այն թույլ է տալիս հաշվարկներ կատարել առանց նախորդ փուլում պահելու միջանկյալ դաշտերը, եթե դա պետք չէ։",
+      "example": "Model.aggregate([\n { $project: { date: 1, item: 1, total: { $multiply: [ '$price', '$quantity' ] } } }\n])"
+    },
+    {
+      "id": 14,
+      "keyword": "$fill",
+      "command": "Model.aggregate([\n { $fill: { output: { name: { value: <value> } } } }\n])",
+      "description": "$fill փուլը (MongoDB 5.3+) լրացնում է բացակայող կամ null արժեքները ըստ կարգավորված կանոնների, օրինակ՝ նշված default արժեքով։Օգտակար է ժամանակային շարքերի և կարգավորված փաստաթղթերում «բացեր» լցնելու համար։Պարամետրերը թույլ են տալիս նշել sortBy և միջակայք։",
+      "example": "Model.aggregate([\n { $fill: { output: { name: { value: 'unknown' } } } }\n])"
+    },
+    {
+      "id": 15,
+      "keyword": "mongoDB | $push",
+      "command": "db.students.updateOne( { _id: 1 }, { $push: { scores: 89 } } )",
+      "description": "$push-ը թարմացման օպերատոր է, որը զանգվածի վերջում ավելացնում է նոր էլեմենտ (կամ $each-ով՝ մի քանիսը)։Տարբերվում է $addToSet-ից, որը չի թողնում կրկնություններ։Ագրեգացիայի համատեքստում հաճախ օգտագործում ենք $group․$push՝ խմբի փաստաթղթերը զանգվածում հավաքելու համար։",
+      "example": "db.students.updateOne(\n { _id: 1 },\n { $push: { scores: 89 } }\n)"
+    },
+    {
+      "id": 16,
+      "keyword": "$sum",
+      "command": "([ { $project: { total: { $sum: [ '$assignment', '$points' ] } } } ])",
+      "description": "Արտահայտության $sum-ը (array operand-ով) գումարում է տրված արտահայտությունների արդյունքները մեկ փաստաթղթի ներսում։Տարբերվում է $group-ի $sum ագրեգատից, որը գումարում է բոլոր խմբի փաստաթղթերը։Օգտագործեք ճիշտ կոնտեքստը՝ խմբային vs փաստաթղթային հաշվարկ։",
+      "example": "Model.aggregate([\n { $project: { total: { $sum: [ '$assignment', '$points' ] } } }\n])"
+    },
+    {
+      "id": 17,
+      "keyword": "$unset",
+      "command": "db.dogs.updateMany({}, { $unset: { age: '' } })",
+      "description": "$unset-ը թարմման մեջ ջնջում է դաշտը։Ագրեգացիայի $unset փուլը (կամ project-ում 0) վերադարձնում է փաստաթուղթը առանց տվյալ դաշտի՝ չփոխելով պահեստը, եթե pipeline-ը միայն կարդում է։Հստակեցրեք՝ արդյունքը պահելու ($merge/$out) թե միայն ցուցադրելու եք։",
+      "example": "db.dogs.updateMany(\n {},\n { $unset: { age: '' } }\n)"
+    },
+    {
+      "id": 18,
+      "keyword": "$match",
+      "command": "Model.aggregate([ { $match: {} } ])",
+      "description": "Դատարկ ֆիլտրով $match-ը անցկացնում է բոլոր փաստաթղթերը հաջորդ փուլին, ինչը երբեմն օգտագործվում է դեբագի կամ հետո forEach/կուրսորով մշակման համար Node դրայվերում։Արտադրությունում ավելի լավ է նեղացնել ֆիլտրը՝ կատարողականը պահպանելու համար։",
+      "example": "Model.aggregate([\n { $match: {} }\n]).then(docs => docs.forEach(d => console.log(d.email)))"
+    },
+    {
+      "id": 19,
+      "keyword": "$lookup",
+      "command": "{ $lookup: {\n  from: 'orders',\n  localField: 'userId',\n  foreignField: '_id',\n  as: 'orders'\n} }",
+      "description": "$lookup-ը MongoDB-ի left outer join-ի համարժեքն է ագրեգացիայում․ մի collection-ի փաստաթուղթը կապում է մյուս collection-ի փաստաթղթերի հետ localField/foreignField բանալիներով կամ pipeline-ով ավելի բարդ join-ների համար։Արդյունքը սովորաբար զանգված է as դաշտում։Պահանջում է ճիշտ ինդեքսներ մեծ տվյալների վրա։",
+      "example": "Model.aggregate([\n { $lookup: {\n   from: 'orders',\n   localField: '_id',\n   foreignField: 'userId',\n   as: 'userOrders'\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/"
+    },
+    {
+      "id": 20,
+      "keyword": "$merge",
+      "command": "{ $merge: { into: 'reporting', on: '_id', whenMatched: 'replace', whenNotMatched: 'insert' } }",
+      "description": "$merge-ը գրում է pipeline-ի արդյունքը նույն կամ այլ collection-ում՝ թույլ տալով upsert, փոխարինում կամ միաձուլում կանոններով։Տարբերվում է $out-ից, որը սովորաբար ստեղծում/փոխարինում է ամբողջ նպատակային collection-ը։$merge-ը ավելի ճկուն է ինկրեմենտալ ETL և հաշվետվությունների համար։",
+      "example": "Model.aggregate([\n { $match: { year: 2025 } },\n { $merge: { into: 'archive2025', whenMatched: 'fail', whenNotMatched: 'insert' } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/"
+    },
+    {
+      "id": 21,
+      "keyword": "$replaceWith",
+      "command": "{ $replaceWith: { $mergeObjects: [ { k: 1 }, '$$ROOT' ] } }",
+      "description": "$replaceWith-ը ամբողջությամբ փոխարինում է արմատային փաստաթուղթը տրված արտահայտությամբ, սովորաբար $$ROOT-ի վրա հիմնված նոր օբյեկտով։Օգտակար է, երբ պետք է «մաքրել» փաստաթղթի ձևը կամ flatten անել ներդրված կառուցվածքը։Համատեղելի է $mergeObjects և այլ արտահայտությունների հետ։",
+      "example": "Model.aggregate([\n { $replaceWith: { $mergeObjects: [ { status: 'computed' }, '$$ROOT' ] } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/"
+    },
+    {
+      "id": 22,
+      "keyword": "$sample",
+      "command": "{ $sample: { size: 100 } }",
+      "description": "$sample-ը պատահական ընտրում է նշված քանակությամբ փաստաթղթեր նախորդ փուլից։Մեծ collection-ներում արդյունավետ պատահական ընտրանքի համար MongoDB-ն կարող է օգտագործել հատուկ մեխանիզմներ։Օգտագործեք միայն անհրաժեշտ size-ը՝ հիշելով հիշողության սահմանները։Համապատասխան է A/B թեստերի, արագ նմուշառման համար։",
+      "example": "Model.aggregate([\n { $match: { active: true } },\n { $sample: { size: 50 } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/"
+    },
+    {
+      "id": 23,
+      "keyword": "$facet",
+      "command": "{ $facet: {\n  byStatus: [ { $match: { status: 'A' } }, { $count: 'c' } ],\n  avgAge: [ { $group: { _id: null, m: { $avg: '$age' } } } ]\n} }",
+      "description": "$facet-ը մեկ անցումում կատարում է մի քանի ենթա-pipeline-ներ նույն մուտքային փաստաթղթերի վրա և վերադարձնում է օբյեկտ՝ յուրաքանչյուր բանալու տակ առանձին արդյունքներով։Սա կարևոր է դաշբորդների համար, երբ մեկ հարցման մեջ պետք է միաժամանակ հաշվարկներ և ֆիլտրեր։Ուշադրություն՝ յուրաքանչյուր ենթա-pipeline սկսում է նույն մուտքից, ոչ թե հաջորդական։",
+      "example": "Model.aggregate([\n { $facet: {\n   high: [ { $match: { score: { $gte: 90 } } }, { $count: 'n' } ],\n   low: [ { $match: { score: { $lt: 60 } } }, { $count: 'n' } ]\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/"
+    },
+    {
+      "id": 24,
+      "keyword": "$unionWith",
+      "command": "{ $unionWith: { coll: 'archived', pipeline: [ { $match: { year: 2024 } } ] } }",
+      "description": "$unionWith-ը միավորում է ընթացիկ pipeline-ի արդյունքը այլ collection-ից եկող փաստաթղթերի հետ, ընդ որում կարելի է նշել լրացուցիչ pipeline նպատակային collection-ի վրա։Սա SQL UNION ALL-ին մոտ է․ կրկնությունները ինքնաբերաբար չեն հեռացվում։Օգտակար է մի քանի աղբյուրներից միասին վերլուծություն անելիս։",
+      "example": "Model.aggregate([\n { $match: { region: 'AM' } },\n { $unionWith: { coll: 'legacyUsers', pipeline: [] } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/"
+    },
+    {
+      "id": 25,
+      "keyword": "$unwind",
+      "command": "{ $unwind: { path: '$tags', preserveNullAndEmptyArrays: true } }",
+      "description": "$unwind-ը զանգվածի յուրաքանչյուր էլեմենտի համար ստեղծում է առանձին փաստաթուղթ՝ տեղափոխելով արժեքը scalar դաշտի մեջ։preserveNullAndEmptyArrays-ը թույլ է տալիս պահել փաստաթղթերը, եթե զանգվածը դատարկ է կամ բացակայում է։Հաճախ հաջորդում է $group՝ tag-երով հաշվելու համար։",
+      "example": "Model.aggregate([\n { $unwind: '$items' },\n { $group: { _id: '$items.sku', qty: { $sum: '$items.qty' } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/"
+    },
+    {
+      "id": 26,
+      "keyword": "$graphLookup",
+      "command": "{ $graphLookup: {\n  from: 'employees',\n  startWith: '$reportsTo',\n  connectFromField: 'reportsTo',\n  connectToField: '_id',\n  as: 'chain',\n  maxDepth: 5\n} }",
+      "description": "$graphLookup-ը կատարում է ռեկուրսիվ հարցում գրաֆի եզրերով՝ օրինակ կազմակերպական աղյուսակ կամ հրավերի ծառ։startWith-ից սկսած connectFromField/connectToField-ով «քայլում է» մինչև depthRestriction կամ maxDepth։Արդյունքը զանգված է as դաշտում։Պահանջում է զգուշություն ցիկլերի և կատարողականի նկատմամբ։",
+      "example": "Model.aggregate([\n { $graphLookup: {\n   from: 'refs',\n   startWith: '$userId',\n   connectFromField: 'userId',\n   connectToField: 'referredBy',\n   as: 'network'\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/"
+    },
+    {
+      "id": 27,
+      "keyword": "$replaceRoot",
+      "command": "{ $replaceRoot: { newRoot: '$profile' } }",
+      "description": "$replaceRoot-ը դարձնում է նշված արտահայտությունը նոր արմատային փաստաթուղթ․ օրինակ եթե profile-ը ներդրված օբյեկտ է, կարող եք բարձրացնել այն վերին մակարդակ։Տարբերվում է $project-ից, որն ավելի ընտրողական է։$replaceWith-ը ավելի ընդհանուր ձևակերպում է նույն գաղափարի համար նոր տարբերակներում։",
+      "example": "Model.aggregate([\n { $replaceRoot: { newRoot: { $mergeObjects: [ '$meta', '$$ROOT' ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/"
+    },
+    {
+      "id": 28,
+      "keyword": "$bucket",
+      "command": "{ $bucket: {\n  groupBy: '$price',\n  boundaries: [0, 50, 100, 200],\n  default: '200+',\n  output: { count: { $sum: 1 }, titles: { $push: '$title' } }\n} }",
+      "description": "$bucket-ը խմբավորում է փաստաթղթերը թվային կամ ամսաթվային միջակայքերի մեջ՝ boundaries զանգվածով սահմանված։default բucket-ը ընկնում է ցանկացած այլ արժեքի համար։Օգտակար է հիստոգրամների, գնային միջակայքերի վերլուծության համար։Մոտ ալտերնատիվ է $bucketAuto-ն ավտոմատ միջակայքերով։",
+      "example": "Model.aggregate([\n { $bucket: {\n   groupBy: '$score',\n   boundaries: [0, 60, 80, 100],\n   default: 'other',\n   output: { n: { $sum: 1 } }\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/"
+    },
+    {
+      "id": 29,
+      "keyword": "$sortByCount",
+      "command": "{ $sortByCount: '$country' }",
+      "description": "$sortByCount-ը համարժեք է $group․_id դաշտով և $sum․1-ին, հետևած $sort-ին ըստ count-ի․ այն հաշվում է յուրաքանչյուր արժեքի հանդիպումները և դասավորում նվազման կարգով։Հարմար է tag-երի, կատեգորիաների հաճախականության արագ աղյուսակի համար։Կրճատում է pipeline-ի երկարությունը։",
+      "example": "Model.aggregate([\n { $sortByCount: '$tags' }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/"
+    },
+    {
+      "id": 30,
+      "keyword": "$addFields | $set",
+      "command": "{ $set: { fullName: { $concat: [ '$first', ' ', '$last' ] } } }",
+      "description": "$set (նույնը, ինչ $addFields) ավելացնում կամ վերագրում է դաշտեր առանց ամբողջական $project-ի․ գոյություն ունեցող դաշտերը պահպանվում են։Օգտակար է հաշվարկված դաշտ ավելացնելու համար մինչև հաջորդ փուլերը։Տարբերվում է $project-ից, որը լռելյայն կարող է նեղացնել դաշտերը, եթե հստակ չեք նշել։",
+      "example": "Model.aggregate([\n { $set: { discountPrice: { $multiply: [ '$price', 0.9 ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/"
+    },
+    {
+      "id": 31,
+      "keyword": "$out",
+      "command": "{ $out: 'analytics_results' }",
+      "description": "$out-ը գրում է ամբողջ pipeline-ի վերջնական արդյունքը նշված collection-ում՝ ստեղծելով կամ փոխարինելով այն (վարքը կախված է տարբերակից և տվյալ բազայից)։Պետք է լինի վերջին փուլը։Տարբերվում է $merge-ից, որը թույլ է տալիս միաձուլման ռազմավարություններ։Օգտագործեք ուշադրությամբ արտադրությունում՝ կորուստներից խուսափելու համար։",
+      "example": "Model.aggregate([\n { $group: { _id: '$cat', total: { $sum: '$amount' } } },\n { $out: 'monthlyTotals' }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/"
+    }
+  ],
+  "expressions": [
+    {
+      "id": 1,
+      "keyword": "$ifNull",
+      "command": "{ $ifNull: [ '$nickname', '$name' ] }",
+      "description": "$ifNull արտահայտությունը վերադարձնում է առաջին արգումենտը, բայց եթե այն null է կամ բացակայում է, վերադարձնում է երկրորդը։Սա հաճախակի pattern է user displayName-ների, կանխադրված արժեքների համար։Աշխատում է ագրեգացիայի $project, $set և update pipeline-ում։",
+      "example": "Model.aggregate([\n { $project: { display: { $ifNull: [ '$nick', 'Anonymous' ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/"
+    },
+    {
+      "id": 2,
+      "keyword": "$cond",
+      "command": "{ $cond: { if: { $gte: [ '$qty', 10 ] }, then: 'bulk', else: 'retail' } }",
+      "description": "$cond-ը if/then/else տրամաբանություն է արտահայտությունների մեջ․ կախված boolean պայմանից վերադարձնում է մեկ կամ մյուս արժեքը։Նոր սինտաքսը օբյեկտային ձևով ավելի ընթեռնելի է։Օգտագործվում է դաշտերի դասակարգման, flag-երի և հաշվարկված կարգավիճակների համար առանց application կոդի։",
+      "example": "Model.aggregate([\n { $set: { tier: { $cond: { if: { $gte: [ '$points', 1000 ] }, then: 'gold', else: 'silver' } } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/"
+    },
+    {
+      "id": 3,
+      "keyword": "$switch",
+      "command": "{ $switch: { branches: [\n  { case: { $eq: [ '$status', 'A' ] }, then: 1 },\n  { case: { $eq: [ '$status', 'B' ] }, then: 2 }\n], default: 0 } }",
+      "description": "$switch-ը բազմակի branch տրամաբանություն է՝ case/then զույգերի ցանկով և default արժեքով։Ավելի ընթեռնելի է, քան nested $cond երկար շղթաները։Օգտագործեք ագրեգացիայում կարգավիճակների քարտեզագրման, scoring-ի և բարդ կանոնների համար։",
+      "example": "Model.aggregate([\n { $project: {\n   code: { $switch: {\n     branches: [\n       { case: { $lt: [ '$score', 60 ] }, then: 'F' },\n       { case: { $lt: [ '$score', 80 ] }, then: 'C' }\n     ],\n     default: 'A'\n   } }\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/"
+    },
+    {
+      "id": 4,
+      "keyword": "$arrayElemAt",
+      "command": "{ $arrayElemAt: [ '$items', 0 ] }",
+      "description": "$arrayElemAt-ը վերադարձնում է զանգվածի տրված ինդեքսի էլեմենտը (0-ից սկսած)։Օգտակար է առաջին/վերջին էլեմենտը հանելու համար առանց $slice-ի։Եթե ինդեքսը դուրս է սահմաններից, արդյունքը null է։Հաճախ համակցվում է $filter-ի հետ։",
+      "example": "Model.aggregate([\n { $project: { firstTag: { $arrayElemAt: [ '$tags', 0 ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/"
+    },
+    {
+      "id": 5,
+      "keyword": "$filter",
+      "command": "{ $filter: { input: '$scores', as: 's', cond: { $gte: [ '$$s', 60 ] } } }",
+      "description": "$filter-ը ստեղծում է նոր զանգված՝ թողնելով միայն այն էլեմենտները, որոնք բավարարում են cond պայմանին։input-ը զանգված է, as-ով տալիս եք փոփոխականի անունը $$prefix-ով։Օգտակար է ենթազանգվածներ պատրաստելու համար առանց application-ում կրկնակի մշակման։",
+      "example": "Model.aggregate([\n { $project: { pass: { $filter: { input: '$grades', as: 'g', cond: { $gte: [ '$$g', 50 ] } } } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/"
+    },
+    {
+      "id": 6,
+      "keyword": "$map",
+      "command": "{ $map: { input: '$items', as: 'it', in: { $multiply: [ '$$it.price', 2 ] } } }",
+      "description": "$map-ը վերածում է զանգվածի յուրաքանչյուր էլեմենտը նոր արժեքի՝ in արտահայտությամբ, որտեղ $$as փոփոխականը հղում է ընթացիկ էլեմենտին։Սա ֆունկցիոնալ transform է ագրեգացիայի ներսում։Համատեղեք $toDouble և այլ cast-երով, եթե տիպերը խառնված են։",
+      "example": "Model.aggregate([\n { $project: {\n   doubled: { $map: { input: '$nums', as: 'n', in: { $multiply: [ '$$n', 2 ] } } }\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/"
+    },
+    {
+      "id": 7,
+      "keyword": "$reduce",
+      "command": "{ $reduce: { input: '$arr', initialValue: 0, in: { $add: [ '$$value', '$$this' ] } } }",
+      "description": "$reduce-ը fold է զանգվածի վրա․ initialValue-ից սկսում է և in-ում համատեղում է $$value (ակումուլատոր) և $$this (ընթացիկ էլեմենտ)։Օգտագործեք գումարներ, string կոնկատենացիա, կամ բարդ ագրեգացիա array-ի ներսում, երբ $sum բավարար չէ։",
+      "example": "Model.aggregate([\n { $project: {\n   product: { $reduce: {\n     input: '$factors',\n     initialValue: 1,\n     in: { $multiply: [ '$$value', '$$this' ] }\n   } }\n } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/"
+    },
+    {
+      "id": 8,
+      "keyword": "$dateToString",
+      "command": "{ $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'Asia/Yerevan' } }",
+      "description": "$dateToString-ը ձևաչափում է BSON Date արժեքը տողի՝ format նիշերով (%Y, %m, %H և այլն)։timezone պարամետրը կարևոր է ճիշտ օրը ցույց տալու համար global օգտատերերի դեպքում։Օգտագործվում է հաշվետվություններում, արտահանումներում և խմբավորման բանալիներ պատրաստելու համար։",
+      "example": "Model.aggregate([\n { $project: { day: { $dateToString: { format: '%Y-%m-%d', date: '$ts' } } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/"
+    },
+    {
+      "id": 9,
+      "keyword": "$regexMatch",
+      "command": "{ $regexMatch: { input: '$email', regex: /@gmail\\.com$/ } }",
+      "description": "$regexMatch-ը վերադարձնում է boolean՝ արդյոք input տողը համապատասխանում է regex-ին։Տարբերվում է $match փուլի regex-ից, որն ամբողջ փաստաթուղթ է ֆիլտրում։Օգտագործեք $project/$set-ում դաշտեր դասակարգելու, մաքրելու համար։Ուշադրություն կատարողականին մեծ տվյալների վրա։",
+      "example": "Model.aggregate([\n { $match: { $expr: { $regexMatch: { input: '$code', regex: '^AM-' } } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/"
+    },
+    {
+      "id": 10,
+      "keyword": "$toString / $toInt",
+      "command": "{ $toString: '$_id' }",
+      "description": "Տիպի փոխակերպման արտահայտությունները ($toString, $toInt, $toDouble, $toBool, $toDate, $toObjectId) թույլ են տալիս միավորել տարբեր BSON տիպերը մեկ pipeline-ում, օրինակ ObjectId-ը ցուցադրել որպես տող կամ query string-ից եկած թիվը վերածել int։Սխալների դեպքում կարող են գցել error՝ օգտագործեք $convert onError/onNull-ով ավելի փափուկ վարքի համար։",
+      "example": "Model.aggregate([\n { $project: { idStr: { $toString: '$_id' }, ageNum: { $toInt: '$ageStr' } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/"
+    },
+    {
+      "id": 11,
+      "keyword": "$mergeObjects",
+      "command": "{ $mergeObjects: [ '$defaults', '$profile' ] }",
+      "description": "$mergeObjects-ը մի քանի օբյեկտներ է միավորում մեկի մեջ՝ աջից ձախ վերջին արժեքները հաղթելով կոնֆլիկտների դեպքում։Օգտակար է default կարգավորումներով user profile-ներ «լցնելու» համար։Հաճախ օգտագործվում է $replaceRoot-ի հետ։",
+      "example": "Model.aggregate([\n { $replaceWith: { $mergeObjects: [ { role: 'user' }, '$$ROOT' ] } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/"
+    },
+    {
+      "id": 12,
+      "keyword": "$slice",
+      "command": "{ $slice: [ '$arr', 2, 5 ] }",
+      "description": "$slice-ը կտրում է զանգվածը՝ վերադարձնելով ենթազանգված offset և length պարամետրերով (երկրորդ ձևով կարող է լինել միայն length վերջից)։Օգտագործեք pagination array դաշտերի ներսում, preview ցույց տալու համար առանց ամբողջական զանգվածը բեռնելու client։",
+      "example": "Model.aggregate([\n { $project: { head: { $slice: [ '$events', 3 ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/"
+    },
+    {
+      "id": 13,
+      "keyword": "$concat",
+      "command": "{ $concat: [ '$first', ' ', '$last' ] }",
+      "description": "$concat-ը միացնում է մի քանի տողային արժեքներ մեկ տողի մեջ։Null կամ բացակայող դաշտերը կարող են ամբողջ արդյունքը դարձնել null՝ կիրառեք $ifNull յուրաքանչյուր մասի վրա։Օգտակար է slug-եր, պիտակներ, հասցեների ստեղծման համար։",
+      "example": "Model.aggregate([\n { $project: { title: { $concat: [ '$brand', ' — ', '$model' ] } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/"
+    },
+    {
+      "id": 14,
+      "keyword": "$size",
+      "command": "{ $size: '$tags' }",
+      "description": "Արտահայտության $size-ը վերադարձնում է զանգվածի երկարությունը scalar թվով։Տարբերվում է query $size-ից, որը օգտագործվում է match-ում։Եթե արժեքը զանգված չէ, կարող է սխալ տալ՝ նախապես ստուգեք $isArray կամ $type։Օգտագործեք հաշվարկված դաշտերում և ֆիլտրերում $expr-ի միջոցով։",
+      "example": "Model.aggregate([\n { $project: { n: { $size: { $ifNull: [ '$tags', [] ] } } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/"
+    },
+    {
+      "id": 15,
+      "keyword": "$avg / $min / $max",
+      "command": "{ $group: { _id: '$dept', m: { $avg: '$salary' } } }",
+      "description": "Խմբային ագրեգատներ $avg, $min, $max, $sum-ը հաշվում են թվային դաշտերը խմբի մեջ։$avg-ը անտեսում է non-numeric արժեքները։Սրանք արտահայտություն չեն առանձին, այլ աշխատում են $group, $bucket, window փուլերում։Օգտագործեք ճիշտ խմբավորման բանալի՝ արդյունքը չխառնելու համար։",
+      "example": "Model.aggregate([\n { $group: { _id: '$team', avgAge: { $avg: '$age' }, top: { $max: '$score' } } }\n])",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/"
+    }
+  ],
+  "comparisonQuery": [
+    {
+      "id": 1,
+      "keyword": "$eq",
+      "command": "{ status: { $eq: 'active' } }",
+      "description": "$eq query օպերատորը ընտրում է փաստաթղթերը, որտեղ դաշտի արժեքը հավասար է նշված արժեքին, ներառյալ BSON տիպի ճիշտ համընկնումը։Շատ դաշտերի համար կարելի է օգտագործել կարճ ձև՝ { status: 'active' }, որը համարժեք է $eq-ին։Համեմատումը հետևում է BSON համեմատման կարգին տարբեր տիպերի միջև։",
+      "example": "db.orders.find({ qty: { $eq: 5 } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/eq/"
+    },
+    {
+      "id": 2,
+      "keyword": "$gt",
+      "command": "{ age: { $gt: 18 } }",
+      "description": "$gt-ը նշանակում է «մեծ է, քան»՝ թվային, ամսաթվային կամ string արժեքների համեմատման համար BSON կարգով։Օգտագործվում է find, update filters և $match ագրեգացիայում։Սովորաբար համակցվում է $and/$or-ի հետ բարդ ֆիլտրերի համար։",
+      "example": "db.users.find({ score: { $gt: 90 } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/gt/"
+    },
+    {
+      "id": 3,
+      "keyword": "$gte",
+      "command": "{ age: { $gte: 18 } }",
+      "description": "$gte-ը ընտրում է արժեքներ, որոնք մեծ են կամ հավասար են նշված սահմանին։Օրինակ՝ թույլատրելի տարիքի ստուգում կամ ամսաթվից սկսած գրառումներ։Տարբերվում է $gt-ից միայն սահմանային արժեքը ներառել-չներառելու հարցով։",
+      "example": "db.events.find({ startsAt: { $gte: ISODate('2026-01-01') } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/gte/"
+    },
+    {
+      "id": 4,
+      "keyword": "$in",
+      "command": "{ country: { $in: [ 'AM', 'GE', 'AZ' ] } }",
+      "description": "$in-ը ստուգում է, արդյոք դաշտի արժեքը պարունակված է տրված զանգվածում (ցանկի ցանկացած տարրի հետ հավասար է)։Օգտակար է whitelist ֆիլտրերի, բազմակի կարգավիճակների համար։Զանգվածի մեծությունը և ինդեքսները ազդում են կատարողականի վրա։",
+      "example": "db.products.find({ sku: { $in: ['A1','B2'] } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/in/"
+    },
+    {
+      "id": 5,
+      "keyword": "$lt",
+      "command": "{ price: { $lt: 100 } }",
+      "description": "$lt-ը ընտրում է արժեքներ, որոնք փոքր են նշված սահմանից՝ BSON համեմատման կարգով։Օգտագործեք գների վերին սահմանների, ամսաթվերի «մինչև» ֆիլտրերի համար։Համատեղեք $gt-ի հետ միջակայք ստեղծելու համար։",
+      "example": "db.items.find({ stock: { $lt: 5 } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/lt/"
+    },
+    {
+      "id": 6,
+      "keyword": "$lte",
+      "command": "{ rating: { $lte: 3 } }",
+      "description": "$lte-ը ընտրում է փաստաթղթերը, որտեղ դաշտը փոքր է կամ հավասար է տրված արժեքին։Օրինակ՝ ցածր վարկանիշ ունեցող կամ սահմանաչափի ներսում գտնվող մետրիկաներ։Սահմանային արժեքը ներառված է արդյունքում, ի տարբերություն միայն $lt-ի։",
+      "example": "db.reviews.find({ stars: { $lte: 2 } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/lte/"
+    },
+    {
+      "id": 7,
+      "keyword": "$ne",
+      "command": "{ role: { $ne: 'admin' } }",
+      "description": "$ne-ը վերադարձնում է բոլոր փաստաթղթերը, որտեղ դաշտը հավասար չէ տրված արժեքին, ներառյալ այն դեպքերը, երբ դաշտը բացակայում է կամ այլ տիպ ունի։Ուշադրություն՝ հաճախ պետք է հստակ մշակել null/բացակայող դաշտի դեպքերը՝ սպասված արդյունքի համար։",
+      "example": "db.users.find({ verified: { $ne: true } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/ne/"
+    },
+    {
+      "id": 8,
+      "keyword": "$nin",
+      "command": "{ status: { $nin: [ 'deleted', 'banned' ] } }",
+      "description": "$nin-ը ընտրում է փաստաթղթերը, որտեղ դաշտի արժեքը չի համընկնում զանգվածի ոչ մի տարրի հետ (կամ դաշտը բացակայում է)։Սա blacklist ֆիլտրի բնական ձևն է։Մեծ ցանկերի դեպքում դիտարկեք ալտերնատիվ սխեմաներ կամ ինդեքսավորման ռազմավարություն։",
+      "example": "db.posts.find({ tags: { $nin: [ 'spam' ] } })",
+      "link": "https://www.mongodb.com/docs/manual/reference/operator/query/nin/"
+    }
+  ]
+}

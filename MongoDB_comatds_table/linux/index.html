@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Шпаргалка по Linux: От Истории до 100+ Команд</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Справочник по операционной системе Linux</h1>
+      <p>История, Установка на Mac и 100+ основных команд с интерактивным поиском</p>
+    </header>
+
+    <section class="section-card">
+      <h2>История создания Linux</h2>
+      <p>
+        <strong>Linux</strong> — это семейство Unix-подобных операционных систем с открытым исходным кодом, основанных
+        на одноименном
+        ядре. История Linux началась в <strong>1991 году</strong>, когда финский студент <strong>Линус
+          Торвальдс</strong> (Linus
+        Torvalds), обучавшийся в Университете Хельсинки, разочаровался в ограничениях операционной системы MINIX
+        (учебная Unix-подобная
+        система) и решил написать собственное ядро, совместимое с POSIX.
+      </p>
+      <p>
+        25 августа 1991 года Линус отправил свое знаменитое письмо в новостную группу компьтерной сети:
+        <em>«Привет всем... Я пишу бесплатную операционную систему (просто хобби, не будет большой и профессиональной,
+          как gnu)...»</em>.
+        В сентябре 1991 года была выпущена версия 0.01.
+      </p>
+      <p>
+        Важнейшую роль в успехе Linux сыграл проект <strong>GNU</strong>, начатый Ричардом Столлманом в 1983 году. GNU
+        создавал свободное
+        окружение (компиляторы, редакторы, оболочки), но у них не было готового ядра. Объединение ядра Linux и системных
+        утилит GNU
+        привело к созданию полноценной операционной системы, которую правильно называть <strong>GNU/Linux</strong>.
+      </p>
+    </section>
+
+    <section class="section-card">
+      <h2>Руководство по установке Linux на Mac OS</h2>
+      <br>
+      <a class="btn-link" href="https://chatgpt.com/share/6a1ff953-8a80-83eb-82c4-f7b661d834aa" target="_blank">
+        GPT CHAT LINK</a>
+
+      <p>
+        Существует три основных способа использовать Linux на компьютерах Apple (как на базе процессоров Intel, так и на
+        базе современных
+        чипов Apple Silicon M1/M2/M3):
+      </p>
+      <ol>
+        <li>
+          <strong>Виртуализация (Рекомендуется для 99% пользователей):</strong> Без риска для основной macOS.
+          <ul>
+            <li>
+              Для Mac M1/M2/M3 используйте бесплатный <strong>UTM</strong> или коммерческий <strong>Parallels
+                Desktop</strong>. Скачайте
+              ARM64-образ (например, Ubuntu Server или Debian ARM).
+            </li>
+            <li>Для Mac Intel используйте бесплатный <strong>VirtualBox</strong> или <strong>VMware Fusion</strong>.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Проект Asahi Linux (Для нативной установки на Apple Silicon M1/M2):</strong>
+          <p>Это полноценный порт Linux для процессоров Apple. Установка запускается прямо из терминала macOS одной
+            командой:</p>
+          <code>curl https://alx.sh | sh</code>
+          <p>Скрипт сам безопасно изменит разделы диска и установит дистрибутив (по умолчанию Fedora Remix).</p>
+        </li>
+        <li>
+          <strong>Dual Boot через Boot Camp (Только для старых Mac на процессорах Intel):</strong>
+          <p>
+            Запишите образ Linux (Ubuntu/Mint) на флешку через программу <em>Etcher</em>, перезагрузите Mac с зажатой
+            клавишей
+            <code>Option (Alt)</code> и выберите загрузку с USB для установки рядом с macOS.
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section-card">
+      <h2>Интерактивный справочник команд Linux</h2>
+
+      <div class="tabs" role="tablist" aria-label="Навигация по разделам">
+        <button class="tab-button active" type="button" data-tab="main" aria-selected="true">Основной справочник</button>
+        <button class="tab-button" type="button" data-tab="extra" aria-selected="false">Дополнительная шпаргалка</button>
+        <button class="tab-button" type="button" data-tab="mc" aria-selected="false">Midnight Commander (MC)</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-main">
+        <p>Кликните по заголовку колонки для сортировки. Используйте строку поиска для быстрой фильтрации по имени,
+          описанию или группе.</p>
+
+        <div class="controls">
+          <input type="text" id="searchInput" class="search-input"
+            placeholder="Поиск по командам, описанию или категориям..." />
+        </div>
+
+        <div class="table-container">
+          <div class="grid-table" id="cmdTable">
+            <div class="table-cell table-header">№</div>
+            <div class="table-cell table-header flex-column" data-column="1">Команда</div>
+            <div class="table-cell table-header flex-column" data-column="2">Описание</div>
+            <div class="table-cell table-header" data-column="3">Группа / Категория</div>
+            <div class="table-cell table-header" data-column="4">Сложность</div>
+            <div class="table-cell table-header" data-column="5">Опасность</div>
+            <div class="table-cell table-header">Пример использования</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-extra">
+        <p>Это краткий список команд, которые удобно использовать в повседневной работе с Linux: от обновления системы до
+          диагностики дискового пространства и сервисов.</p>
+
+        <div class="table-container">
+          <div class="grid-table extra-grid-table" id="extraTable">
+            <div class="table-cell table-header">№</div>
+            <div class="table-cell table-header" data-column="1">Команда</div>
+            <div class="table-cell table-header" data-column="2">Задача</div>
+            <div class="table-cell table-header" data-column="3">Пример</div>
+            <div class="table-cell table-header" data-column="4">Совет</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-mc">
+        <p>
+          <strong>Midnight Commander</strong> (команда <code>mc</code>) — двухпанельный файловый менеджер для терминала,
+          наследник Norton Commander. Он незаменим при работе по SSH: перемещение, копирование, редактирование и просмотр
+          файлов делаются клавишами, без длинных путей в командной строке.
+        </p>
+
+        <div class="mc-note">
+          <strong>Как читать сочетания:</strong> запись вида <code>Ctrl + X, then C</code> означает последовательное
+          нажатие — сначала <code>Ctrl + X</code>, отпустить, затем <code>C</code>. На macOS клавиша <code>Alt</code>
+          в терминале обычно требует включить опцию «Use Option as Meta key» (Terminal / iTerm2), иначе
+          <code>Alt</code>-сочетания не сработают.
+        </div>
+
+        <h3 class="mc-subtitle">Горячие клавиши</h3>
+        <div class="controls">
+          <input type="text" id="mcSearchInput" class="search-input"
+            placeholder="Поиск по клавишам, действию или группе..." />
+        </div>
+
+        <div class="table-container">
+          <div class="grid-table mc-grid-table" id="mcHotkeysTable">
+            <div class="table-cell table-header">№</div>
+            <div class="table-cell table-header" data-column="1">Сочетание клавиш</div>
+            <div class="table-cell table-header" data-column="2">Действие</div>
+            <div class="table-cell table-header" data-column="3">Группа</div>
+            <div class="table-cell table-header">Примечание</div>
+          </div>
+        </div>
+
+        <h3 class="mc-subtitle">Топ команд и приёмов</h3>
+        <div class="table-container">
+          <div class="grid-table extra-grid-table" id="mcCommandsTable">
+            <div class="table-cell table-header">№</div>
+            <div class="table-cell table-header" data-column="1">Команда / приём</div>
+            <div class="table-cell table-header" data-column="2">Задача</div>
+            <div class="table-cell table-header" data-column="3">Пример</div>
+            <div class="table-cell table-header" data-column="4">Совет</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/script.js" type="module"></script>
+</body>
+
+</html>
